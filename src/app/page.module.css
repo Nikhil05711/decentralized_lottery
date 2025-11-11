@@ -355,6 +355,22 @@
   .ticketCard {
     padding: 32px 28px;
   }
+
+  .walletBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .ticketHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -362,17 +378,81 @@
     padding: 48px 16px 64px;
   }
 
+  .heroCard,
+  .ticketCard {
+    padding: 28px 22px;
+  }
+
   .walletBar {
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
+  }
+
+  .title,
+  .subtitle {
+    text-align: center;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .metricCard {
+    align-items: center;
   }
 
   .ticketRow {
-    align-items: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
   }
 
   .totalBreakdown {
     text-align: left;
+  }
+
+  .quantityControl {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .totalBreakdown {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroCard,
+  .ticketCard {
+    padding: 24px 18px;
+  }
+
+  .title {
+    font-size: clamp(2.2rem, 8vw, 2.6rem);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .quantityControl {
+    padding: 10px 14px;
+    gap: 12px;
+  }
+
+  .quantityButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .quantityValue {
+    font-size: 1.5rem;
+  }
+
+  .secondaryLink,
+  .ctaButton {
+    font-size: 0.95rem;
   }
 }
 

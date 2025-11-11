@@ -81,6 +81,7 @@
     rgba(59, 130, 246, 0.18)
   );
   box-shadow: 0 28px 68px rgba(20, 184, 166, 0.22);
+  width: 100%;
 }
 
 .countdownRing {
@@ -138,6 +139,7 @@
 .countdownInfo {
   display: grid;
   gap: 10px;
+  align-items: flex-start;
 }
 
 .countdownHeading {
@@ -502,6 +504,11 @@
 
   .hero {
     padding: 40px;
+    grid-template-columns: 1fr;
+  }
+
+  .statsPanel {
+    gap: 20px;
   }
 
   .actions,
@@ -511,13 +518,24 @@
 
   .countdownCard {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .countdownInfo {
+    justify-items: center;
   }
 }
 
 @media (max-width: 640px) {
   .hero {
     padding: 32px 26px;
+    gap: 24px;
+  }
+
+  .heroText {
+    text-align: center;
+    align-items: center;
   }
 
   .actions,
@@ -539,8 +557,65 @@
     height: 140px;
   }
 
+  .countdownCard {
+    gap: 20px;
+    padding: 24px;
+  }
+
   .countdownTime {
     font-size: 1.6rem;
+  }
+
+  .countdownInfo {
+    justify-items: center;
+    text-align: center;
+  }
+
+  .statRow {
+    grid-template-columns: 1fr;
+  }
+
+  .actionGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statMicro {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 28px 20px;
+  }
+
+  .countdownRing {
+    width: 120px;
+    height: 120px;
+  }
+
+  .countdownCard {
+    padding: 20px;
+    gap: 18px;
+  }
+
+  .countdownHeading {
+    font-size: 0.95rem;
+  }
+
+  .countdownSubheading,
+  .countdownHint {
+    font-size: 0.85rem;
+  }
+
+  .actions,
+  .history {
+    padding: 28px 20px;
+  }
+
+  .actionButton,
+  .actionButtonSecondary {
+    width: 100%;
   }
 }
 
