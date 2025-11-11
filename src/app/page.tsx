@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
@@ -12,7 +12,6 @@ import { GlowingOrbs } from "@/components/GlowingOrbs";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
 import { wagmiConfig } from "@/lib/wagmi";
-import { TOTAL_TICKETS } from "@/lib/constants";
 
 const LOTTERY_ADDRESS = process.env
   .NEXT_PUBLIC_LOTTERY_ADDRESS as `0x${string}` | undefined;
@@ -21,6 +20,12 @@ const USDT_ADDRESS = process.env
 const USD_PRICE_PER_TICKET = 0.11;
 
 const fallbackDecimals = 6;
+const clampToSafeNumber = (value: bigint | number | undefined) => {
+  if (typeof value === "number") return value;
+  if (typeof value !== "bigint") return 0;
+  const max = BigInt(Number.MAX_SAFE_INTEGER);
+  return Number(value > max ? max : value);
+};
 
 type FlowStatus = "idle" | "approving" | "buying";
 
@@ -75,6 +80,33 @@ export default function Home() {
     },
   });
 
+  const { data: activeSeriesIdData } = useReadContract({
+    address: LOTTERY_ADDRESS,
+    abi: lotteryAbi,
+    functionName: "activeSeriesId",
+    query: {
+      enabled: Boolean(LOTTERY_ADDRESS),
+      refetchInterval: 20_000,
+    },
+  });
+
+  const activeSeriesId = useMemo(() => {
+    if (typeof activeSeriesIdData === "bigint") return activeSeriesIdData;
+    if (typeof activeSeriesIdData === "number") return BigInt(activeSeriesIdData);
+    return BigInt(0);
+  }, [activeSeriesIdData]);
+
+  const { data: activeSeriesInfoData } = useReadContract({
+    address: LOTTERY_ADDRESS,
+    abi: lotteryAbi,
+    functionName: "seriesInfo",
+    args: [activeSeriesId],
+    query: {
+      enabled: Boolean(LOTTERY_ADDRESS),
+      refetchInterval: 20_000,
+    },
+  });
+
   const { data: allowanceData, refetch: refetchAllowance } = useReadContract({
     address: USDT_ADDRESS,
     abi: erc20Abi,
@@ -107,13 +139,13 @@ export default function Home() {
   const allowance = useMemo(() => {
     if (typeof allowanceData === "bigint") return allowanceData;
     if (typeof allowanceData === "number") return BigInt(allowanceData);
-    return 0n;
+    return BigInt(0);
   }, [allowanceData]);
 
   const ticketsSold = useMemo(() => {
     if (typeof ticketsSoldData === "bigint") return ticketsSoldData;
     if (typeof ticketsSoldData === "number") return BigInt(ticketsSoldData);
-    return 0n;
+    return BigInt(0);
   }, [ticketsSoldData]);
 
   const ticketsSoldCount = useMemo(() => {
@@ -122,10 +154,86 @@ export default function Home() {
     return Number(value);
   }, [ticketsSold]);
 
-  const ticketsLeft = useMemo(
-    () => Math.max(TOTAL_TICKETS - ticketsSoldCount, 0),
-    [ticketsSoldCount]
+  const activeSeriesTotals = useMemo(() => {
+    if (!activeSeriesInfoData) {
+      return { total: BigInt(0), sold: BigInt(0) };
+    }
+    const tuple = activeSeriesInfoData as ReadonlyArray<unknown> & {
+      totalTickets?: bigint;
+      ticketsSold?: bigint;
+    };
+    const total =
+      typeof tuple.totalTickets === "bigint"
+        ? tuple.totalTickets
+        : (Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0));
+    const sold =
+      typeof tuple.ticketsSold === "bigint"
+        ? tuple.ticketsSold
+        : (Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0));
+    return { total, sold };
+  }, [activeSeriesInfoData]);
+
+  const activeSeriesTotalCount = useMemo(
+    () => clampToSafeNumber(activeSeriesTotals.total),
+    [activeSeriesTotals]
   );
+
+  const activeSeriesSoldCount = useMemo(
+    () => clampToSafeNumber(activeSeriesTotals.sold),
+    [activeSeriesTotals]
+  );
+
+  const hasActiveSeries = useMemo(
+    () => activeSeriesId > BigInt(0),
+    [activeSeriesId]
+  );
+
+  const ticketsLeft = useMemo(
+    () => Math.max(activeSeriesTotalCount - activeSeriesSoldCount, 0),
+    [activeSeriesSoldCount, activeSeriesTotalCount]
+  );
+
+  const salesOpen = useMemo(
+    () => hasActiveSeries && activeSeriesTotals.total > activeSeriesTotals.sold,
+    [activeSeriesTotals, hasActiveSeries]
+  );
+
+  const maxSelectable = useMemo(() => {
+    if (!salesOpen) return 0;
+    if (ticketsLeft <= 0) return 0;
+    return Math.min(ticketsLeft, 100);
+  }, [salesOpen, ticketsLeft]);
+
+  const activeSeriesLabel = useMemo(
+    () => (hasActiveSeries ? `Series #${activeSeriesId.toString()}` : "No active series"),
+    [activeSeriesId, hasActiveSeries]
+  );
+
+  const activeSeriesHint = useMemo(() => {
+    if (!hasActiveSeries) {
+      return "Queue the next series to resume sales";
+    }
+    return `Series ${activeSeriesId.toString()} · total ${activeSeriesTotalCount}`;
+  }, [activeSeriesId, activeSeriesTotalCount, hasActiveSeries]);
+
+  const activeSeriesProgress = useMemo(() => {
+    if (activeSeriesTotalCount === 0) return "0%";
+    const percent = Math.min(
+      100,
+      Math.round((activeSeriesSoldCount / activeSeriesTotalCount) * 100)
+    );
+    return `${percent}% sold`;
+  }, [activeSeriesSoldCount, activeSeriesTotalCount]);
+
+  useEffect(() => {
+    if (maxSelectable === 0) {
+      setTicketCount(1);
+      return;
+    }
+    setTicketCount((current) =>
+      current > maxSelectable ? maxSelectable : current
+    );
+  }, [maxSelectable]);
 
   const needsApproval = useMemo(() => {
     if (!isConnected || !totalCost) return false;
@@ -167,6 +275,18 @@ export default function Home() {
       setFeedback(
         "Missing contract configuration. Set NEXT_PUBLIC_LOTTERY_ADDRESS and NEXT_PUBLIC_USDT_ADDRESS."
       );
+      return;
+    }
+    if (!salesOpen) {
+      setFeedback("Ticket sales are paused until the next series is activated.");
+      return;
+    }
+    if (ticketsLeft === 0) {
+      setFeedback("This series is sold out. Watch for the next series to launch.");
+      return;
+    }
+    if (ticketCount > ticketsLeft) {
+      setFeedback(`Only ${ticketsLeft} ticket(s) remain in the current series.`);
       return;
     }
     if (!totalCost || ticketCount < 1) {
@@ -216,9 +336,10 @@ export default function Home() {
     }
   };
 
-  const increment = () => setTicketCount((current) => Math.min(100, current + 1));
+  const increment = () =>
+    setTicketCount((current) => Math.min(maxSelectable, current + 1));
   const decrement = () =>
-    setTicketCount((current) => Math.max(1, current - 1));
+    setTicketCount((current) => Math.max(1, Math.min(current - 1, maxSelectable)));
 
   const envReady = Boolean(LOTTERY_ADDRESS && USDT_ADDRESS);
 
@@ -264,9 +385,9 @@ export default function Home() {
               whileHover={{ y: -6 }}
               transition={{ type: "spring", stiffness: 140, damping: 18 }}
             >
-              <span className={styles.metricLabel}>Total Tickets</span>
+              <span className={styles.metricLabel}>Lifetime Tickets Sold</span>
               <span className={styles.metricValue}>
-                {ticketsSold.toString()}
+                {ticketsSoldCount.toLocaleString()}
               </span>
               <span className={styles.walletState}>
                 Live counter from the smart contract
@@ -278,9 +399,11 @@ export default function Home() {
               transition={{ type: "spring", stiffness: 140, damping: 18 }}
             >
               <span className={styles.metricLabel}>Tickets Left</span>
-              <span className={styles.metricValue}>{ticketsLeft}</span>
+              <span className={styles.metricValue}>
+                {hasActiveSeries ? ticketsLeft.toLocaleString() : "—"}
+              </span>
               <span className={styles.walletState}>
-                {TOTAL_TICKETS} total · replenish each draw
+                {hasActiveSeries ? activeSeriesHint : "Sales resume next series"}
               </span>
             </motion.div>
           </div>
@@ -322,7 +445,9 @@ export default function Home() {
                 <button
                   className={styles.quantityButton}
                   onClick={increment}
-                  disabled={ticketCount >= 100 || isBusy}
+                  disabled={
+                    isBusy || maxSelectable === 0 || ticketCount >= maxSelectable
+                  }
                 >
                   +
                 </button>
@@ -345,6 +470,13 @@ export default function Home() {
                 `NEXT_PUBLIC_USDT_ADDRESS`, and `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` to enable transactions.
               </div>
             )}
+            {envReady && !salesOpen && (
+              <div className={styles.errorBanner}>
+                {hasActiveSeries
+                  ? "Current series is sold out. Queue the next series to reopen sales."
+                  : "Ticket sales are paused until the next series is activated."}
+              </div>
+            )}
 
             {feedback && (
               <div
@@ -364,7 +496,13 @@ export default function Home() {
               className={styles.ctaButton}
               onClick={handleBuy}
               disabled={
-                !isConnected || !envReady || isBusy || !totalCost || ticketCount < 1
+                !isConnected ||
+                !envReady ||
+                isBusy ||
+                !totalCost ||
+                ticketCount < 1 ||
+                !salesOpen ||
+                maxSelectable === 0
               }
             >
               {isBusy

@@ -1,22 +1,38 @@
-[00:00:02.596] Server  LOG      ✓ Ready in 2.4s
-[00:00:15.259] Server  LOG      ○ Compiling / ...
-[00:00:21.646] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:21.766] Server  ERROR    ⨯ TypeError: localStorage.getItem is not a function
-[00:00:21.768] Server  ERROR   {"level":50,"time":1762888617694,"pid":34786,"hostname":"Nikhils-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
+[00:00:01.097] Server  LOG      ✓ Ready in 840ms
+[00:00:09.614] Server  LOG      ○ Compiling / ...
+[00:00:14.789] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:14.936] Server  ERROR    ⨯ TypeError: localStorage.getItem is not a function
+[00:00:14.938] Server  ERROR   {"level":50,"time":1762892353196,"pid":54515,"hostname":"Nikhils-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
 
-[00:00:21.768] Server  ERROR   {"level":50,"time":1762888617694,"pid":34786,"hostname":"Nikhils-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
+[00:00:14.938] Server  ERROR   {"level":50,"time":1762892353196,"pid":54515,"hostname":"Nikhils-MacBook-Air.local","name":"core","context":"core","msg":"this.localStorage.getItem is not a function"}
 
-[00:00:21.781] Server  ERROR   (node:34786) Warning: `--localstorage-file` was provided without a valid path
+[00:00:14.952] Server  ERROR   (node:54515) Warning: `--localstorage-file` was provided without a valid path
 (Use `node --trace-warnings ...` to show where the warning was created)
-[00:00:21.797] Server  ERROR   TypeError: this.localStorage.getItem is not a function
-[00:00:21.798] Server  ERROR    ⨯ "unhandledRejection:" TypeError: this.localStorage.getItem is not a function
-[00:00:21.800] Server  ERROR    ⨯ "unhandledRejection: " TypeError: this.localStorage.getItem is not a function
-[00:00:21.801] Server  ERROR   TypeError: this.localStorage.getItem is not a function
-[00:00:21.803] Server  ERROR    ⨯ "unhandledRejection:" TypeError: this.localStorage.getItem is not a function
-[00:00:21.804] Server  ERROR    ⨯ "unhandledRejection: " TypeError: this.localStorage.getItem is not a function
-[00:00:22.023] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:22.316] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:23.734] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:00:24.263] Server  ERROR    ⨯ TypeError: localStorage.getItem is not a function
-[00:00:24.288] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:00:24.388] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:14.972] Server  ERROR   TypeError: this.localStorage.getItem is not a function
+[00:00:14.974] Server  ERROR    ⨯ "unhandledRejection:" TypeError: this.localStorage.getItem is not a function
+[00:00:14.976] Server  ERROR    ⨯ "unhandledRejection: " TypeError: this.localStorage.getItem is not a function
+[00:00:14.979] Server  ERROR   TypeError: this.localStorage.getItem is not a function
+[00:00:14.981] Server  ERROR    ⨯ "unhandledRejection:" TypeError: this.localStorage.getItem is not a function
+[00:00:14.983] Server  ERROR    ⨯ "unhandledRejection: " TypeError: this.localStorage.getItem is not a function
+[00:00:15.194] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:15.498] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:17.624] Server  ERROR    ⨯ TypeError: localStorage.getItem is not a function
+[00:00:17.636] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:00:17.636] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:00:17.738] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:37.897] Server  LOG      ○ Compiling /draw ...
+[00:06:56.507] Server  LOG      ✓ Compiled in 196ms
+[00:07:04.891] Server  LOG      ✓ Compiled in 39ms
+[00:07:25.010] Server  LOG      ✓ Compiled in 80ms
+[00:07:32.856] Server  LOG      ✓ Compiled in 37ms
+[00:07:43.503] Server  LOG      ✓ Compiled in 144ms
+[00:07:58.092] Server  LOG      ✓ Compiled in 187ms
+[00:08:21.468] Server  LOG      ✓ Compiled in 40ms
+[00:08:56.601] Server  LOG      ✓ Compiled in 79ms
+[00:10:08.785] Server  ERROR    ⨯ TypeError: localStorage.getItem is not a function
+[00:10:09.039] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:11.031] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:10:11.538] Server  ERROR    ⨯ TypeError: localStorage.getItem is not a function
+[00:10:11.551] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:10:11.551] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:10:11.649] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500

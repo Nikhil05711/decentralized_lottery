@@ -9,6 +9,57 @@ export const lotteryAbi = [
   },
   {
     type: "event",
+    name: "SeriesActivated",
+    inputs: [
+      {
+        name: "seriesId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "totalTickets",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "SeriesCompleted",
+    inputs: [
+      {
+        name: "seriesId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "SeriesConfigured",
+    inputs: [
+      {
+        name: "seriesId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
+      {
+        name: "totalTickets",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
     name: "TicketPriceUpdated",
     inputs: [
       {
@@ -42,6 +93,18 @@ export const lotteryAbi = [
         indexed: false,
         internalType: "uint256",
       },
+      {
+        name: "ticketIds",
+        type: "uint256[]",
+        indexed: false,
+        internalType: "uint256[]",
+      },
+      {
+        name: "seriesId",
+        type: "uint256",
+        indexed: true,
+        internalType: "uint256",
+      },
     ],
     anonymous: false,
   },
@@ -66,8 +129,69 @@ export const lotteryAbi = [
   },
   {
     type: "function",
+    name: "activeSeriesId",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "buyTickets",
+    inputs: [{ name: "count", type: "uint256", internalType: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "getOwnedTicketIds",
+    inputs: [{ name: "account", type: "address", internalType: "address" }],
+    outputs: [
+      { name: "", type: "uint256[]", internalType: "uint256[]" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "owner",
     inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "queueSeries",
+    inputs: [{ name: "ticketCount", type: "uint256", internalType: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "seriesInfo",
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [
+      { name: "totalTickets", type: "uint256", internalType: "uint256" },
+      { name: "ticketsSold", type: "uint256", internalType: "uint256" },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "setTicketPrice",
+    inputs: [{ name: "newTicketPrice", type: "uint256", internalType: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "ticketBalances",
+    inputs: [{ name: "", type: "address", internalType: "address" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "ticketOwners",
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     outputs: [{ name: "", type: "address", internalType: "address" }],
     stateMutability: "view",
   },
@@ -80,6 +204,13 @@ export const lotteryAbi = [
   },
   {
     type: "function",
+    name: "ticketSeries",
+    inputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
     name: "ticketsSold",
     inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
@@ -87,10 +218,17 @@ export const lotteryAbi = [
   },
   {
     type: "function",
-    name: "ticketBalances",
-    inputs: [{ name: "", type: "address", internalType: "address" }],
+    name: "totalSeriesCount",
+    inputs: [],
     outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "transferOwnership",
+    inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -101,32 +239,11 @@ export const lotteryAbi = [
   },
   {
     type: "function",
-    name: "setTicketPrice",
-    inputs: [{ name: "newTicketPrice", type: "uint256", internalType: "uint256" }],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "buyTickets",
-    inputs: [{ name: "count", type: "uint256", internalType: "uint256" }],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
     name: "withdraw",
     inputs: [
       { name: "to", type: "address", internalType: "address" },
       { name: "amount", type: "uint256", internalType: "uint256" },
     ],
-    outputs: [],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "transferOwnership",
-    inputs: [{ name: "newOwner", type: "address", internalType: "address" }],
     outputs: [],
     stateMutability: "nonpayable",
   },
