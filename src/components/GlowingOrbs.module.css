@@ -1,0 +1,15 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  filter: blur(120px);
+  opacity: 0.8;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  mix-blend-mode: screen;
+}
+

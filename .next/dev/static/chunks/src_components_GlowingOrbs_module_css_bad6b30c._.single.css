@@ -1,0 +1,17 @@
+/* [project]/src/components/GlowingOrbs.module.css [app-client] (css) */
+.GlowingOrbs-module__NUJpbG__scene {
+  pointer-events: none;
+  filter: blur(120px);
+  opacity: .8;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.GlowingOrbs-module__NUJpbG__orb {
+  mix-blend-mode: screen;
+  border-radius: 9999px;
+  position: absolute;
+}
+
+/*# sourceMappingURL=src_components_GlowingOrbs_module_css_bad6b30c._.single.css.map*/
