@@ -9,6 +9,18 @@
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .page {
+    padding: 48px 24px 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 32px 16px 64px;
+  }
+}
+
 .main {
   position: relative;
   z-index: 1;
@@ -16,6 +28,18 @@
   max-width: 1280px;
   display: grid;
   gap: 48px;
+}
+
+@media (max-width: 768px) {
+  .main {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    gap: 24px;
+  }
 }
 
 .hero {
@@ -35,6 +59,22 @@
   backdrop-filter: blur(28px);
 }
 
+@media (max-width: 768px) {
+  .hero {
+    border-radius: 28px;
+    padding: 36px 28px;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    border-radius: 24px;
+    padding: 28px 20px;
+    gap: 24px;
+  }
+}
+
 .heroText {
   display: grid;
   gap: 18px;
@@ -52,6 +92,14 @@
   font-weight: 700;
   letter-spacing: -0.05em;
   color: var(--foreground);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+  }
 }
 
 .subtitle {
@@ -59,6 +107,22 @@
   line-height: 1.85;
   color: rgba(226, 232, 240, 0.78);
   max-width: 620px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .subtitle {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+}
+
+@media (max-width: 480px) {
+  .subtitle {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
 }
 
 .statsPanel {
@@ -84,17 +148,51 @@
   width: 100%;
 }
 
+@media (max-width: 768px) {
+  .countdownCard {
+    flex-direction: column;
+    align-items: center;
+    padding: 24px;
+    border-radius: 22px;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdownCard {
+    padding: 20px;
+    border-radius: 20px;
+    gap: 18px;
+  }
+}
+
 .countdownRing {
   position: relative;
-  width: 160px;
-  height: 160px;
+  width: 200px;
+  height: 200px;
   flex-shrink: 0;
+  rotate: -90deg;
+}
+
+@media (max-width: 768px) {
+  .countdownRing {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdownRing {
+    width: 180px;
+    height: 180px;
+  }
 }
 
 .countdownSvg {
   width: 100%;
   height: 100%;
   transform: rotate(-90deg);
+  transform-origin: 50% 50%;
 }
 
 .countdownCircleBase {
@@ -120,6 +218,7 @@
   justify-content: center;
   gap: 6px;
   transform: rotate(90deg);
+  transform-origin: 50% 50%;
 }
 
 .countdownTime {
@@ -127,6 +226,18 @@
   font-weight: 600;
   color: rgba(226, 232, 240, 0.95);
   letter-spacing: 0.08em;
+}
+
+@media (max-width: 768px) {
+  .countdownTime {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdownTime {
+    font-size: 1.5rem;
+  }
 }
 
 .countdownLabel {
@@ -142,22 +253,71 @@
   align-items: flex-start;
 }
 
+@media (max-width: 768px) {
+  .countdownInfo {
+    justify-items: center;
+    text-align: center;
+  }
+}
+
 .countdownHeading {
   font-size: 1.05rem;
   font-weight: 600;
   color: rgba(236, 254, 255, 0.95);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .countdownHeading {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdownHeading {
+    font-size: 0.95rem;
+  }
 }
 
 .countdownSubheading {
   font-size: 0.95rem;
   color: rgba(226, 232, 240, 0.82);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .countdownSubheading {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdownSubheading {
+    font-size: 0.85rem;
+  }
 }
 
 .countdownHint {
   font-size: 0.9rem;
   color: rgba(191, 219, 254, 0.78);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .countdownHint {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .countdownHint {
+    font-size: 0.8rem;
+  }
 }
 
 .statCard {
@@ -175,6 +335,20 @@
   box-shadow: 0 24px 60px rgba(14, 165, 233, 0.2);
 }
 
+@media (max-width: 768px) {
+  .statCard {
+    padding: 24px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .statCard {
+    padding: 20px;
+    border-radius: 18px;
+  }
+}
+
 .statLabel {
   font-size: 0.9rem;
   letter-spacing: 0.14em;
@@ -186,6 +360,14 @@
   font-size: clamp(2.2rem, 3.6vw, 3rem);
   font-weight: 700;
   color: rgba(226, 232, 240, 0.98);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 480px) {
+  .statValue {
+    font-size: clamp(1.8rem, 6vw, 2.2rem);
+  }
 }
 
 .statHint {
@@ -199,6 +381,13 @@
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 }
 
+@media (max-width: 640px) {
+  .statRow {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
 .statMicro {
   padding: 18px;
   border-radius: 18px;
@@ -206,6 +395,21 @@
   background: rgba(15, 23, 42, 0.36);
   display: grid;
   gap: 6px;
+}
+
+@media (max-width: 768px) {
+  .statMicro {
+    padding: 16px;
+    border-radius: 16px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .statMicro {
+    padding: 14px;
+    border-radius: 14px;
+  }
 }
 
 .microLabel {
@@ -219,6 +423,18 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: rgba(226, 232, 240, 0.95);
+}
+
+@media (max-width: 768px) {
+  .microValue {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .microValue {
+    font-size: 1.2rem;
+  }
 }
 
 .homeLink {
@@ -237,6 +453,23 @@
   text-transform: uppercase;
   border: 1px solid rgba(45, 212, 191, 0.34);
   transition: transform 0.3s ease, background 0.3s ease, border 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .homeLink {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homeLink {
+    width: 100%;
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    border-radius: 12px;
+  }
 }
 
 .homeLink:hover {
@@ -260,6 +493,22 @@
   gap: 32px;
 }
 
+@media (max-width: 768px) {
+  .actions {
+    padding: 32px 28px;
+    border-radius: 28px;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions {
+    padding: 24px 20px;
+    border-radius: 24px;
+    gap: 24px;
+  }
+}
+
 .actionHeader {
   display: grid;
   gap: 12px;
@@ -269,18 +518,49 @@
   font-size: clamp(1.8rem, 3vw, 2.4rem);
   font-weight: 600;
   color: rgba(226, 232, 240, 0.98);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 480px) {
+  .sectionTitle {
+    font-size: clamp(1.5rem, 6vw, 1.8rem);
+  }
 }
 
 .sectionSubtitle {
   font-size: 1.05rem;
   line-height: 1.8;
   color: rgba(203, 213, 225, 0.78);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .sectionSubtitle {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionSubtitle {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
 }
 
 .actionGrid {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+@media (max-width: 640px) {
+  .actionGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 .actionCard {
@@ -293,16 +573,60 @@
   box-shadow: 0 22px 60px rgba(59, 130, 246, 0.18);
 }
 
+@media (max-width: 768px) {
+  .actionCard {
+    padding: 24px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionCard {
+    padding: 20px;
+    border-radius: 18px;
+    gap: 12px;
+  }
+}
+
 .actionCard h3 {
   font-size: 1.2rem;
   font-weight: 600;
   color: rgba(226, 232, 240, 0.96);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .actionCard h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionCard h3 {
+    font-size: 1rem;
+  }
 }
 
 .actionCard p {
   font-size: 0.98rem;
   line-height: 1.7;
   color: rgba(203, 213, 225, 0.8);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .actionCard p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionCard p {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
 }
 
 .actionButton,
@@ -319,6 +643,25 @@
   text-transform: uppercase;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .actionButton,
+  .actionButtonSecondary {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionButton,
+  .actionButtonSecondary {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-radius: 12px;
+  }
 }
 
 .actionButton {
@@ -361,6 +704,24 @@
   color: rgba(226, 232, 240, 0.88);
   font-size: 0.95rem;
   line-height: 1.6;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .statusBanner {
+    padding: 14px 18px;
+    font-size: 0.9rem;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .statusBanner {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    border-radius: 14px;
+  }
 }
 
 .permissionHint {
@@ -383,6 +744,22 @@
   gap: 32px;
 }
 
+@media (max-width: 768px) {
+  .history {
+    padding: 32px 28px;
+    border-radius: 28px;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .history {
+    padding: 24px 20px;
+    border-radius: 24px;
+    gap: 24px;
+  }
+}
+
 .historyHeader {
   display: grid;
   gap: 12px;
@@ -395,6 +772,24 @@
   background: rgba(248, 113, 113, 0.24);
   color: rgba(254, 226, 226, 0.92);
   font-size: 0.95rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .errorBanner {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    border-radius: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .errorBanner {
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    border-radius: 12px;
+  }
 }
 
 .loadingState,
@@ -406,6 +801,26 @@
   color: rgba(226, 232, 240, 0.8);
   text-align: center;
   font-size: 0.95rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .loadingState,
+  .emptyState {
+    padding: 22px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loadingState,
+  .emptyState {
+    padding: 18px;
+    font-size: 0.85rem;
+    border-radius: 18px;
+  }
 }
 
 .historyList {
@@ -422,6 +837,21 @@
   display: grid;
   gap: 12px;
   box-shadow: 0 20px 58px rgba(30, 64, 175, 0.18);
+}
+
+@media (max-width: 768px) {
+  .historyItem {
+    padding: 20px 20px 20px 44px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .historyItem {
+    padding: 18px 16px 18px 40px;
+    border-radius: 18px;
+    gap: 10px;
+  }
 }
 
 .historyMarker {
@@ -460,12 +890,35 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .historyHeaderRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 
 .historyHeaderRow h3 {
   font-size: 1.05rem;
   font-weight: 600;
   color: rgba(226, 232, 240, 0.95);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .historyHeaderRow h3 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .historyHeaderRow h3 {
+    font-size: 0.95rem;
+  }
 }
 
 .historyAmount {
@@ -477,6 +930,20 @@
 .historySubheading {
   font-size: 0.9rem;
   color: rgba(203, 213, 225, 0.78);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .historySubheading {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .historySubheading {
+    font-size: 0.8rem;
+  }
 }
 
 .historyMeta {
@@ -486,6 +953,16 @@
   gap: 12px;
   font-size: 0.85rem;
   color: rgba(148, 163, 184, 0.86);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .historyMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.8rem;
+  }
 }
 
 .historyMeta a {
@@ -498,134 +975,12 @@
 }
 
 @media (max-width: 1024px) {
-  .page {
-    padding: 60px 24px 100px;
-  }
-
   .hero {
-    padding: 40px;
     grid-template-columns: 1fr;
   }
 
   .statsPanel {
     gap: 20px;
-  }
-
-  .actions,
-  .history {
-    padding: 36px;
-  }
-
-  .countdownCard {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-  }
-
-  .countdownInfo {
-    justify-items: center;
-  }
-}
-
-@media (max-width: 640px) {
-  .page {
-    padding: 32px 26px;
-    gap: 24px;
-    align-items: flex-start;
-  }
-
-  .hero {
-    padding: 32px 26px;
-    gap: 24px;
-  }
-
-  .heroText {
-    text-align: center;
-    align-items: center;
-  }
-
-  .actions,
-  .history {
-    padding: 32px 24px;
-  }
-
-  .historyItem {
-    padding: 20px 20px 20px 44px;
-  }
-
-  .historyHeaderRow {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .countdownRing {
-    width: 140px;
-    height: 140px;
-  }
-
-  .countdownCard {
-    gap: 20px;
-    padding: 24px;
-  }
-
-  .countdownTime {
-    font-size: 1.6rem;
-  }
-
-  .countdownInfo {
-    justify-items: center;
-    text-align: center;
-  }
-
-  .statRow {
-    grid-template-columns: 1fr;
-  }
-
-  .actionGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .statMicro {
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .page {
-    padding: 28px 20px;
-  }
-
-  .hero {
-    padding: 28px 20px;
-  }
-
-  .countdownRing {
-    width: 120px;
-    height: 120px;
-  }
-
-  .countdownCard {
-    padding: 20px;
-    gap: 18px;
-  }
-
-  .countdownHeading {
-    font-size: 0.95rem;
-  }
-
-  .countdownSubheading,
-  .countdownHint {
-    font-size: 0.85rem;
-  }
-
-  .actions,
-  .history {
-    padding: 28px 20px;
-  }
-
-  .actionButton,
-  .actionButtonSecondary {
-    width: 100%;
   }
 }
 
