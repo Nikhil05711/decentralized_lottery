@@ -1,0 +1,508 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "usdtAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "initialTicketPrice",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "InsufficientTickets",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidAddress",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "InvalidTicketCount",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NoActiveSeries",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "NotOwner",
+				"type": "error"
+			},
+			{
+				"inputs": [],
+				"name": "TransferFailed",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "seriesId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalTickets",
+						"type": "uint256"
+					}
+				],
+				"name": "SeriesActivated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "seriesId",
+						"type": "uint256"
+					}
+				],
+				"name": "SeriesCompleted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "seriesId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalTickets",
+						"type": "uint256"
+					}
+				],
+				"name": "SeriesConfigured",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newPrice",
+						"type": "uint256"
+					}
+				],
+				"name": "TicketPriceUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "count",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "totalCost",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256[]",
+						"name": "ticketIds",
+						"type": "uint256[]"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "seriesId",
+						"type": "uint256"
+					}
+				],
+				"name": "TicketPurchased",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "Withdraw",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "activeSeriesId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "count",
+						"type": "uint256"
+					}
+				],
+				"name": "buyTickets",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "getOwnedTicketIds",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "seriesId",
+						"type": "uint256"
+					}
+				],
+				"name": "getSeriesInfo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalTickets",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "sold",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "ticketCount",
+						"type": "uint256"
+					}
+				],
+				"name": "queueSeries",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "seriesInfo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "totalTickets",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "ticketsSold",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newTicketPrice",
+						"type": "uint256"
+					}
+				],
+				"name": "setTicketPrice",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "ticketBalances",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "ticketOwners",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ticketPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "ticketSeries",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ticketsSold",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSeriesCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "usdt",
+				"outputs": [
+					{
+						"internalType": "contract IERC20",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"title": "Nebula Lottery",
+			"version": 1
+		},
+		"userdoc": {
+			"errors": {
+				"InvalidAddress()": [
+					{
+						"notice": "----------------------------------------------------------------------- Errors -----------------------------------------------------------------------"
+					}
+				]
+			},
+			"events": {
+				"TicketPriceUpdated(uint256)": {
+					"notice": "----------------------------------------------------------------------- Events -----------------------------------------------------------------------"
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"buyTickets(uint256)": {
+					"notice": "----------------------------------------------------------------------- Public actions -----------------------------------------------------------------------"
+				},
+				"constructor": {
+					"notice": "----------------------------------------------------------------------- Constructor -----------------------------------------------------------------------"
+				},
+				"setTicketPrice(uint256)": {
+					"notice": "----------------------------------------------------------------------- Owner actions -----------------------------------------------------------------------"
+				}
+			},
+			"notice": "Minimal lottery contract that sells tickets priced in USDT on BNB Testnet.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Lottery.sol": "Lottery"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Lottery.sol": {
+			"keccak256": "0x90afb453e3868b69d1a68c07594de861ab72a1d554b4f1e2a5fa246102e294c5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c6374f83a93a026f8f77a93f7e0f27bdeb5a1bf55d8f5d27b6a4de63329bbc03",
+				"dweb:/ipfs/Qmdo6XopVb9QA2Q1hWg7bAtec6PLr5dY6b7GWr3kZpiVBf"
+			]
+		}
+	},
+	"version": 1
+}
