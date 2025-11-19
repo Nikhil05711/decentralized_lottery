@@ -153,6 +153,17 @@ export default function TicketsPage() {
     },
   });
 
+  const { data: balanceData, refetch: refetchBalance } = useReadContract({
+    address: USDT_ADDRESS,
+    abi: erc20Abi,
+    functionName: "balanceOf",
+    args: [address ?? zeroAddress],
+    query: {
+      enabled: Boolean(USDT_ADDRESS && isConnected && address),
+      refetchInterval: 20_000,
+    },
+  });
+
   type SeriesData = {
     seriesId: bigint;
     totalTickets: bigint;
@@ -225,6 +236,20 @@ export default function TicketsPage() {
     return BigInt(0);
   }, [allowanceData]);
 
+  const usdtBalance = useMemo(() => {
+    if (typeof balanceData === "bigint") return balanceData;
+    if (typeof balanceData === "number") return BigInt(balanceData);
+    return BigInt(0);
+  }, [balanceData]);
+
+  const usdtBalanceFormatted = useMemo(() => {
+    if (!isConnected || usdtBalance === BigInt(0)) return "0.00";
+    return Number(formatUnits(usdtBalance, decimals)).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 6,
+    });
+  }, [usdtBalance, decimals, isConnected]);
+
   const totalCost = useMemo(() => {
     if (!ticketCount) return undefined;
     try {
@@ -245,6 +270,19 @@ export default function TicketsPage() {
       return next;
     });
   }, []);
+
+  // Auto-expand active series on load and when activeSeriesId changes
+  useEffect(() => {
+    if (activeSeriesId > BigInt(0)) {
+      setExpandedSeries((prev) => {
+        const next = new Set(prev);
+        if (!next.has(activeSeriesId)) {
+          next.add(activeSeriesId);
+        }
+        return next;
+      });
+    }
+  }, [activeSeriesId]);
 
   // Create ticket owner contracts for expanded series only
   const seriesTicketOwnerContracts = useMemo(() => {
@@ -351,9 +389,22 @@ export default function TicketsPage() {
     return Array.from(activeSeriesAvailableTickets).sort((a, b) => a - b);
   }, [activeSeriesAvailableTickets]);
 
+  // Get active series info to determine if buttons should be enabled
+  const activeSeriesInfo = useMemo(() => {
+    return allSeriesData.find(s => s.isActive);
+  }, [allSeriesData]);
+
   const maxCustomSelectable = useMemo(() => {
-    return Math.min(activeSeriesAvailableTickets.size, MAX_CUSTOM_SELECTION);
-  }, [activeSeriesAvailableTickets.size]);
+    // If we have detailed ticket data, use that
+    if (activeSeriesAvailableTickets.size > 0) {
+      return Math.min(activeSeriesAvailableTickets.size, MAX_CUSTOM_SELECTION);
+    }
+    // Otherwise, use series info to determine availability
+    if (activeSeriesInfo && activeSeriesInfo.ticketsLeft > 0) {
+      return Math.min(activeSeriesInfo.ticketsLeft, MAX_CUSTOM_SELECTION);
+    }
+    return 0;
+  }, [activeSeriesAvailableTickets.size, activeSeriesInfo]);
 
   const padLength = useMemo(() => {
     let max = 3;
@@ -610,6 +661,7 @@ export default function TicketsPage() {
         refetchPrice(),
         refetchActiveSeriesId(),
         refetchAllTicketOwners(),
+        refetchBalance(),
       ]);
     } catch (error) {
       setFeedback(formatError(error));
@@ -625,6 +677,7 @@ export default function TicketsPage() {
     refetchPrice,
     refetchAllSeriesInfo,
     refetchAllTicketOwners,
+    refetchBalance,
     totalCost,
     writeContractAsync,
     allSeriesData,
@@ -671,7 +724,7 @@ export default function TicketsPage() {
 
   const randomizeSelection = useCallback(
     (target: number, seriesId?: bigint) => {
-      if (maxCustomSelectable === 0 || activeSeriesAvailableTickets.size === 0) {
+      if (maxCustomSelectable === 0) {
         // Only clear active series tickets, keep manually selected from other series
         setSelectedTickets((current) => {
           return current.filter((ticket) => selectedTicketsSeries.get(ticket) !== activeSeriesId);
@@ -696,13 +749,22 @@ export default function TicketsPage() {
       
       let availableTickets: Array<{ number: number; seriesId: bigint }> = [];
       const seriesData = seriesTicketsData.get(targetSeriesId);
-      if (seriesData) {
+      
+      if (seriesData && seriesData.tickets.length > 0) {
+        // Use detailed ticket data if available
         availableTickets = seriesData.tickets
           .filter((t) => !t.isSold)
           .map((t) => ({ number: t.number, seriesId: targetSeriesId }));
+      } else {
+        // If ticket data not loaded yet, show feedback and wait
+        setSelectionFeedback("Loading ticket data... Please expand the active series or wait a moment.");
+        return;
       }
 
-      if (availableTickets.length === 0) return;
+      if (availableTickets.length === 0) {
+        setSelectionFeedback("No available tickets in the active series.");
+        return;
+      }
 
       // Shuffle
       for (let i = availableTickets.length - 1; i > 0; i -= 1) {
@@ -961,6 +1023,7 @@ export default function TicketsPage() {
         refetchPrice(),
         refetchActiveSeriesId(),
         refetchAllTicketOwners(),
+        refetchBalance(),
       ]);
     } catch (error) {
       setSelectionFeedback(formatError(error));
@@ -977,6 +1040,7 @@ export default function TicketsPage() {
     refetchPrice,
     refetchAllSeriesInfo,
     refetchAllTicketOwners,
+    refetchBalance,
     selectedTickets,
     selectedTicketsSeries,
     activeSeriesId,
@@ -1015,6 +1079,11 @@ export default function TicketsPage() {
               )}
             </div>
             <div className={styles.stats}>
+              {isConnected && (
+                <span className={styles.balanceStat}>
+                  Balance: <strong>{usdtBalanceFormatted} USDT</strong>
+                </span>
+              )}
               <span>
                 Series: <strong>{allSeriesData.length}</strong>
               </span>
@@ -1089,7 +1158,7 @@ export default function TicketsPage() {
                   <button
                     className={styles.quantityButton}
                     onClick={decrementSelection}
-                    disabled={selectionCount === 0 && selectionTarget === 0}
+                    disabled={maxCustomSelectable === 0 || (selectionTarget === 0 && selectionCount === 0) || isBusy}
                   >
                     −
                   </button>
@@ -1122,6 +1191,7 @@ export default function TicketsPage() {
                 className={styles.selectionSecondaryButton}
                 onClick={handleShuffleSelection}
                 disabled={selectionCount === 0 || isBusy}
+                title={selectionCount === 0 ? "Select tickets first to shuffle" : "Shuffle selected tickets"}
               >
                 🔀 Shuffle (Active Series)
               </button>
@@ -1129,6 +1199,7 @@ export default function TicketsPage() {
                 className={styles.selectionSecondaryButton}
                 onClick={handleClearSelection}
                 disabled={selectionCount === 0 || isBusy}
+                title={selectionCount === 0 ? "No active series tickets to clear" : "Clear active series selection"}
               >
                 ✕ Clear Active Series
               </button>

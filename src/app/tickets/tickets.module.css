@@ -191,6 +191,16 @@
   color: rgba(244, 249, 255, 0.94);
 }
 
+.balanceStat {
+  color: rgba(34, 197, 94, 0.9);
+  font-weight: 500;
+}
+
+.balanceStat strong {
+  color: rgba(34, 197, 94, 1);
+  font-weight: 600;
+}
+
 .purchaseCard {
   position: relative;
   border-radius: 30px;

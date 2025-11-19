@@ -127,6 +127,17 @@ export default function Home() {
     },
   });
 
+  const { data: balanceData, refetch: refetchBalance } = useReadContract({
+    address: USDT_ADDRESS,
+    abi: erc20Abi,
+    functionName: "balanceOf",
+    args: [address ?? zeroAddress],
+    query: {
+      enabled: Boolean(USDT_ADDRESS && isConnected && address),
+      refetchInterval: 20_000,
+    },
+  });
+
   const { writeContractAsync } = useWriteContract();
 
   const ticketPriceRaw = useMemo(() => {
@@ -148,6 +159,20 @@ export default function Home() {
     if (typeof allowanceData === "number") return BigInt(allowanceData);
     return BigInt(0);
   }, [allowanceData]);
+
+  const usdtBalance = useMemo(() => {
+    if (typeof balanceData === "bigint") return balanceData;
+    if (typeof balanceData === "number") return BigInt(balanceData);
+    return BigInt(0);
+  }, [balanceData]);
+
+  const usdtBalanceFormatted = useMemo(() => {
+    if (!isConnected || usdtBalance === BigInt(0)) return "0.00";
+    return Number(formatUnits(usdtBalance, decimals)).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 6,
+    });
+  }, [usdtBalance, decimals, isConnected]);
 
   const ticketsSold = useMemo(() => {
     if (typeof ticketsSoldData === "bigint") return ticketsSoldData;
@@ -352,7 +377,7 @@ export default function Home() {
 
       setFeedback(`Success! You now own ${ticketCount} ticket(s).`);
       setTicketCount(1);
-      await Promise.all([refetchAllowance(), refetchTickets(), refetchPrice()]);
+      await Promise.all([refetchAllowance(), refetchTickets(), refetchPrice(), refetchBalance()]);
     } catch (error) {
       setFeedback(formatError(error));
     } finally {
@@ -420,7 +445,15 @@ export default function Home() {
           <span className={styles.fadeBorder} />
           <div className={styles.walletBar}>
             <h1 className={styles.title}>Nebula Lottery</h1>
-            <ConnectButton showBalance={false} chainStatus="icon" />
+            <div className={styles.walletBarRight}>
+              {isConnected && (
+                <div className={styles.balanceDisplay}>
+                  <span className={styles.balanceLabel}>Balance:</span>
+                  <span className={styles.balanceValue}>{usdtBalanceFormatted} USDT</span>
+                </div>
+              )}
+              <ConnectButton showBalance={false} chainStatus="icon" />
+            </div>
           </div>
           <p className={styles.subtitle}>
             Experience a cinematic, on-chain raffle on the BNB Testnet. Each

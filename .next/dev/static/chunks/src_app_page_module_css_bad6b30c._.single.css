@@ -92,6 +92,34 @@
   position: relative;
 }
 
+.page-module___8aEwW__walletBarRight {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  display: flex;
+}
+
+.page-module___8aEwW__balanceDisplay {
+  background: #22c55e1a;
+  border: 1px solid #22c55e4d;
+  border-radius: 12px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-size: .9rem;
+  display: flex;
+}
+
+.page-module___8aEwW__balanceLabel {
+  color: #d1fae5cc;
+  font-weight: 500;
+}
+
+.page-module___8aEwW__balanceValue {
+  color: #22c55e;
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .page-module___8aEwW__walletBar {
     flex-direction: column;
