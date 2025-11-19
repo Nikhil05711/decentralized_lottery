@@ -744,9 +744,16 @@ export default function TicketsPage() {
             </p>
           </div>
           <div className={styles.ctaGroup}>
-            <Link href="/" className={styles.primaryLink}>
-              Back to purchase
-            </Link>
+            <div className={styles.navLinks}>
+              <Link href="/" className={styles.primaryLink}>
+                Back to purchase
+              </Link>
+              {isConnected && (
+                <Link href="/my-tickets" className={styles.secondaryLink}>
+                  My Tickets
+                </Link>
+              )}
+            </div>
             <div className={styles.stats}>
               <span>
                 Series: <strong>{activeSeriesLabel}</strong>
