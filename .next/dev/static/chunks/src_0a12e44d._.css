@@ -341,15 +341,95 @@
   display: grid;
 }
 
+.page-module___8aEwW__seriesPanel {
+  background: #082f4959;
+  border: 1px solid #38bdf847;
+  border-radius: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 24px;
+  display: flex;
+  box-shadow: inset 0 0 25px #082f4959;
+}
+
+.page-module___8aEwW__seriesCopy {
+  flex: 1;
+  min-width: 220px;
+}
+
+.page-module___8aEwW__seriesEyebrow {
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #e2e8f0b8;
+  margin-bottom: 6px;
+  font-size: .85rem;
+}
+
+.page-module___8aEwW__seriesName {
+  color: #f4fbfff2;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.page-module___8aEwW__seriesMeta {
+  color: #e2e8f0c7;
+  margin-top: 8px;
+  font-size: .95rem;
+  line-height: 1.5;
+}
+
+.page-module___8aEwW__seriesActions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+  min-width: 220px;
+  display: flex;
+}
+
+.page-module___8aEwW__seriesStat {
+  gap: 4px;
+  min-width: 120px;
+  display: grid;
+}
+
+.page-module___8aEwW__seriesStatLabel {
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #e0f2feb8;
+  font-size: .8rem;
+}
+
+.page-module___8aEwW__seriesStatValue {
+  color: #f4fbffeb;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .page-module___8aEwW__ticketBody {
     gap: 20px;
+  }
+
+  .page-module___8aEwW__seriesPanel {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px;
+  }
+
+  .page-module___8aEwW__seriesActions {
+    justify-content: flex-start;
   }
 }
 
 @media (max-width: 480px) {
   .page-module___8aEwW__ticketBody {
     gap: 16px;
+  }
+
+  .page-module___8aEwW__seriesPanel {
+    padding: 16px;
   }
 }
 
@@ -492,24 +572,122 @@
   opacity: .5;
 }
 
-.page-module___8aEwW__quantityValue {
+.page-module___8aEwW__quantityStack {
+  gap: 14px;
+  display: grid;
+}
+
+@media (max-width: 768px) {
+  .page-module___8aEwW__quantityStack {
+    width: 100%;
+  }
+}
+
+.page-module___8aEwW__quantityInput {
+  width: 80px;
   color: var(--foreground);
   text-align: center;
-  min-width: 40px;
+  background: none;
+  border: none;
+  outline: none;
   font-size: 1.8rem;
   font-weight: 600;
 }
 
 @media (max-width: 768px) {
-  .page-module___8aEwW__quantityValue {
+  .page-module___8aEwW__quantityInput {
     font-size: 1.6rem;
   }
 }
 
 @media (max-width: 480px) {
-  .page-module___8aEwW__quantityValue {
+  .page-module___8aEwW__quantityInput {
     font-size: 1.4rem;
   }
+}
+
+.page-module___8aEwW__quickPickGroup {
+  flex-wrap: wrap;
+  gap: 10px;
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .page-module___8aEwW__quickPickGroup {
+    justify-content: center;
+  }
+}
+
+.page-module___8aEwW__quickPickButton {
+  color: #eaf7ffeb;
+  cursor: pointer;
+  background: #082f4966;
+  border: 1px solid #38bdf859;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: .9rem;
+  font-weight: 500;
+  transition: border .2s, transform .2s, background .2s;
+}
+
+.page-module___8aEwW__quickPickButton:hover:enabled {
+  background: #0891b280;
+  border-color: #38bdf8a6;
+  transform: translateY(-2px);
+}
+
+.page-module___8aEwW__quickPickButton:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.page-module___8aEwW__quickPickButtonActive {
+  background: #0ea5e966;
+  border-color: #81d4facc;
+  box-shadow: 0 12px 30px #0ea5e94d;
+}
+
+.page-module___8aEwW__quickPickButtonRandom {
+  background: linear-gradient(120deg, #0ea5e966, #3b82f680);
+  border-color: #f8fafc73;
+}
+
+.page-module___8aEwW__previewBanner {
+  background: #0f766e52;
+  border: 1px solid #2dd4bf59;
+  border-radius: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  display: flex;
+}
+
+.page-module___8aEwW__previewLabel {
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #d1fae5e0;
+  font-size: .9rem;
+}
+
+.page-module___8aEwW__previewList {
+  flex-wrap: wrap;
+  gap: 8px;
+  display: flex;
+}
+
+.page-module___8aEwW__previewChip {
+  color: #f0fdf4f2;
+  background: #10b98140;
+  border: 1px solid #86efac80;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: .9rem;
+}
+
+.page-module___8aEwW__previewExtra {
+  color: #f0fdf4cc;
+  font-size: .9rem;
 }
 
 .page-module___8aEwW__totalBreakdown {

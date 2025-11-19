@@ -356,15 +356,95 @@
   gap: 24px;
 }
 
+.seriesPanel {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: rgba(8, 47, 73, 0.35);
+  box-shadow: inset 0 0 25px rgba(8, 47, 73, 0.35);
+}
+
+.seriesCopy {
+  flex: 1;
+  min-width: 220px;
+}
+
+.seriesEyebrow {
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.72);
+  margin-bottom: 6px;
+}
+
+.seriesName {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgba(244, 251, 255, 0.95);
+}
+
+.seriesMeta {
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: rgba(226, 232, 240, 0.78);
+  line-height: 1.5;
+}
+
+.seriesActions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 220px;
+}
+
+.seriesStat {
+  display: grid;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.seriesStatLabel {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(224, 242, 254, 0.72);
+}
+
+.seriesStatValue {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgba(244, 251, 255, 0.92);
+}
+
 @media (max-width: 768px) {
   .ticketBody {
     gap: 20px;
+  }
+
+  .seriesPanel {
+    padding: 18px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .seriesActions {
+    justify-content: flex-start;
   }
 }
 
 @media (max-width: 480px) {
   .ticketBody {
     gap: 16px;
+  }
+
+  .seriesPanel {
+    padding: 16px;
   }
 }
 
@@ -507,24 +587,126 @@
   opacity: 0.5;
 }
 
-.quantityValue {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: var(--foreground);
-  min-width: 40px;
-  text-align: center;
+.quantityStack {
+  display: grid;
+  gap: 14px;
 }
 
 @media (max-width: 768px) {
-  .quantityValue {
+  .quantityStack {
+    width: 100%;
+  }
+}
+
+.quantityInput {
+  width: 80px;
+  border: none;
+  background: transparent;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--foreground);
+  text-align: center;
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .quantityInput {
     font-size: 1.6rem;
   }
 }
 
 @media (max-width: 480px) {
-  .quantityValue {
+  .quantityInput {
     font-size: 1.4rem;
   }
+}
+
+.quickPickGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .quickPickGroup {
+    justify-content: center;
+  }
+}
+
+.quickPickButton {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(8, 47, 73, 0.4);
+  color: rgba(234, 247, 255, 0.92);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.quickPickButton:hover:enabled {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.65);
+  background: rgba(8, 145, 178, 0.5);
+}
+
+.quickPickButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quickPickButtonActive {
+  border-color: rgba(129, 212, 250, 0.8);
+  background: rgba(14, 165, 233, 0.4);
+  box-shadow: 0 12px 30px rgba(14, 165, 233, 0.3);
+}
+
+.quickPickButtonRandom {
+  border-color: rgba(248, 250, 252, 0.45);
+  background: linear-gradient(
+    120deg,
+    rgba(14, 165, 233, 0.4),
+    rgba(59, 130, 246, 0.5)
+  );
+}
+
+.previewBanner {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  border-radius: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  background: rgba(15, 118, 110, 0.32);
+}
+
+.previewLabel {
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(209, 250, 229, 0.88);
+}
+
+.previewList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.previewChip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.25);
+  border: 1px solid rgba(134, 239, 172, 0.5);
+  font-size: 0.9rem;
+  color: rgba(240, 253, 244, 0.95);
+}
+
+.previewExtra {
+  font-size: 0.9rem;
+  color: rgba(240, 253, 244, 0.8);
 }
 
 .totalBreakdown {

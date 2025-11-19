@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ChangeEvent,
+} from "react";
 import { motion } from "framer-motion";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
@@ -18,6 +24,7 @@ const LOTTERY_ADDRESS = process.env
 const USDT_ADDRESS = process.env
   .NEXT_PUBLIC_USDT_ADDRESS as `0x${string}` | undefined;
 const USD_PRICE_PER_TICKET = 0.11;
+const QUICK_PICK_PRESETS = [1, 5, 10, 25, 50] as const;
 
 const fallbackDecimals = 6;
 const clampToSafeNumber = (value: bigint | number | undefined) => {
@@ -198,6 +205,23 @@ export default function Home() {
     [activeSeriesTotals, hasActiveSeries]
   );
 
+  const seriesAvailability = useMemo(() => {
+    if (!hasActiveSeries) {
+      return "Activate or queue the next series to restart ticket sales.";
+    }
+    return `${ticketsLeft.toLocaleString()} of ${activeSeriesTotalCount.toLocaleString()} tickets remain in this series.`;
+  }, [activeSeriesTotalCount, hasActiveSeries, ticketsLeft]);
+
+  const previewTicketNumbers = useMemo(() => {
+    if (!salesOpen || ticketCount < 1) return [];
+    const start = activeSeriesTotals.sold + BigInt(1);
+    const limit = Math.min(ticketCount, 6);
+    return Array.from({ length: limit }, (_, index) => {
+      const ticketNumber = start + BigInt(index);
+      return ticketNumber.toString();
+    });
+  }, [activeSeriesTotals.sold, salesOpen, ticketCount]);
+
   const maxSelectable = useMemo(() => {
     if (!salesOpen) return 0;
     if (ticketsLeft <= 0) return 0;
@@ -341,6 +365,41 @@ export default function Home() {
   const decrement = () =>
     setTicketCount((current) => Math.max(1, Math.min(current - 1, maxSelectable)));
 
+  const clampSelection = useCallback(
+    (value: number) => {
+      if (!Number.isFinite(value) || value <= 0) return 1;
+      const safeMax = maxSelectable || 1;
+      return Math.min(Math.max(1, value), safeMax);
+    },
+    [maxSelectable]
+  );
+
+  const handleQuantityInputChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const nextValue = Number(event.target.value);
+      if (Number.isNaN(nextValue)) {
+        setTicketCount(1);
+        return;
+      }
+      setTicketCount(clampSelection(Math.floor(nextValue)));
+    },
+    [clampSelection]
+  );
+
+  const handleQuickSelect = useCallback(
+    (value: number) => {
+      if (maxSelectable === 0) return;
+      setTicketCount(clampSelection(value));
+    },
+    [clampSelection, maxSelectable]
+  );
+
+  const handleRandomizeCount = useCallback(() => {
+    if (maxSelectable === 0) return;
+    const randomCount = Math.floor(Math.random() * maxSelectable) + 1;
+    setTicketCount(randomCount);
+  }, [maxSelectable]);
+
   const envReady = Boolean(LOTTERY_ADDRESS && USDT_ADDRESS);
 
   return (
@@ -423,36 +482,109 @@ export default function Home() {
           </div>
 
           <div className={styles.ticketBody}>
-            <div className={styles.ticketRow}>
-              <span className={styles.ticketLabel}>Ticket quantity</span>
-              <div className={styles.quantityControl}>
-                <button
-                  className={styles.quantityButton}
-                  onClick={decrement}
-                  disabled={ticketCount <= 1 || isBusy}
-                >
-                  -
-                </button>
-                <motion.span
-                  key={ticketCount}
-                  className={styles.quantityValue}
-                  initial={{ scale: 0.6, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 220, damping: 16 }}
-                >
-                  {ticketCount}
-                </motion.span>
-                <button
-                  className={styles.quantityButton}
-                  onClick={increment}
-                  disabled={
-                    isBusy || maxSelectable === 0 || ticketCount >= maxSelectable
-                  }
-                >
-                  +
-                </button>
+            <div className={styles.seriesPanel}>
+              <div className={styles.seriesCopy}>
+                <p className={styles.seriesEyebrow}>Series in focus</p>
+                <p className={styles.seriesName}>{activeSeriesLabel}</p>
+                <p className={styles.seriesMeta}>{seriesAvailability}</p>
+              </div>
+              <div className={styles.seriesActions}>
+                <div className={styles.seriesStat}>
+                  <span className={styles.seriesStatLabel}>Progress</span>
+                  <span className={styles.seriesStatValue}>
+                    {activeSeriesProgress}
+                  </span>
+                </div>
+                <div className={styles.seriesStat}>
+                  <span className={styles.seriesStatLabel}>Remaining</span>
+                  <span className={styles.seriesStatValue}>
+                    {hasActiveSeries ? ticketsLeft.toLocaleString() : "—"}
+                  </span>
+                </div>
               </div>
             </div>
+
+            <div className={styles.ticketRow}>
+              <span className={styles.ticketLabel}>Ticket quantity</span>
+              <div className={styles.quantityStack}>
+                <div className={styles.quantityControl}>
+                  <button
+                    className={styles.quantityButton}
+                    onClick={decrement}
+                    disabled={ticketCount <= 1 || isBusy}
+                  >
+                    -
+                  </button>
+                  <motion.input
+                    key={ticketCount}
+                    className={styles.quantityInput}
+                    type="number"
+                    inputMode="numeric"
+                    min={1}
+                    max={maxSelectable || 1}
+                    value={ticketCount}
+                    onChange={handleQuantityInputChange}
+                    disabled={isBusy || maxSelectable === 0}
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 220, damping: 16 }}
+                  />
+                  <button
+                    className={styles.quantityButton}
+                    onClick={increment}
+                    disabled={
+                      isBusy ||
+                      maxSelectable === 0 ||
+                      ticketCount >= maxSelectable
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+
+                <div className={styles.quickPickGroup}>
+                  {QUICK_PICK_PRESETS.map((preset) => (
+                    <button
+                      key={preset}
+                      className={`${styles.quickPickButton} ${
+                        ticketCount === preset ? styles.quickPickButtonActive : ""
+                      }`}
+                      onClick={() => handleQuickSelect(preset)}
+                      disabled={
+                        isBusy || maxSelectable === 0 || preset > maxSelectable
+                      }
+                    >
+                      {preset} {preset === 1 ? "ticket" : "tickets"}
+                    </button>
+                  ))}
+                  <button
+                    className={`${styles.quickPickButton} ${styles.quickPickButtonRandom}`}
+                    onClick={handleRandomizeCount}
+                    disabled={isBusy || maxSelectable === 0}
+                  >
+                    Lucky dip
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {salesOpen && previewTicketNumbers.length > 0 && (
+              <div className={styles.previewBanner}>
+                <span className={styles.previewLabel}>Projected numbers</span>
+                <div className={styles.previewList}>
+                  {previewTicketNumbers.map((number) => (
+                    <span key={number} className={styles.previewChip}>
+                      #{number}
+                    </span>
+                  ))}
+                  {ticketCount > previewTicketNumbers.length && (
+                    <span className={styles.previewExtra}>
+                      +{ticketCount - previewTicketNumbers.length} more
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className={styles.ticketRow}>
               <span className={styles.ticketLabel}>Total cost</span>

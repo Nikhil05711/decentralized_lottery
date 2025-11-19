@@ -31,6 +31,10 @@ contract Lottery {
     error TransferFailed();
     error NoActiveSeries();
     error InsufficientTickets();
+    error InvalidTicketNumber();
+    error TicketAlreadySold(uint256 ticketNumber);
+    error InvalidTicketNumber();
+    error TicketAlreadySold(uint256 ticketNumber);
 
     /// -----------------------------------------------------------------------
     /// Storage
@@ -123,30 +127,29 @@ contract Lottery {
         uint256 remaining = series.totalTickets - series.ticketsSold;
         if (count > remaining) revert InsufficientTickets();
 
-        uint256 totalCost = ticketPrice * count;
-        uint256 seriesSoldBefore = series.ticketsSold;
-        series.ticketsSold += count;
-        ticketsSold += count;
-        ticketBalances[msg.sender] += count;
-        uint256[] memory ticketIds = _generateTicketSeries(
-            msg.sender,
-            activeSeriesId,
-            seriesSoldBefore + 1,
-            count
-        );
-
-        emit TicketPurchased(msg.sender, count, totalCost, ticketIds, activeSeriesId);
-
-        if (totalCost > 0) {
-            if (!usdt.transferFrom(msg.sender, address(this), totalCost)) {
-                revert TransferFailed();
-            }
+        uint256[] memory ticketNumbers = new uint256[](count);
+        uint256 startNumber = series.ticketsSold + 1;
+        for (uint256 i = 0; i < count; i++) {
+            ticketNumbers[i] = startNumber + i;
         }
 
-        if (series.ticketsSold == series.totalTickets) {
-            emit SeriesCompleted(activeSeriesId);
-            _advanceSeries();
-        }
+        _completePurchase(msg.sender, activeSeriesId, series, ticketNumbers);
+    }
+
+    function buyTicketsAt(uint256[] calldata ticketNumbers) external {
+        uint256 count = ticketNumbers.length;
+        if (count == 0) revert InvalidTicketCount();
+
+        _ensureActiveSeries();
+        if (activeSeriesId == 0) revert NoActiveSeries();
+
+        Series storage series = seriesInfo[activeSeriesId];
+        uint256 remaining = series.totalTickets - series.ticketsSold;
+        if (count > remaining) revert InsufficientTickets();
+
+        uint256[] memory sanitized = _validateTicketNumbers(ticketNumbers, series.totalTickets);
+
+        _completePurchase(msg.sender, activeSeriesId, series, sanitized);
     }
 
     function getOwnedTicketIds(address account) external view returns (uint256[] memory) {
@@ -166,19 +169,65 @@ contract Lottery {
     /// Internal helpers
     /// -----------------------------------------------------------------------
 
-    function _generateTicketSeries(
+    function _completePurchase(
         address buyer,
         uint256 seriesId,
-        uint256 startNumber,
-        uint256 count
-    )
+        Series storage series,
+        uint256[] memory ticketNumbers
+    ) internal {
+        uint256 count = ticketNumbers.length;
+        uint256 totalCost = ticketPrice * count;
+        uint256[] memory ticketIds = _mintTickets(buyer, seriesId, series.totalTickets, ticketNumbers);
+
+        series.ticketsSold += count;
+        ticketsSold += count;
+        ticketBalances[buyer] += count;
+
+        emit TicketPurchased(buyer, count, totalCost, ticketIds, seriesId);
+
+        if (totalCost > 0) {
+            if (!usdt.transferFrom(buyer, address(this), totalCost)) {
+                revert TransferFailed();
+            }
+        }
+
+        if (series.ticketsSold == series.totalTickets) {
+            emit SeriesCompleted(seriesId);
+            _advanceSeries();
+        }
+    }
+
+    function _validateTicketNumbers(uint256[] calldata ticketNumbers, uint256 totalTickets)
         internal
-        returns (uint256[] memory ticketIds)
+        pure
+        returns (uint256[] memory sanitized)
     {
+        uint256 count = ticketNumbers.length;
+        sanitized = new uint256[](count);
+        for (uint256 i = 0; i < count; i++) {
+            uint256 ticketNumber = ticketNumbers[i];
+            if (ticketNumber == 0 || ticketNumber > totalTickets) revert InvalidTicketNumber();
+            sanitized[i] = ticketNumber;
+        }
+    }
+
+    function _mintTickets(
+        address buyer,
+        uint256 seriesId,
+        uint256 totalTicketsInSeries,
+        uint256[] memory ticketNumbers
+    ) internal returns (uint256[] memory ticketIds) {
+        uint256 count = ticketNumbers.length;
         ticketIds = new uint256[](count);
         for (uint256 i = 0; i < count; i++) {
-            uint256 ticketNumber = startNumber + i;
+            uint256 ticketNumber = ticketNumbers[i];
+            if (ticketNumber == 0 || ticketNumber > totalTicketsInSeries) revert InvalidTicketNumber();
+
             uint256 currentTicketId = (seriesId << 128) | ticketNumber;
+            if (ticketOwners[currentTicketId] != address(0)) {
+                revert TicketAlreadySold(ticketNumber);
+            }
+
             ticketOwners[currentTicketId] = buyer;
             ticketSeries[currentTicketId] = seriesId;
             ownedTicketIds[buyer].push(currentTicketId);
