@@ -748,6 +748,9 @@ export default function TicketsPage() {
               <Link href="/" className={styles.primaryLink}>
                 Back to purchase
               </Link>
+              <Link href="/rewards" className={styles.secondaryLink}>
+                Rewards
+              </Link>
               {isConnected && (
                 <Link href="/my-tickets" className={styles.secondaryLink}>
                   My Tickets

@@ -649,6 +649,9 @@ export default function Home() {
               <Link className={styles.secondaryLink} href="/tickets">
                 View ticket board
               </Link>
+              <Link className={styles.secondaryLink} href="/rewards">
+                Rewards & Prizes
+              </Link>
               <Link className={styles.secondaryLink} href="/draw">
                 Draw & rewards
               </Link>

@@ -1,53 +1,51 @@
-[00:00:00.860] Server  LOG      ✓ Ready in 630ms
-[00:00:08.717] Server  LOG      ○ Compiling /tickets ...
-[00:00:13.275] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:13.379] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:13.385] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:13.391] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:13.619] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:14.690] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:15.334] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:15.340] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:15.348] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:16.367] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:00:16.367] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:00:16.367] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:04:38.104] Server  LOG      ✓ Compiled in 100ms
-[00:06:55.771] Server  LOG      ○ Compiling / ...
-[00:07:59.715] Server  LOG      ✓ Compiled in 49ms
-[00:08:10.021] Server  LOG      ✓ Compiled in 29ms
-[00:08:22.157] Server  LOG      ✓ Compiled in 31ms
-[00:08:40.911] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:08:41.019] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:08:41.026] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:08:41.032] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:08:41.307] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:08:43.379] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:08:43.937] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:08:43.945] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:08:43.950] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:08:43.951] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:08:43.951] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:08:44.032] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:11:51.082] Server  LOG      ✓ Compiled in 106ms
-[00:11:55.568] Server  LOG      ✓ Compiled in 27ms
-[00:12:18.558] Server  LOG      ✓ Compiled in 153ms
-[00:12:27.535] Server  LOG      ✓ Compiled in 20ms
-[00:12:31.372] Server  LOG      ✓ Compiled in 20ms
-[00:12:40.250] Server  LOG      ✓ Compiled in 20ms
-[00:12:52.016] Server  LOG      ✓ Compiled in 19ms
-[00:12:55.809] Server  LOG      ✓ Compiled in 20ms
-[00:13:11.954] Server  LOG      ✓ Compiled in 23ms
-[00:13:28.266] Server  LOG      ✓ Compiled in 25ms
-[00:14:11.943] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:14:12.046] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:14:12.053] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:14:12.059] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:14:12.228] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:14:13.111] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:14:13.476] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:14:13.483] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:14:13.490] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:14:13.491] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:14:13.491] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:14:13.567] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:00.861] Server  LOG      ✓ Ready in 629ms
+[00:00:07.143] Server  LOG      ○ Compiling / ...
+[00:00:16.347] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:16.536] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:16.546] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:16.556] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:16.903] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:18.671] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:19.991] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:19.998] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:20.005] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:20.710] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:00:20.710] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:00:20.710] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:34.405] Server  LOG      ○ Compiling /tickets ...
+[00:07:44.720] Server  LOG      ✓ Compiled in 136ms
+[00:07:53.081] Server  LOG      ✓ Compiled in 40ms
+[00:08:31.424] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:08:31.532] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:08:31.538] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:08:31.544] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:08:31.741] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:08:32.608] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:08:32.892] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:08:32.901] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:08:32.909] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:08:32.910] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:08:32.910] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:08:32.984] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:11:50.239] Server  LOG      ✓ Compiled in 40ms
+[00:11:51.959] Server  LOG      ✓ Compiled in 80ms
+[00:11:57.341] Server  LOG      ✓ Compiled in 27ms
+[00:12:26.331] Server  LOG      ✓ Compiled in 100ms
+[00:12:43.404] Server  LOG      ✓ Compiled in 31ms
+[00:12:48.480] Server  LOG      ✓ Compiled in 29ms
+[00:12:50.591] Server  LOG      ✓ Compiled in 21ms
+[00:13:01.527] Server  LOG      ✓ Compiled in 27ms
+[00:13:10.337] Server  LOG      ✓ Compiled in 21ms
+[00:13:13.187] Server  LOG      ✓ Compiled in 23ms
+[00:13:25.560] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:13:25.675] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:13:25.682] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:13:25.689] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:13:25.897] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:27.383] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:13:27.827] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:13:27.835] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:13:27.842] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:13:27.843] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:13:27.843] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:13:27.920] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500

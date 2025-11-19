@@ -164,7 +164,7 @@ export default function MyTicketsPage() {
 
   const handleTicketClick = (ticketId: bigint) => {
     setClickedTicket(ticketId);
-    setTimeout(() => setClickedTicket(null), 600);
+    setTimeout(() => setClickedTicket(null), 400);
   };
 
   if (!isConnected) {
@@ -327,17 +327,18 @@ export default function MyTicketsPage() {
                               initial={{ opacity: 0, scale: 0.9 }}
                               animate={{ 
                                 opacity: 1, 
-                                scale: isClicked ? 1.1 : 1,
-                                rotate: isClicked ? [0, -5, 5, -5, 0] : 0,
+                                scale: isClicked ? 0.3 : 1,
                               }}
                               transition={{ 
                                 delay: ticketIndex * 0.02,
-                                scale: { duration: 0.2 },
-                                rotate: { duration: 0.5 }
+                                scale: { 
+                                  duration: 0.4,
+                                  ease: [0.4, 0, 0.2, 1]
+                                }
                               }}
                               onClick={() => handleTicketClick(ticket.ticketId)}
                               whileHover={{ scale: 1.05, y: -4 }}
-                              whileTap={{ scale: 0.95 }}
+                              whileTap={{ scale: 0.9 }}
                             >
                               <span className={styles.ticketNumber}>
                                 #{ticket.ticketNumber.toString().padStart(padLength, "0")}
