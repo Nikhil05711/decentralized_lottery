@@ -7,6 +7,7 @@ import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import { zeroAddress } from "viem";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
+import { formatSeriesName } from "@/lib/seriesUtils";
 import styles from "./rewards.module.css";
 
 const SERIES_PER_PAGE = 5;
@@ -316,7 +317,7 @@ export default function RewardsPage() {
                       >
                         <div className={styles.seriesTitleRow}>
                           <h3 className={styles.seriesTitle}>
-                            Series #{series.seriesId.toString()}
+                            Series {formatSeriesName(series.seriesId)}
                           </h3>
                           <div className={styles.seriesHeaderRight}>
                             <div className={styles.seriesBadges}>

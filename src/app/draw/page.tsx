@@ -19,6 +19,7 @@ import styles from "./draw.module.css";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
+import { formatSeriesName, formatTicketNumber } from "@/lib/seriesUtils";
 
 const LOTTERY_ADDRESS = process.env
   .NEXT_PUBLIC_LOTTERY_ADDRESS as Address | undefined;
@@ -58,19 +59,31 @@ const clampToSafeNumber = (value: bigint | number | undefined) => {
   return Number(value > max ? max : value);
 };
 
-const extractTicketOrdinal = (ticketId: bigint) => {
-  const ordinal = ticketId & ticketNumberMask;
-  return ordinal.toString();
+const extractTicketOrdinal = (ticketId: bigint): bigint => {
+  return ticketId & ticketNumberMask;
 };
 
-const formatTicketRange = (ticketIds: readonly bigint[] | undefined) => {
+const extractSeriesId = (ticketId: bigint): bigint => {
+  return ticketId >> BigInt(128);
+};
+
+const formatTicketRange = (ticketIds: readonly bigint[] | undefined, padLength: number = 3) => {
   if (!ticketIds || ticketIds.length === 0) return "Ticket IDs pending";
   if (ticketIds.length === 1) {
-    return `Ticket #${extractTicketOrdinal(ticketIds[0])}`;
+    const ticketId = ticketIds[0];
+    const seriesId = extractSeriesId(ticketId);
+    const ticketNumber = extractTicketOrdinal(ticketId);
+    return `Ticket ${formatTicketNumber(ticketNumber, seriesId, padLength)}`;
   }
-  const first = extractTicketOrdinal(ticketIds[0]);
-  const last = extractTicketOrdinal(ticketIds[ticketIds.length - 1]);
-  return `Tickets #${first}–#${last}`;
+  const firstId = ticketIds[0];
+  const lastId = ticketIds[ticketIds.length - 1];
+  const firstSeriesId = extractSeriesId(firstId);
+  const lastSeriesId = extractSeriesId(lastId);
+  const firstTicketNumber = extractTicketOrdinal(firstId);
+  const lastTicketNumber = extractTicketOrdinal(lastId);
+  const firstFormatted = formatTicketNumber(firstTicketNumber, firstSeriesId, padLength);
+  const lastFormatted = formatTicketNumber(lastTicketNumber, lastSeriesId, padLength);
+  return `Tickets ${firstFormatted}–${lastFormatted}`;
 };
 
 const formatDuration = (milliseconds: number) => {
@@ -362,10 +375,12 @@ export default function DrawPage() {
 
   const formattedLastDraw = useMemo(() => {
     if (lastDrawTicket == null) return "Awaiting first draw";
-    return `Ticket #${lastDrawTicket
-      .toString()
-      .padStart(ticketPadLength, "0")}`;
-  }, [lastDrawTicket, ticketPadLength]);
+    // Use active series ID for formatting (lastDrawTicket is just the ticket number)
+    if (activeSeriesId > BigInt(0)) {
+      return `Ticket ${formatTicketNumber(lastDrawTicket, activeSeriesId, ticketPadLength)}`;
+    }
+    return `Ticket #${lastDrawTicket.toString().padStart(ticketPadLength, "0")}`;
+  }, [lastDrawTicket, ticketPadLength, activeSeriesId]);
 
   const drawRangeLabel = useMemo(() => {
     if (ticketsInPlay <= 0) {
@@ -462,10 +477,10 @@ export default function DrawPage() {
             seriesId?: bigint;
           };
           const timestamp = await loadTimestamp(log.blockNumber ?? undefined);
-          const ticketSummary = formatTicketRange(args.ticketIds);
+          const ticketSummary = formatTicketRange(args.ticketIds, 3);
           const seriesLabel =
             args.seriesId && args.seriesId > BigInt(0)
-              ? `Series ${args.seriesId.toString()}`
+              ? `Series ${formatSeriesName(args.seriesId)}`
               : "Series pending";
           entries.push({
             txHash: log.transactionHash ?? undefined,
@@ -645,7 +660,7 @@ export default function DrawPage() {
               <div className={styles.statMicro}>
                 <span className={styles.microLabel}>Active series</span>
                 <span className={styles.microValue}>
-                  {hasActiveSeries ? `#${activeSeriesId.toString()}` : "None"}
+                  {hasActiveSeries ? formatSeriesName(activeSeriesId) : "None"}
                 </span>
               </div>
               <div className={styles.statMicro}>

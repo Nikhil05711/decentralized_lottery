@@ -21,6 +21,7 @@ import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
 import { wagmiConfig } from "@/lib/wagmi";
+import { formatSeriesName, formatTicketNumber } from "@/lib/seriesUtils";
 import styles from "./tickets.module.css";
 
 const LOTTERY_ADDRESS = process.env
@@ -971,7 +972,7 @@ export default function TicketsPage() {
 
     // If tickets from multiple series, warn user (for now only allow active series)
     if (ticketsBySeries.size > 1) {
-      setSelectionFeedback("Currently, you can only buy tickets from the active series. Please select tickets from Series #" + activeSeriesId.toString());
+      setSelectionFeedback("Currently, you can only buy tickets from the active series. Please select tickets from Series " + formatSeriesName(activeSeriesId));
       return;
     }
 
@@ -1234,12 +1235,7 @@ export default function TicketsPage() {
                         title={isFromActiveSeries ? "Click to remove" : "This ticket is from a different series. Only active series tickets can be purchased."}
                       >
                         <span>
-                          #{ticket.toString().padStart(padLength, "0")}
-                          {ticketSeriesId && (
-                            <span className={styles.selectionChipSeries}>
-                              {" "}S{ticketSeriesId.toString()}
-                            </span>
-                          )}
+                          {ticketSeriesId ? formatTicketNumber(ticket, ticketSeriesId, padLength) : `#${ticket.toString().padStart(padLength, "0")}`}
                         </span>
                         <span aria-hidden="true" className={styles.selectionChipRemove}>×</span>
                       </button>
@@ -1343,7 +1339,7 @@ export default function TicketsPage() {
                   >
                     <div className={styles.seriesCardTitleRow}>
                       <h3 className={styles.seriesCardTitle}>
-                        Series #{series.seriesId.toString()}
+                        Series {formatSeriesName(series.seriesId)}
                       </h3>
                       <div className={styles.seriesCardHeaderRight}>
                         {series.isActive && (
@@ -1415,9 +1411,9 @@ export default function TicketsPage() {
                                   }
                 }}
               >
-                <span className={styles.ticketNumber}>
-                                  Ticket #{ticket.number.toString().padStart(seriesPadLength, "0")}
-                </span>
+                                <span className={styles.ticketNumber}>
+                                  Ticket {formatTicketNumber(ticket.number, series.seriesId, seriesPadLength)}
+                                </span>
                 <span
                   className={`${styles.stamp} ${
                     ticket.isSold ? styles.stampSold : styles.stampAvailable

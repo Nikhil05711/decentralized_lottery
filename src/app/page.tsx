@@ -18,6 +18,7 @@ import { GlowingOrbs } from "@/components/GlowingOrbs";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
 import { wagmiConfig } from "@/lib/wagmi";
+import { formatSeriesName } from "@/lib/seriesUtils";
 
 const LOTTERY_ADDRESS = process.env
   .NEXT_PUBLIC_LOTTERY_ADDRESS as `0x${string}` | undefined;
@@ -254,7 +255,7 @@ export default function Home() {
   }, [salesOpen, ticketsLeft]);
 
   const activeSeriesLabel = useMemo(
-    () => (hasActiveSeries ? `Series #${activeSeriesId.toString()}` : "No active series"),
+    () => (hasActiveSeries ? `Series ${formatSeriesName(activeSeriesId)}` : "No active series"),
     [activeSeriesId, hasActiveSeries]
   );
 
@@ -262,7 +263,7 @@ export default function Home() {
     if (!hasActiveSeries) {
       return "Queue the next series to resume sales";
     }
-    return `Series ${activeSeriesId.toString()} · total ${activeSeriesTotalCount}`;
+    return `Series ${formatSeriesName(activeSeriesId)} · total ${activeSeriesTotalCount}`;
   }, [activeSeriesId, activeSeriesTotalCount, hasActiveSeries]);
 
   const activeSeriesProgress = useMemo(() => {

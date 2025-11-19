@@ -7,6 +7,7 @@ import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import { zeroAddress } from "viem";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
+import { formatSeriesName, formatTicketNumber } from "@/lib/seriesUtils";
 import styles from "./my-tickets.module.css";
 
 const LOTTERY_ADDRESS = process.env
@@ -271,7 +272,7 @@ export default function MyTicketsPage() {
                 >
                   <div className={styles.seriesTitleRow}>
                     <h2 className={styles.seriesTitle}>
-                      Series #{group.seriesId.toString()}
+                      Series {formatSeriesName(group.seriesId)}
                     </h2>
                     {isActive && (
                       <span className={styles.activeBadge}>Active</span>
@@ -341,10 +342,10 @@ export default function MyTicketsPage() {
                               whileTap={{ scale: 0.9 }}
                             >
                               <span className={styles.ticketNumber}>
-                                #{ticket.ticketNumber.toString().padStart(padLength, "0")}
+                                {formatTicketNumber(ticket.ticketNumber, ticket.seriesId, padLength)}
                               </span>
                               <span className={styles.ticketSeriesLabel}>
-                                Series {group.seriesId.toString()}
+                                Series {formatSeriesName(group.seriesId)}
                               </span>
                             </motion.div>
                           );
