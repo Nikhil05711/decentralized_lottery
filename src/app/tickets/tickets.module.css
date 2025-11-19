@@ -760,6 +760,12 @@
   box-shadow: 0 6px 16px rgba(14, 165, 233, 0.3);
 }
 
+.selectionChipSeries {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
 .selectionChipRemove {
   display: inline-flex;
   align-items: center;
@@ -776,6 +782,16 @@
 .selectionChip:hover .selectionChipRemove {
   background: rgba(255, 255, 255, 0.25);
   transform: scale(1.1);
+}
+
+.selectionChipInactive {
+  opacity: 0.6;
+  border-color: rgba(148, 163, 184, 0.3);
+  background: rgba(71, 85, 105, 0.2);
+}
+
+.selectionChipInactive:hover {
+  opacity: 0.8;
 }
 
 .selectionPlaceholder {
@@ -1001,6 +1017,129 @@
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }
 
+.seriesContainer {
+  display: grid;
+  gap: 24px;
+}
+
+.seriesCard {
+  padding: 28px;
+  border-radius: 24px;
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  background: linear-gradient(
+    145deg,
+    rgba(8, 47, 73, 0.45),
+    rgba(15, 23, 42, 0.4)
+  );
+  box-shadow: 0 20px 50px rgba(15, 118, 110, 0.2);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.seriesCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(15, 118, 110, 0.25);
+}
+
+.seriesCardActive {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: linear-gradient(
+    145deg,
+    rgba(8, 47, 73, 0.5),
+    rgba(6, 95, 70, 0.3)
+  );
+  box-shadow: 0 24px 60px rgba(16, 185, 129, 0.25);
+}
+
+.seriesCardHeader {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 12px;
+  padding: 20px;
+  margin: -20px -20px 0;
+  position: relative;
+}
+
+.seriesCardHeader:hover {
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.seriesCardHeader:active {
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.seriesCardTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.seriesCardTitle {
+  font-size: clamp(1.3rem, 2vw, 1.6rem);
+  font-weight: 600;
+  margin: 0;
+  color: var(--foreground);
+}
+
+.seriesCardHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.seriesActiveBadge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(45, 212, 191, 0.25));
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: rgba(209, 250, 229, 0.95);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.seriesExpandIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.1);
+  color: rgba(56, 189, 238, 0.9);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.seriesCardHeader:hover .seriesExpandIcon {
+  background: rgba(56, 189, 248, 0.2);
+  transform: scale(1.1);
+}
+
+.seriesCardSummary {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  color: rgba(224, 242, 254, 0.75);
+  padding-top: 12px;
+  border-top: 1px solid rgba(56, 189, 248, 0.1);
+}
+
+.seriesTicketsGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  padding-top: 24px;
+  margin-top: 20px;
+  border-top: 1px solid rgba(56, 189, 248, 0.15);
+}
+
 .ticket {
   position: relative;
   padding: 24px 20px;
@@ -1200,6 +1339,26 @@
 
   .grid {
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .seriesCard {
+    padding: 20px;
+  }
+
+  .seriesCardTitleRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .seriesCardHeaderRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .seriesTicketsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
   }
 
   .ticket {
