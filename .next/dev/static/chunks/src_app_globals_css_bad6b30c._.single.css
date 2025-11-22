@@ -294,6 +294,10 @@ img, video {
   }
 }
 
+.collapse {
+  visibility: collapse;
+}
+
 .block {
   display: block;
 }
@@ -308,11 +312,6 @@ img, video {
 
 .grow {
   flex-grow: 1;
-}
-
-.ordinal {
-  --tw-ordinal: ordinal;
-  font-variant-numeric: var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction);
 }
 
 .filter {

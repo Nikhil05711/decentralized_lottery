@@ -18,7 +18,7 @@ import { GlowingOrbs } from "@/components/GlowingOrbs";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
 import { wagmiConfig } from "@/lib/wagmi";
-import { formatSeriesName } from "@/lib/seriesUtils";
+import { formatSeriesName, getSeriesCode } from "@/lib/seriesUtils";
 
 const LOTTERY_ADDRESS = process.env
   .NEXT_PUBLIC_LOTTERY_ADDRESS as `0x${string}` | undefined;
@@ -53,6 +53,7 @@ export default function Home() {
   const [ticketCount, setTicketCount] = useState(1);
   const [status, setStatus] = useState<FlowStatus>("idle");
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [selectedSeriesId, setSelectedSeriesId] = useState<bigint | null>(null);
 
   const { data: decimalsData } = useReadContract({
     address: USDT_ADDRESS,
@@ -123,9 +124,11 @@ export default function Home() {
     },
   });
 
-  // Find first available series (with tickets left)
-  const firstAvailableSeries = useMemo(() => {
-    if (!allSeriesInfoData || allSeriesInfoData.length === 0) return null;
+  // Get all available series (with tickets left)
+  const availableSeries = useMemo(() => {
+    if (!allSeriesInfoData || allSeriesInfoData.length === 0) return [];
+    
+    const series: Array<{ seriesId: bigint; total: bigint; sold: bigint; ticketsLeft: number }> = [];
     
     for (let i = 0; i < seriesIds.length; i++) {
       const info = allSeriesInfoData[i];
@@ -136,16 +139,50 @@ export default function Home() {
         const drawExecuted = Array.isArray(tuple) && typeof tuple[2] === "boolean" ? tuple[2] : false;
         
         if (!drawExecuted && sold < total && total > BigInt(0)) {
-          return {
+          series.push({
             seriesId: seriesIds[i],
             total,
             sold,
-          };
+            ticketsLeft: Number(total) - Number(sold),
+          });
         }
       }
     }
-    return null;
+    
+    // Sort alphabetically by series code
+    return series.sort((a, b) => {
+      const codeA = getSeriesCode(a.seriesId);
+      const codeB = getSeriesCode(b.seriesId);
+      return codeA.localeCompare(codeB);
+    });
   }, [allSeriesInfoData, seriesIds]);
+
+  // Find first available series (for default selection)
+  const firstAvailableSeries = useMemo(() => {
+    return availableSeries.length > 0 ? availableSeries[0] : null;
+  }, [availableSeries]);
+
+  // Get the currently selected series or default to first available
+  const selectedSeries = useMemo(() => {
+    if (selectedSeriesId) {
+      return availableSeries.find(s => s.seriesId === selectedSeriesId) || firstAvailableSeries;
+    }
+    return firstAvailableSeries;
+  }, [selectedSeriesId, availableSeries, firstAvailableSeries]);
+
+  // Set default selected series when available
+  useEffect(() => {
+    if (!selectedSeriesId && firstAvailableSeries) {
+      setSelectedSeriesId(firstAvailableSeries.seriesId);
+    } else if (selectedSeriesId && !availableSeries.find(s => s.seriesId === selectedSeriesId)) {
+      // If selected series is no longer available, switch to first available
+      if (firstAvailableSeries) {
+        setSelectedSeriesId(firstAvailableSeries.seriesId);
+      } else {
+        setSelectedSeriesId(null);
+      }
+    }
+  }, [selectedSeriesId, firstAvailableSeries, availableSeries]);
 
   const { data: allowanceData, refetch: refetchAllowance } = useReadContract({
     address: USDT_ADDRESS,
@@ -220,28 +257,28 @@ export default function Home() {
   }, [ticketsSold]);
 
   const activeSeriesTotalCount = useMemo(
-    () => firstAvailableSeries ? clampToSafeNumber(firstAvailableSeries.total) : 0,
-    [firstAvailableSeries]
+    () => selectedSeries ? clampToSafeNumber(selectedSeries.total) : 0,
+    [selectedSeries]
   );
 
   const activeSeriesSoldCount = useMemo(
-    () => firstAvailableSeries ? clampToSafeNumber(firstAvailableSeries.sold) : 0,
-    [firstAvailableSeries]
+    () => selectedSeries ? clampToSafeNumber(selectedSeries.sold) : 0,
+    [selectedSeries]
   );
 
   const activeSeriesId = useMemo(
-    () => firstAvailableSeries?.seriesId || BigInt(0),
-    [firstAvailableSeries]
+    () => selectedSeries?.seriesId || BigInt(0),
+    [selectedSeries]
   );
 
   const hasActiveSeries = useMemo(
-    () => firstAvailableSeries !== null,
-    [firstAvailableSeries]
+    () => selectedSeries !== null,
+    [selectedSeries]
   );
 
   const ticketsLeft = useMemo(
-    () => Math.max(activeSeriesTotalCount - activeSeriesSoldCount, 0),
-    [activeSeriesSoldCount, activeSeriesTotalCount]
+    () => selectedSeries?.ticketsLeft || 0,
+    [selectedSeries]
   );
 
   const salesOpen = useMemo(
@@ -257,14 +294,14 @@ export default function Home() {
   }, [activeSeriesTotalCount, hasActiveSeries, ticketsLeft]);
 
   const previewTicketNumbers = useMemo(() => {
-    if (!salesOpen || ticketCount < 1 || !firstAvailableSeries) return [];
-    const start = firstAvailableSeries.sold + BigInt(1);
+    if (!salesOpen || ticketCount < 1 || !selectedSeries) return [];
+    const start = selectedSeries.sold + BigInt(1);
     const limit = Math.min(ticketCount, 6);
     return Array.from({ length: limit }, (_, index) => {
       const ticketNumber = start + BigInt(index);
       return ticketNumber.toString();
     });
-  }, [firstAvailableSeries, salesOpen, ticketCount]);
+  }, [selectedSeries, salesOpen, ticketCount]);
 
   const maxSelectable = useMemo(() => {
     if (!salesOpen) return 0;
@@ -383,9 +420,9 @@ export default function Home() {
 
       setStatus("buying");
 
-      // Get available series for purchase
-      if (!firstAvailableSeries) {
-        setFeedback("No series with available tickets. Please try again.");
+      // Get selected series for purchase
+      if (!selectedSeries) {
+        setFeedback("Please select a series with available tickets.");
         return;
       }
 
@@ -393,7 +430,7 @@ export default function Home() {
         address: LOTTERY_ADDRESS,
         abi: lotteryAbi,
         functionName: "buyTickets",
-        args: [firstAvailableSeries.seriesId, BigInt(ticketCount)],
+        args: [selectedSeries.seriesId, BigInt(ticketCount)],
       });
 
       await waitForTransactionReceipt(wagmiConfig, {
@@ -542,8 +579,26 @@ export default function Home() {
           <div className={styles.ticketBody}>
             <div className={styles.seriesPanel}>
               <div className={styles.seriesCopy}>
-                <p className={styles.seriesEyebrow}>Series in focus</p>
-                <p className={styles.seriesName}>{activeSeriesLabel}</p>
+                <p className={styles.seriesEyebrow}>Select series</p>
+                <select
+                  className={styles.seriesSelect}
+                  value={selectedSeriesId?.toString() || ""}
+                  onChange={(e) => {
+                    const seriesId = BigInt(e.target.value);
+                    setSelectedSeriesId(seriesId);
+                  }}
+                  disabled={isBusy || availableSeries.length === 0}
+                >
+                  {availableSeries.length === 0 ? (
+                    <option value="">No series available</option>
+                  ) : (
+                    availableSeries.map((series) => (
+                      <option key={series.seriesId.toString()} value={series.seriesId.toString()}>
+                        Series {formatSeriesName(series.seriesId)} ({series.ticketsLeft} available)
+                      </option>
+                    ))
+                  )}
+                </select>
                 <p className={styles.seriesMeta}>{seriesAvailability}</p>
               </div>
               <div className={styles.seriesActions}>

@@ -66,6 +66,7 @@ export default function TicketsPage() {
   const [selectionTarget, setSelectionTarget] = useState(0);
   const [expandedSeries, setExpandedSeries] = useState<Set<bigint>>(new Set());
   const [seriesTicketsData, setSeriesTicketsData] = useState<Map<bigint, { tickets: Array<{ number: number; isSold: boolean }>; soldLookup: Set<number> | null }>>(new Map());
+  const [selectedSeriesForQuickSelect, setSelectedSeriesForQuickSelect] = useState<bigint | null>(null);
 
   const { data: totalSeriesCountData } = useReadContract({
     address: LOTTERY_ADDRESS,
@@ -254,8 +255,53 @@ export default function TicketsPage() {
     return allSeriesData.find(s => s.isActive);
   }, [allSeriesData]);
 
+  // Available series for dropdown (sorted alphabetically)
+  const availableSeriesForSelection = useMemo(() => {
+    return allSeriesData.filter(s => s.isActive).sort((a, b) => {
+      const codeA = getSeriesCode(a.seriesId);
+      const codeB = getSeriesCode(b.seriesId);
+      return codeA.localeCompare(codeB);
+    });
+  }, [allSeriesData]);
+
+  // Get selected series for quick select (defaults to first available)
+  const quickSelectSeriesId = useMemo(() => {
+    if (selectedSeriesForQuickSelect) {
+      const series = allSeriesData.find(s => s.seriesId === selectedSeriesForQuickSelect && s.isActive);
+      if (series) return selectedSeriesForQuickSelect;
+    }
+    return firstAvailableSeries?.seriesId || BigInt(0);
+  }, [selectedSeriesForQuickSelect, firstAvailableSeries, allSeriesData]);
+
+  // Set default selected series when available
   useEffect(() => {
-    if (firstAvailableSeries) {
+    if (!selectedSeriesForQuickSelect && firstAvailableSeries) {
+      setSelectedSeriesForQuickSelect(firstAvailableSeries.seriesId);
+    } else if (selectedSeriesForQuickSelect && !allSeriesData.find(s => s.seriesId === selectedSeriesForQuickSelect && s.isActive)) {
+      // If selected series is no longer available, switch to first available
+      if (firstAvailableSeries) {
+        setSelectedSeriesForQuickSelect(firstAvailableSeries.seriesId);
+      } else {
+        setSelectedSeriesForQuickSelect(null);
+      }
+    }
+  }, [selectedSeriesForQuickSelect, firstAvailableSeries, allSeriesData]);
+
+  // Auto-expand selected series and collapse others when selection changes
+  useEffect(() => {
+    if (quickSelectSeriesId && quickSelectSeriesId !== BigInt(0)) {
+      setExpandedSeries((prev) => {
+        const next = new Set<bigint>();
+        // Expand only the selected series
+        next.add(quickSelectSeriesId);
+        return next;
+      });
+    }
+  }, [quickSelectSeriesId]);
+
+  // Auto-expand first available series on initial load only
+  useEffect(() => {
+    if (firstAvailableSeries && !selectedSeriesForQuickSelect) {
       setExpandedSeries((prev) => {
         const next = new Set(prev);
         if (!next.has(firstAvailableSeries.seriesId)) {
@@ -264,7 +310,25 @@ export default function TicketsPage() {
         return next;
       });
     }
-  }, [firstAvailableSeries]);
+  }, [firstAvailableSeries, selectedSeriesForQuickSelect]);
+
+  // Auto-expand selected series from dropdown and collapse others
+  useEffect(() => {
+    if (quickSelectSeriesId && quickSelectSeriesId !== BigInt(0)) {
+      setExpandedSeries((prev) => {
+        // If the selected series is already expanded, keep it expanded
+        // Otherwise, collapse all and expand only the selected one
+        if (prev.has(quickSelectSeriesId) && prev.size === 1) {
+          // Already the only expanded series, no change needed
+          return prev;
+        }
+        // Collapse all and expand only the selected series
+        const next = new Set<bigint>();
+        next.add(quickSelectSeriesId);
+        return next;
+      });
+    }
+  }, [quickSelectSeriesId]);
 
   // Create ticket owner contracts for expanded series only
   const seriesTicketOwnerContracts = useMemo(() => {
@@ -356,11 +420,11 @@ export default function TicketsPage() {
     return allAvailable;
   }, [seriesTicketsData]);
 
-  // First available series tickets (for quick select and manual picks section)
-  const activeSeriesAvailableTickets = useMemo(() => {
+  // Selected series tickets (for quick select and manual picks section)
+  const quickSelectSeriesAvailableTickets = useMemo(() => {
     const availableTickets = new Set<number>();
-    if (firstAvailableSeries) {
-      const seriesData = seriesTicketsData.get(firstAvailableSeries.seriesId);
+    if (quickSelectSeriesId && quickSelectSeriesId !== BigInt(0)) {
+      const seriesData = seriesTicketsData.get(quickSelectSeriesId);
       if (seriesData) {
         seriesData.tickets.forEach((ticket) => {
           if (!ticket.isSold) {
@@ -370,33 +434,33 @@ export default function TicketsPage() {
       }
     }
     return availableTickets;
-  }, [seriesTicketsData, firstAvailableSeries]);
+  }, [seriesTicketsData, quickSelectSeriesId]);
 
   // Use first available series ID as "active" series for backward compatibility
   const activeSeriesId = useMemo(() => {
-    return firstAvailableSeries?.seriesId || BigInt(0);
-  }, [firstAvailableSeries]);
+    return quickSelectSeriesId || firstAvailableSeries?.seriesId || BigInt(0);
+  }, [quickSelectSeriesId, firstAvailableSeries]);
 
-  const activeSeriesAvailableNumbers = useMemo(() => {
-    return Array.from(activeSeriesAvailableTickets).sort((a, b) => a - b);
-  }, [activeSeriesAvailableTickets]);
+  const quickSelectSeriesAvailableNumbers = useMemo(() => {
+    return Array.from(quickSelectSeriesAvailableTickets).sort((a, b) => a - b);
+  }, [quickSelectSeriesAvailableTickets]);
 
-  // Get first available series info to determine if buttons should be enabled
-  const activeSeriesInfo = useMemo(() => {
-    return allSeriesData.find(s => s.isActive);
-  }, [allSeriesData]);
+  // Get selected series info to determine if buttons should be enabled
+  const quickSelectSeriesInfo = useMemo(() => {
+    return allSeriesData.find(s => s.seriesId === quickSelectSeriesId && s.isActive);
+  }, [allSeriesData, quickSelectSeriesId]);
 
   const maxCustomSelectable = useMemo(() => {
     // If we have detailed ticket data, use that
-    if (activeSeriesAvailableTickets.size > 0) {
-      return Math.min(activeSeriesAvailableTickets.size, MAX_CUSTOM_SELECTION);
+    if (quickSelectSeriesAvailableTickets.size > 0) {
+      return Math.min(quickSelectSeriesAvailableTickets.size, MAX_CUSTOM_SELECTION);
     }
     // Otherwise, use series info to determine availability
-    if (activeSeriesInfo && activeSeriesInfo.ticketsLeft > 0) {
-      return Math.min(activeSeriesInfo.ticketsLeft, MAX_CUSTOM_SELECTION);
+    if (quickSelectSeriesInfo && quickSelectSeriesInfo.ticketsLeft > 0) {
+      return Math.min(quickSelectSeriesInfo.ticketsLeft, MAX_CUSTOM_SELECTION);
     }
     return 0;
-  }, [activeSeriesAvailableTickets.size, activeSeriesInfo]);
+  }, [quickSelectSeriesAvailableTickets.size, quickSelectSeriesInfo]);
 
   const padLength = useMemo(() => {
     let max = 3;
@@ -468,7 +532,7 @@ export default function TicketsPage() {
       }
       return current;
     });
-  }, [activeSeriesAvailableTickets, maxCustomSelectable, activeSeriesId, selectedTicketsSeries]);
+  }, [quickSelectSeriesAvailableTickets, maxCustomSelectable, quickSelectSeriesId, activeSeriesId, selectedTicketsSeries]);
 
   const needsApproval = useMemo(() => {
     if (!isConnected || !totalCost) return false;
@@ -738,9 +802,9 @@ export default function TicketsPage() {
       }
       const desired = Math.min(Math.max(1, target), maxCustomSelectable);
       
-      // For manual picks section, always use active series tickets
+      // For manual picks section, use selected series for quick select
       // Only use specified seriesId if explicitly provided (for future use)
-      const targetSeriesId = seriesId || activeSeriesId;
+      const targetSeriesId = seriesId || quickSelectSeriesId;
       
       let availableTickets: Array<{ number: number; seriesId: bigint }> = [];
       const seriesData = seriesTicketsData.get(targetSeriesId);
@@ -796,7 +860,7 @@ export default function TicketsPage() {
       setSelectionTarget(desired);
       setSelectionFeedback(null);
     },
-    [activeSeriesAvailableTickets.size, maxCustomSelectable, seriesTicketsData, activeSeriesId, selectedTicketsSeries]
+    [quickSelectSeriesAvailableTickets.size, maxCustomSelectable, seriesTicketsData, quickSelectSeriesId, activeSeriesId, selectedTicketsSeries]
   );
 
   const handleSelectionQuantityChange = useCallback(
@@ -1156,7 +1220,7 @@ export default function TicketsPage() {
                 <p className={styles.selectionEyebrow}>Manual Selection</p>
                 <h3 className={styles.selectionTitle}>Pick Your Tickets</h3>
                 <p className={styles.selectionSubtitle}>
-                  Quick select and manual quantity tools work with the first available series. You can manually click tickets from any series below and purchase tickets from any available series.
+                  Select a series from the dropdown below to use with quick select tools. You can manually click tickets from any series below and purchase tickets from any available series.
                 </p>
               </div>
               <div className={styles.selectionHeaderStats}>
@@ -1181,6 +1245,28 @@ export default function TicketsPage() {
 
           <div className={styles.selectionTools}>
             <div className={styles.selectionToolsRow}>
+              <div className={styles.selectionToolGroup}>
+                <label className={styles.selectionToolLabel}>Select Series (for Quick Select)</label>
+                <select
+                  className={styles.seriesSelect}
+                  value={quickSelectSeriesId?.toString() || ""}
+                  onChange={(e) => {
+                    const seriesId = BigInt(e.target.value);
+                    setSelectedSeriesForQuickSelect(seriesId);
+                  }}
+                  disabled={isBusy || availableSeriesForSelection.length === 0}
+                >
+                  {availableSeriesForSelection.length === 0 ? (
+                    <option value="">No series available</option>
+                  ) : (
+                    availableSeriesForSelection.map((series) => (
+                      <option key={series.seriesId.toString()} value={series.seriesId.toString()}>
+                        Series {formatSeriesName(series.seriesId)} ({series.ticketsLeft} available)
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
               <div className={styles.selectionToolGroup}>
                 <label className={styles.selectionToolLabel}>Quick Select</label>
                 <div className={styles.selectionQuickGroup}>
@@ -1246,9 +1332,9 @@ export default function TicketsPage() {
                 className={styles.selectionSecondaryButton}
                 onClick={handleShuffleSelection}
                 disabled={selectedTickets.length === 0 || isBusy}
-                title={selectedTickets.length === 0 ? "Select tickets first to shuffle" : "Shuffle selected tickets from active series"}
+                title={selectedTickets.length === 0 ? "Select tickets first to shuffle" : `Shuffle selected tickets from Series ${formatSeriesName(quickSelectSeriesId)}`}
               >
-                🔀 Shuffle (Active Series)
+                🔀 Shuffle ({quickSelectSeriesId ? formatSeriesName(quickSelectSeriesId) : "Series"})
               </button>
               <button
                 className={styles.selectionSecondaryButton}

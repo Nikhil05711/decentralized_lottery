@@ -635,6 +635,48 @@
   letter-spacing: 0.1em;
 }
 
+.seriesSelect {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: rgba(15, 23, 42, 0.6);
+  color: rgba(244, 251, 255, 0.95);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.seriesSelect:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.seriesSelect:focus {
+  outline: none;
+  border-color: rgba(56, 189, 248, 0.8);
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+.seriesSelect:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.seriesSelect option {
+  background: rgba(15, 23, 42, 0.95);
+  color: rgba(244, 251, 255, 0.95);
+  padding: 8px;
+}
+
 .selectionQuantity {
   display: inline-flex;
   align-items: center;
@@ -1176,14 +1218,66 @@
 }
 
 .ticketSold {
-  border-color: rgba(248, 113, 113, 0.45);
+  border-color: rgba(239, 68, 68, 1);
+  border-width: 2.5px;
   background: linear-gradient(
-    150deg,
-    rgba(239, 68, 68, 0.42),
-    rgba(248, 113, 113, 0.28),
-    rgba(185, 28, 28, 0.32)
+    145deg,
+    rgba(239, 68, 68, 0.65),
+    rgba(220, 38, 38, 0.6),
+    rgba(185, 28, 28, 0.65)
   );
-  box-shadow: 0 24px 50px rgba(239, 68, 68, 0.28);
+  box-shadow: 
+    0 4px 16px rgba(220, 38, 38, 0.35),
+    0 8px 24px rgba(185, 28, 28, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  opacity: 0.85;
+  cursor: not-allowed;
+  animation: subtlePulse 3s ease-in-out infinite;
+}
+
+.ticketSold::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ticketSold .ticketNumber {
+  color: rgba(255, 255, 255, 1);
+  text-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 2px 6px rgba(0, 0, 0, 0.8),
+    0 4px 12px rgba(0, 0, 0, 0.6),
+    0 0 10px rgba(0, 0, 0, 0.5);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    box-shadow: 
+      0 4px 16px rgba(220, 38, 38, 0.35),
+      0 8px 24px rgba(185, 28, 28, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    opacity: 0.85;
+  }
+  50% {
+    box-shadow: 
+      0 6px 20px rgba(220, 38, 38, 0.45),
+      0 10px 30px rgba(185, 28, 28, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    opacity: 0.9;
+  }
 }
 
 .ticketNumber {
@@ -1220,7 +1314,16 @@
 }
 
 .stampSold {
-  color: rgba(239, 68, 68, 0.48);
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  font-weight: 800;
+  opacity: 0.75;
+  border-color: rgba(255, 255, 255, 0.4);
+  border-width: 3px;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(2px);
 }
 
 @media (max-width: 960px) {
