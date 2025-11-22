@@ -7,7 +7,7 @@ import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import { zeroAddress } from "viem";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
-import { formatSeriesName, formatTicketNumber } from "@/lib/seriesUtils";
+import { formatSeriesName, formatTicketNumber, getSeriesCode } from "@/lib/seriesUtils";
 import styles from "./my-tickets.module.css";
 
 const LOTTERY_ADDRESS = process.env
@@ -69,9 +69,10 @@ export default function MyTicketsPage() {
 
   const seriesIds = useMemo(() => {
     return Array.from(ticketsBySeries.keys()).sort((a, b) => {
-      if (a < b) return 1;
-      if (a > b) return -1;
-      return 0;
+      // Sort alphabetically by series code (AA, AB, AC, ..., AAA, AAB, etc.)
+      const codeA = getSeriesCode(a);
+      const codeB = getSeriesCode(b);
+      return codeA.localeCompare(codeB);
     });
   }, [ticketsBySeries]);
 
@@ -80,7 +81,7 @@ export default function MyTicketsPage() {
     return seriesIds.map((seriesId) => ({
       address: LOTTERY_ADDRESS,
       abi: lotteryAbi,
-      functionName: "seriesInfo" as const,
+      functionName: "getSeriesInfo" as const,
       args: [seriesId],
     }));
   }, [seriesIds]);
@@ -103,20 +104,10 @@ export default function MyTicketsPage() {
       let ticketsSold = BigInt(0);
 
       if (info?.status === "success" && info.result) {
-        const tuple = info.result as ReadonlyArray<unknown> & {
-          totalTickets?: bigint;
-          ticketsSold?: bigint;
-        };
-        const total =
-          typeof tuple.totalTickets === "bigint"
-            ? tuple.totalTickets
-            : (Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0));
-        const sold =
-          typeof tuple.ticketsSold === "bigint"
-            ? tuple.ticketsSold
-            : (Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0));
-        totalTickets = total;
-        ticketsSold = sold;
+        // getSeriesInfo returns: [totalTickets, soldCount, drawExecuted, readyForDraw, winningTicketNumbers[]]
+        const tuple = info.result as readonly [bigint, bigint, boolean, boolean, readonly bigint[]];
+        totalTickets = tuple[0];
+        ticketsSold = tuple[1];
       }
 
       return {
@@ -136,20 +127,6 @@ export default function MyTicketsPage() {
     return ticketIds.length;
   }, [ticketIds]);
 
-  const { data: activeSeriesIdData } = useReadContract({
-    address: LOTTERY_ADDRESS,
-    abi: lotteryAbi,
-    functionName: "activeSeriesId",
-    query: {
-      enabled: Boolean(LOTTERY_ADDRESS),
-    },
-  });
-
-  const activeSeriesId = useMemo(() => {
-    if (typeof activeSeriesIdData === "bigint") return activeSeriesIdData;
-    if (typeof activeSeriesIdData === "number") return BigInt(activeSeriesIdData);
-    return BigInt(0);
-  }, [activeSeriesIdData]);
 
   const toggleSeries = (seriesId: bigint) => {
     setExpandedSeries((prev) => {
@@ -246,7 +223,6 @@ export default function MyTicketsPage() {
 
         <div className={styles.seriesList}>
           {seriesGroups.map((group, groupIndex) => {
-            const isActive = group.seriesId === activeSeriesId;
             const isExpanded = expandedSeries.has(group.seriesId);
             const padLength = group.totalTickets.toString().length;
             
@@ -274,9 +250,6 @@ export default function MyTicketsPage() {
                     <h2 className={styles.seriesTitle}>
                       Series {formatSeriesName(group.seriesId)}
                     </h2>
-                    {isActive && (
-                      <span className={styles.activeBadge}>Active</span>
-                    )}
                     <motion.div
                       className={styles.expandIcon}
                       animate={{ rotate: isExpanded ? 180 : 0 }}

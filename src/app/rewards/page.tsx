@@ -7,7 +7,7 @@ import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import { zeroAddress } from "viem";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
-import { formatSeriesName } from "@/lib/seriesUtils";
+import { formatSeriesName, getSeriesCode } from "@/lib/seriesUtils";
 import styles from "./rewards.module.css";
 
 const SERIES_PER_PAGE = 5;
@@ -52,16 +52,6 @@ export default function RewardsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedSeries, setExpandedSeries] = useState<Set<bigint>>(new Set());
 
-  const { data: activeSeriesIdData } = useReadContract({
-    address: LOTTERY_ADDRESS,
-    abi: lotteryAbi,
-    functionName: "activeSeriesId",
-    query: {
-      enabled: Boolean(LOTTERY_ADDRESS),
-      refetchInterval: 20_000,
-    },
-  });
-
   const { data: totalSeriesCountData } = useReadContract({
     address: LOTTERY_ADDRESS,
     abi: lotteryAbi,
@@ -82,12 +72,6 @@ export default function RewardsPage() {
       refetchInterval: 20_000,
     },
   });
-
-  const activeSeriesId = useMemo(() => {
-    if (typeof activeSeriesIdData === "bigint") return activeSeriesIdData;
-    if (typeof activeSeriesIdData === "number") return BigInt(activeSeriesIdData);
-    return BigInt(0);
-  }, [activeSeriesIdData]);
 
   const totalSeriesCount = useMemo(() => {
     if (typeof totalSeriesCountData === "bigint") return Number(totalSeriesCountData);
@@ -117,7 +101,7 @@ export default function RewardsPage() {
     return seriesIds.map((seriesId) => ({
       address: LOTTERY_ADDRESS,
       abi: lotteryAbi,
-      functionName: "seriesInfo" as const,
+      functionName: "getSeriesInfo" as const,
       args: [seriesId],
     }));
   }, [seriesIds]);
@@ -138,18 +122,10 @@ export default function RewardsPage() {
       let ticketsSold = BigInt(0);
 
       if (info?.status === "success" && info.result) {
-        const tuple = info.result as ReadonlyArray<unknown> & {
-          totalTickets?: bigint;
-          ticketsSold?: bigint;
-        };
-        totalTickets =
-          typeof tuple.totalTickets === "bigint"
-            ? tuple.totalTickets
-            : (Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0));
-        ticketsSold =
-          typeof tuple.ticketsSold === "bigint"
-            ? tuple.ticketsSold
-            : (Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0));
+        // getSeriesInfo returns: totalTickets, soldCount, drawExecuted, readyForDraw, winningTicketNumbers
+        const tuple = info.result as ReadonlyArray<unknown>;
+        totalTickets = Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0);
+        ticketsSold = Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0);
       }
 
       const { count: rewardCount, pool: totalRewardPool } = calculateRewards(ticketsSold, totalTickets);
@@ -162,7 +138,10 @@ export default function RewardsPage() {
         ? Math.min(rewardCount, Math.floor((userTickets / totalPool) * rewardCount))
         : 0;
 
-      const isActive = seriesId === activeSeriesId;
+      // Find first available series (one with tickets left and not draw executed)
+      // This will be considered "active" for display purposes
+      const hasAvailableTickets = totalTickets > BigInt(0) && ticketsSold < totalTickets;
+      const isActive = false; // No activeSeriesId concept in new contract, show all series
       const isCompleted = totalTickets > BigInt(0) && ticketsSold === totalTickets;
 
       return {
@@ -177,14 +156,17 @@ export default function RewardsPage() {
         isCompleted,
       };
     }).sort((a, b) => {
-      // Sort: active first, then by series ID (newest first)
-      if (a.isActive && !b.isActive) return -1;
-      if (!a.isActive && b.isActive) return 1;
-      if (a.seriesId > b.seriesId) return -1;
-      if (a.seriesId < b.seriesId) return 1;
-      return 0;
+      // Sort: series with available tickets first, then alphabetically by series code (AA, AB, AC...)
+      const aHasAvailable = a.totalTickets > BigInt(0) && a.ticketsSold < a.totalTickets && !a.isCompleted;
+      const bHasAvailable = b.totalTickets > BigInt(0) && b.ticketsSold < b.totalTickets && !b.isCompleted;
+      if (aHasAvailable && !bHasAvailable) return -1;
+      if (!aHasAvailable && bHasAvailable) return 1;
+      // Sort alphabetically by series code (AA, AB, AC, ..., AAA, AAB, etc.)
+      const codeA = getSeriesCode(a.seriesId);
+      const codeB = getSeriesCode(b.seriesId);
+      return codeA.localeCompare(codeB);
     });
-  }, [seriesIds, seriesInfoData, userTicketsBySeries, activeSeriesId]);
+  }, [seriesIds, seriesInfoData, userTicketsBySeries]);
 
   const totalPotentialRewards = useMemo(() => {
     return seriesRewards.reduce((sum, series) => sum + series.userPotentialRewards * REWARD_PER_WINNER, 0);
@@ -282,11 +264,22 @@ export default function RewardsPage() {
 
         <section className={styles.seriesSection}>
           <h2 className={styles.sectionTitle}>Series Rewards</h2>
-          {seriesRewards.length === 0 ? (
+          {!LOTTERY_ADDRESS ? (
+            <div className={styles.emptyState}>
+              <p className={styles.emptyMessage}>
+                ⚠️ Lottery contract address not configured. Set NEXT_PUBLIC_LOTTERY_ADDRESS in .env.local file.
+              </p>
+            </div>
+          ) : seriesRewards.length === 0 ? (
             <div className={styles.emptyState}>
               <p className={styles.emptyMessage}>
                 No series data available yet. Series will appear here once they are created.
               </p>
+              {totalSeriesCount === 0 && LOTTERY_ADDRESS && (
+                <p style={{ marginTop: '12px', fontSize: '14px', color: '#9ca3af' }}>
+                  Contract: <code style={{ fontFamily: 'monospace' }}>{LOTTERY_ADDRESS}</code>
+                </p>
+              )}
             </div>
           ) : (
             <>

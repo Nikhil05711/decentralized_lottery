@@ -21,7 +21,7 @@ import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
 import { wagmiConfig } from "@/lib/wagmi";
-import { formatSeriesName, formatTicketNumber } from "@/lib/seriesUtils";
+import { formatSeriesName, formatTicketNumber, getSeriesCode } from "@/lib/seriesUtils";
 import styles from "./tickets.module.css";
 
 const LOTTERY_ADDRESS = process.env
@@ -67,17 +67,6 @@ export default function TicketsPage() {
   const [expandedSeries, setExpandedSeries] = useState<Set<bigint>>(new Set());
   const [seriesTicketsData, setSeriesTicketsData] = useState<Map<bigint, { tickets: Array<{ number: number; isSold: boolean }>; soldLookup: Set<number> | null }>>(new Map());
 
-  const { data: activeSeriesIdData, refetch: refetchActiveSeriesId } =
-    useReadContract({
-    address: LOTTERY_ADDRESS,
-    abi: lotteryAbi,
-    functionName: "activeSeriesId",
-      query: {
-        enabled: Boolean(LOTTERY_ADDRESS),
-        refetchInterval: 20_000,
-      },
-    });
-
   const { data: totalSeriesCountData } = useReadContract({
     address: LOTTERY_ADDRESS,
     abi: lotteryAbi,
@@ -87,12 +76,6 @@ export default function TicketsPage() {
       refetchInterval: 20_000,
     },
   });
-
-  const activeSeriesId = useMemo(() => {
-    if (typeof activeSeriesIdData === "bigint") return activeSeriesIdData;
-    if (typeof activeSeriesIdData === "number") return BigInt(activeSeriesIdData);
-    return BigInt(0);
-  }, [activeSeriesIdData]);
 
   const totalSeriesCount = useMemo(() => {
     if (typeof totalSeriesCountData === "bigint") return Number(totalSeriesCountData);
@@ -110,7 +93,7 @@ export default function TicketsPage() {
     return seriesIds.map((seriesId) => ({
       address: LOTTERY_ADDRESS,
       abi: lotteryAbi,
-      functionName: "seriesInfo" as const,
+      functionName: "getSeriesInfo" as const,
       args: [seriesId],
     }));
   }, [seriesIds]);
@@ -182,42 +165,36 @@ export default function TicketsPage() {
         const info = allSeriesInfoData[index];
         if (!info || info.status !== "success" || !info.result) return null;
 
-        const tuple = info.result as ReadonlyArray<unknown> & {
-      totalTickets?: bigint;
-      ticketsSold?: bigint;
-    };
-    const total =
-      typeof tuple.totalTickets === "bigint"
-        ? tuple.totalTickets
-        : (Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0));
-    const sold =
-      typeof tuple.ticketsSold === "bigint"
-        ? tuple.ticketsSold
-        : (Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0));
+        // getSeriesInfo returns: totalTickets, soldCount, drawExecuted, readyForDraw, winningTicketNumbers
+        const tuple = info.result as ReadonlyArray<unknown>;
+        const total = Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0);
+        const sold = Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0);
+        const drawExecuted = Array.isArray(tuple) && typeof tuple[2] === "boolean" ? tuple[2] : false;
 
         const isCompleted = total > BigInt(0) && sold === total;
-        const isActive = seriesId === activeSeriesId;
+        const hasAvailableTickets = !drawExecuted && sold < total && total > BigInt(0);
         const ticketsLeft = Math.max(Number(total) - Number(sold), 0);
 
         return {
           seriesId,
           totalTickets: total,
           ticketsSold: sold,
-          isActive,
+          isActive: hasAvailableTickets,
           isCompleted,
           ticketsLeft,
         } as SeriesData;
       })
-      .filter((series): series is SeriesData => series !== null && !series.isCompleted)
+      .filter((series): series is SeriesData => series !== null)
       .sort((a, b) => {
-        // Active series first, then by series ID (newest first)
+        // Series with available tickets first, then alphabetically by series code (AA, AB, AC...)
         if (a.isActive && !b.isActive) return -1;
         if (!a.isActive && b.isActive) return 1;
-        if (a.seriesId > b.seriesId) return -1;
-        if (a.seriesId < b.seriesId) return 1;
-        return 0;
+        // Sort alphabetically by series code (AA, AB, AC, ..., AAA, AAB, etc.)
+        const codeA = getSeriesCode(a.seriesId);
+        const codeB = getSeriesCode(b.seriesId);
+        return codeA.localeCompare(codeB);
       });
-  }, [allSeriesInfoData, seriesIds, activeSeriesId]);
+  }, [allSeriesInfoData, seriesIds]);
 
   const decimals = useMemo(() => {
     if (typeof decimalsData === "number") return decimalsData;
@@ -272,18 +249,22 @@ export default function TicketsPage() {
     });
   }, []);
 
-  // Auto-expand active series on load and when activeSeriesId changes
+  // Auto-expand first available series on load
+  const firstAvailableSeries = useMemo(() => {
+    return allSeriesData.find(s => s.isActive);
+  }, [allSeriesData]);
+
   useEffect(() => {
-    if (activeSeriesId > BigInt(0)) {
+    if (firstAvailableSeries) {
       setExpandedSeries((prev) => {
         const next = new Set(prev);
-        if (!next.has(activeSeriesId)) {
-          next.add(activeSeriesId);
+        if (!next.has(firstAvailableSeries.seriesId)) {
+          next.add(firstAvailableSeries.seriesId);
         }
         return next;
       });
     }
-  }, [activeSeriesId]);
+  }, [firstAvailableSeries]);
 
   // Create ticket owner contracts for expanded series only
   const seriesTicketOwnerContracts = useMemo(() => {
@@ -352,6 +333,9 @@ export default function TicketsPage() {
           dataIndex++;
         }
 
+        // Ensure tickets are sorted in sequence (1, 2, 3, ...)
+        tickets.sort((a, b) => a.number - b.number);
+        
         newSeriesTicketsData.set(series.seriesId, { tickets, soldLookup });
       }
     });
@@ -372,25 +356,32 @@ export default function TicketsPage() {
     return allAvailable;
   }, [seriesTicketsData]);
 
-  // Active series tickets only (for quick select and manual picks section)
+  // First available series tickets (for quick select and manual picks section)
   const activeSeriesAvailableTickets = useMemo(() => {
-    const activeTickets = new Set<number>();
-    const activeSeriesData = seriesTicketsData.get(activeSeriesId);
-    if (activeSeriesData) {
-      activeSeriesData.tickets.forEach((ticket) => {
-        if (!ticket.isSold) {
-          activeTickets.add(ticket.number);
-        }
-      });
+    const availableTickets = new Set<number>();
+    if (firstAvailableSeries) {
+      const seriesData = seriesTicketsData.get(firstAvailableSeries.seriesId);
+      if (seriesData) {
+        seriesData.tickets.forEach((ticket) => {
+          if (!ticket.isSold) {
+            availableTickets.add(ticket.number);
+          }
+        });
+      }
     }
-    return activeTickets;
-  }, [seriesTicketsData, activeSeriesId]);
+    return availableTickets;
+  }, [seriesTicketsData, firstAvailableSeries]);
+
+  // Use first available series ID as "active" series for backward compatibility
+  const activeSeriesId = useMemo(() => {
+    return firstAvailableSeries?.seriesId || BigInt(0);
+  }, [firstAvailableSeries]);
 
   const activeSeriesAvailableNumbers = useMemo(() => {
     return Array.from(activeSeriesAvailableTickets).sort((a, b) => a - b);
   }, [activeSeriesAvailableTickets]);
 
-  // Get active series info to determine if buttons should be enabled
+  // Get first available series info to determine if buttons should be enabled
   const activeSeriesInfo = useMemo(() => {
     return allSeriesData.find(s => s.isActive);
   }, [allSeriesData]);
@@ -512,12 +503,10 @@ export default function TicketsPage() {
     [ticketCount]
   );
 
-  // Count only active series tickets for manual picks section
+  // Count all selected tickets (from any series)
   const selectionCount = useMemo(() => {
-    return selectedTickets.filter(
-      (ticket) => selectedTicketsSeries.get(ticket) === activeSeriesId
-    ).length;
-  }, [selectedTickets, selectedTicketsSeries, activeSeriesId]);
+    return selectedTickets.length;
+  }, [selectedTickets]);
 
   const selectionTotalCost = useMemo(() => {
     if (selectionCount === 0) return undefined;
@@ -604,14 +593,14 @@ export default function TicketsPage() {
       return;
     }
     
-    // For sequential purchase, use active series
-    const activeSeries = allSeriesData.find(s => s.isActive);
-    if (!activeSeries) {
-      setFeedback("No active series available for sequential purchase.");
+    // For sequential purchase, use first available series
+    const availableSeries = allSeriesData.find(s => s.isActive);
+    if (!availableSeries) {
+      setFeedback("No series with available tickets for sequential purchase.");
       return;
     }
-    if (ticketCount > activeSeries.ticketsLeft) {
-      setFeedback(`Only ${activeSeries.ticketsLeft} ticket(s) remain in the active series.`);
+    if (ticketCount > availableSeries.ticketsLeft) {
+      setFeedback(`Only ${availableSeries.ticketsLeft} ticket(s) remain in this series.`);
       return;
     }
     if (!totalCost || ticketCount < 1) {
@@ -643,11 +632,18 @@ export default function TicketsPage() {
 
       setStatus("buying");
 
+      // Get available series for sequential purchase
+      const availableSeries = allSeriesData.find(s => s.isActive);
+      if (!availableSeries) {
+        setFeedback("No series with available tickets.");
+        return;
+      }
+
       const buyHash = await writeContractAsync({
         address: lotteryAddress,
         abi: lotteryAbi,
         functionName: "buyTickets",
-        args: [BigInt(ticketCount)],
+        args: [availableSeries.seriesId, BigInt(ticketCount)],
       });
 
       await waitForTransactionReceipt(wagmiConfig, {
@@ -660,7 +656,6 @@ export default function TicketsPage() {
         refetchAllowance(),
         refetchAllSeriesInfo(),
         refetchPrice(),
-        refetchActiveSeriesId(),
         refetchAllTicketOwners(),
         refetchBalance(),
       ]);
@@ -671,10 +666,9 @@ export default function TicketsPage() {
     }
   }, [
     isConnected,
-    ticketCount,
-    needsApproval,
-    refetchActiveSeriesId,
-    refetchAllowance,
+      ticketCount,
+      needsApproval,
+      refetchAllowance,
     refetchPrice,
     refetchAllSeriesInfo,
     refetchAllTicketOwners,
@@ -962,17 +956,40 @@ export default function TicketsPage() {
       return;
     }
 
-    // For now, we can only buy from active series (contract limitation)
-    // Buy tickets from each series separately
-    const activeSeriesTickets = ticketsBySeries.get(activeSeriesId);
-    if (!activeSeriesTickets || activeSeriesTickets.length === 0) {
-      setSelectionFeedback("Please select tickets from the active series. Buying from other series requires contract updates.");
+    // Validate that all selected series have available tickets (isActive means available and not draw executed)
+    const invalidSeries: bigint[] = [];
+    for (const [seriesId, ticketNumbers] of ticketsBySeries.entries()) {
+      const series = allSeriesData.find(s => s.seriesId === seriesId);
+      // Check if series exists and has available tickets (isActive means it has tickets and isn't draw executed/completed)
+      if (!series || !series.isActive || series.ticketsLeft === 0) {
+        invalidSeries.push(seriesId);
+      }
+    }
+
+    if (invalidSeries.length > 0) {
+      setSelectionFeedback(`Cannot buy from completed or sold-out series: ${invalidSeries.map(id => formatSeriesName(id)).join(", ")}`);
+      // Remove tickets from invalid series
+      setSelectedTickets((current) =>
+        current.filter((ticket) => {
+          const ticketSeries = selectedTicketsSeries.get(ticket);
+          return !ticketSeries || !invalidSeries.includes(ticketSeries);
+        })
+      );
+      setSelectedTicketsSeries((prev) => {
+        const next = new Map(prev);
+        prev.forEach((seriesId, ticket) => {
+          if (invalidSeries.includes(seriesId)) {
+            next.delete(ticket);
+          }
+        });
+        return next;
+      });
       return;
     }
 
-    // If tickets from multiple series, warn user (for now only allow active series)
-    if (ticketsBySeries.size > 1) {
-      setSelectionFeedback("Currently, you can only buy tickets from the active series. Please select tickets from Series " + formatSeriesName(activeSeriesId));
+    // If no tickets selected, return
+    if (ticketsBySeries.size === 0) {
+      setSelectionFeedback("Please select tickets from an available series.");
       return;
     }
 
@@ -1000,21 +1017,60 @@ export default function TicketsPage() {
 
       setStatus("buying");
 
-      // Use tickets from active series
-      const sortedTickets = activeSeriesTickets.sort((a, b) => a - b);
-      const buyHash = await writeContractAsync({
-        address: lotteryAddress,
-        abi: lotteryAbi,
-        functionName: "buyTicketsAt",
-        args: [sortedTickets.map((ticket) => BigInt(ticket))],
-      });
+      // Buy tickets from each series separately
+      for (const [seriesId, ticketNumbers] of ticketsBySeries.entries()) {
+        // Ensure we have ticket numbers for this series
+        if (!ticketNumbers || ticketNumbers.length === 0) {
+          continue;
+        }
+        
+        // Remove duplicates, sort, and convert to bigint array
+        const uniqueTickets = [...new Set(ticketNumbers)];
+        const sortedTickets = uniqueTickets.sort((a, b) => a - b);
+        const ticketNumbersBigInt: bigint[] = sortedTickets.map((ticket) => BigInt(ticket));
+        
+        // Validate ticket numbers are positive and within valid range (1-100)
+        if (ticketNumbersBigInt.length === 0) {
+          setSelectionFeedback(`No valid tickets selected for series ${formatSeriesName(seriesId)}.`);
+          continue;
+        }
+        
+        if (ticketNumbersBigInt.some(ticket => ticket <= BigInt(0) || ticket > BigInt(100))) {
+          setSelectionFeedback(`Invalid ticket numbers detected for series ${formatSeriesName(seriesId)}. Tickets must be between 1-100.`);
+          return;
+        }
+        
+        // Find series info to validate it's active
+        const seriesInfo = allSeriesData.find(s => s.seriesId === seriesId);
+        if (!seriesInfo || !seriesInfo.isActive || seriesInfo.ticketsLeft === 0) {
+          setSelectionFeedback(`Series ${formatSeriesName(seriesId)} is no longer available. Please refresh and try again.`);
+          return;
+        }
+        
+        try {
+          const buyHash = await writeContractAsync({
+            address: lotteryAddress,
+            abi: lotteryAbi,
+            functionName: "buyTicketsAt",
+            args: [seriesId, ticketNumbersBigInt] as [bigint, bigint[]],
+          });
+          
+          await waitForTransactionReceipt(wagmiConfig, {
+            hash: buyHash,
+          });
+        } catch (seriesError) {
+          // Provide more specific error message for this series
+          const seriesName = formatSeriesName(seriesId);
+          const errorMsg = formatError(seriesError);
+          setSelectionFeedback(`Failed to buy tickets from series ${seriesName}: ${errorMsg}`);
+          throw seriesError; // Re-throw to stop processing other series
+        }
+      }
 
-      await waitForTransactionReceipt(wagmiConfig, {
-        hash: buyHash,
-      });
+      const totalPurchased = Array.from(ticketsBySeries.values()).reduce((sum, tickets) => sum + tickets.length, 0);
 
       setSelectionFeedback(
-        `Success! You reserved ${sortedTickets.length} ticket${sortedTickets.length === 1 ? "" : "s"}.`
+        `Success! You reserved ${totalPurchased} ticket${totalPurchased === 1 ? "" : "s"}.`
       );
       setSelectedTickets([]);
       setSelectedTicketsSeries(new Map());
@@ -1022,7 +1078,6 @@ export default function TicketsPage() {
         refetchAllowance(),
         refetchAllSeriesInfo(),
         refetchPrice(),
-        refetchActiveSeriesId(),
         refetchAllTicketOwners(),
         refetchBalance(),
       ]);
@@ -1034,10 +1089,9 @@ export default function TicketsPage() {
   }, [
     LOTTERY_ADDRESS,
     USDT_ADDRESS,
-    availableTicketSet,
-    isConnected,
-    refetchActiveSeriesId,
-    refetchAllowance,
+      availableTicketSet,
+      isConnected,
+      refetchAllowance,
     refetchPrice,
     refetchAllSeriesInfo,
     refetchAllTicketOwners,
@@ -1089,7 +1143,7 @@ export default function TicketsPage() {
                 Series: <strong>{allSeriesData.length}</strong>
               </span>
               <span>
-                Active: <strong>{allSeriesData.filter(s => s.isActive).length}</strong>
+                Available: <strong>{allSeriesData.filter(s => s.isActive).length}</strong>
               </span>
             </div>
           </div>
@@ -1102,7 +1156,7 @@ export default function TicketsPage() {
                 <p className={styles.selectionEyebrow}>Manual Selection</p>
                 <h3 className={styles.selectionTitle}>Pick Your Tickets</h3>
                 <p className={styles.selectionSubtitle}>
-                  Quick select and manual quantity tools work with the active series only. You can also manually click tickets from any series below, but only active series tickets can be purchased.
+                  Quick select and manual quantity tools work with the first available series. You can manually click tickets from any series below and purchase tickets from any available series.
                 </p>
               </div>
               <div className={styles.selectionHeaderStats}>
@@ -1191,18 +1245,18 @@ export default function TicketsPage() {
               <button
                 className={styles.selectionSecondaryButton}
                 onClick={handleShuffleSelection}
-                disabled={selectionCount === 0 || isBusy}
-                title={selectionCount === 0 ? "Select tickets first to shuffle" : "Shuffle selected tickets"}
+                disabled={selectedTickets.length === 0 || isBusy}
+                title={selectedTickets.length === 0 ? "Select tickets first to shuffle" : "Shuffle selected tickets from active series"}
               >
                 🔀 Shuffle (Active Series)
               </button>
               <button
                 className={styles.selectionSecondaryButton}
                 onClick={handleClearSelection}
-                disabled={selectionCount === 0 || isBusy}
-                title={selectionCount === 0 ? "No active series tickets to clear" : "Clear active series selection"}
+                disabled={selectedTickets.length === 0 || isBusy}
+                title={selectedTickets.length === 0 ? "No tickets selected" : "Clear all selected tickets"}
               >
-                ✕ Clear Active Series
+                ✕ Clear Selection
               </button>
             </div>
           </div>
@@ -1219,7 +1273,7 @@ export default function TicketsPage() {
               <>
                 <div className={styles.selectionChipsHeader}>
                   <span className={styles.selectionChipsLabel}>
-                    Your Selection ({selectedTickets.length} total, {selectionCount} from active series)
+                    Your Selection ({selectedTickets.length} ticket{selectedTickets.length !== 1 ? "s" : ""})
                   </span>
                 </div>
                 <div className={styles.selectionChips}>
@@ -1229,10 +1283,10 @@ export default function TicketsPage() {
                     return (
                       <button
                         key={`selected-${ticket}`}
-                        className={`${styles.selectionChip} ${!isFromActiveSeries ? styles.selectionChipInactive : ""}`}
+                        className={styles.selectionChip}
                         onClick={() => handleRemoveSelected(ticket)}
                         type="button"
-                        title={isFromActiveSeries ? "Click to remove" : "This ticket is from a different series. Only active series tickets can be purchased."}
+                        title="Click to remove from selection"
                       >
                         <span>
                           {ticketSeriesId ? formatTicketNumber(ticket, ticketSeriesId, padLength) : `#${ticket.toString().padStart(padLength, "0")}`}
@@ -1278,11 +1332,9 @@ export default function TicketsPage() {
               disabled={
                 !isConnected ||
                 !envReady ||
-                selectionCount === 0 ||
                 !selectionTotalCost ||
                 isBusy ||
-                selectedTickets.length === 0 ||
-                !selectedTickets.every(t => selectedTicketsSeries.get(t) === activeSeriesId)
+                selectedTickets.length === 0
               }
             >
               {isBusy
@@ -1291,7 +1343,7 @@ export default function TicketsPage() {
                   : "Confirming..."
                 : selectionNeedsApproval
                 ? "Approve & Buy Tickets"
-                : `Buy ${selectionCount} Ticket${selectionCount !== 1 ? "s" : ""}`}
+                : `Buy ${selectedTickets.length} Ticket${selectedTickets.length !== 1 ? "s" : ""}`}
             </button>
             {isConnected && (
               <p className={styles.selectionWalletHint}>
@@ -1382,7 +1434,9 @@ export default function TicketsPage() {
                         style={{ overflow: "hidden" }}
                       >
                         <div className={styles.seriesTicketsGrid}>
-                          {seriesTickets.tickets.map((ticket, ticketIndex) => {
+                          {seriesTickets.tickets
+                            .sort((a, b) => a.number - b.number)
+                            .map((ticket, ticketIndex) => {
                             // Only show as selected if this specific ticket (number + series) is selected
                             const isSelected = selectedTickets.includes(ticket.number) && 
                                               selectedTicketsSeries.get(ticket.number) === series.seriesId;

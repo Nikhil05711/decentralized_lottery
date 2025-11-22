@@ -10,7 +10,7 @@ import {
 } from "react";
 import { motion } from "framer-motion";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import { useAccount, useReadContract, useReadContracts, useWriteContract } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
 import { formatUnits, parseUnits, zeroAddress, BaseError } from "viem";
 import styles from "./page.module.css";
@@ -88,32 +88,64 @@ export default function Home() {
     },
   });
 
-  const { data: activeSeriesIdData } = useReadContract({
+  const { data: totalSeriesCountData } = useReadContract({
     address: LOTTERY_ADDRESS,
     abi: lotteryAbi,
-    functionName: "activeSeriesId",
+    functionName: "totalSeriesCount",
     query: {
       enabled: Boolean(LOTTERY_ADDRESS),
       refetchInterval: 20_000,
     },
   });
 
-  const activeSeriesId = useMemo(() => {
-    if (typeof activeSeriesIdData === "bigint") return activeSeriesIdData;
-    if (typeof activeSeriesIdData === "number") return BigInt(activeSeriesIdData);
-    return BigInt(0);
-  }, [activeSeriesIdData]);
+  const totalSeriesCount = useMemo(() => {
+    if (typeof totalSeriesCountData === "bigint") return Number(totalSeriesCountData);
+    if (typeof totalSeriesCountData === "number") return totalSeriesCountData;
+    return 0;
+  }, [totalSeriesCountData]);
 
-  const { data: activeSeriesInfoData } = useReadContract({
-    address: LOTTERY_ADDRESS,
-    abi: lotteryAbi,
-    functionName: "seriesInfo",
-    args: [activeSeriesId],
+  const seriesIds = useMemo(() => {
+    if (totalSeriesCount === 0) return [];
+    return Array.from({ length: totalSeriesCount }, (_, i) => BigInt(i + 1));
+  }, [totalSeriesCount]);
+
+  // Get info for all series to find available ones
+  const { data: allSeriesInfoData } = useReadContracts({
+    contracts: seriesIds.map((seriesId) => ({
+      address: LOTTERY_ADDRESS!,
+      abi: lotteryAbi,
+      functionName: "getSeriesInfo" as const,
+      args: [seriesId],
+    })),
     query: {
-      enabled: Boolean(LOTTERY_ADDRESS),
+      enabled: Boolean(LOTTERY_ADDRESS) && seriesIds.length > 0,
       refetchInterval: 20_000,
     },
   });
+
+  // Find first available series (with tickets left)
+  const firstAvailableSeries = useMemo(() => {
+    if (!allSeriesInfoData || allSeriesInfoData.length === 0) return null;
+    
+    for (let i = 0; i < seriesIds.length; i++) {
+      const info = allSeriesInfoData[i];
+      if (info?.status === "success" && info.result) {
+        const tuple = info.result as ReadonlyArray<unknown>;
+        const total = Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0);
+        const sold = Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0);
+        const drawExecuted = Array.isArray(tuple) && typeof tuple[2] === "boolean" ? tuple[2] : false;
+        
+        if (!drawExecuted && sold < total && total > BigInt(0)) {
+          return {
+            seriesId: seriesIds[i],
+            total,
+            sold,
+          };
+        }
+      }
+    }
+    return null;
+  }, [allSeriesInfoData, seriesIds]);
 
   const { data: allowanceData, refetch: refetchAllowance } = useReadContract({
     address: USDT_ADDRESS,
@@ -187,38 +219,24 @@ export default function Home() {
     return Number(value);
   }, [ticketsSold]);
 
-  const activeSeriesTotals = useMemo(() => {
-    if (!activeSeriesInfoData) {
-      return { total: BigInt(0), sold: BigInt(0) };
-    }
-    const tuple = activeSeriesInfoData as ReadonlyArray<unknown> & {
-      totalTickets?: bigint;
-      ticketsSold?: bigint;
-    };
-    const total =
-      typeof tuple.totalTickets === "bigint"
-        ? tuple.totalTickets
-        : (Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0));
-    const sold =
-      typeof tuple.ticketsSold === "bigint"
-        ? tuple.ticketsSold
-        : (Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0));
-    return { total, sold };
-  }, [activeSeriesInfoData]);
-
   const activeSeriesTotalCount = useMemo(
-    () => clampToSafeNumber(activeSeriesTotals.total),
-    [activeSeriesTotals]
+    () => firstAvailableSeries ? clampToSafeNumber(firstAvailableSeries.total) : 0,
+    [firstAvailableSeries]
   );
 
   const activeSeriesSoldCount = useMemo(
-    () => clampToSafeNumber(activeSeriesTotals.sold),
-    [activeSeriesTotals]
+    () => firstAvailableSeries ? clampToSafeNumber(firstAvailableSeries.sold) : 0,
+    [firstAvailableSeries]
+  );
+
+  const activeSeriesId = useMemo(
+    () => firstAvailableSeries?.seriesId || BigInt(0),
+    [firstAvailableSeries]
   );
 
   const hasActiveSeries = useMemo(
-    () => activeSeriesId > BigInt(0),
-    [activeSeriesId]
+    () => firstAvailableSeries !== null,
+    [firstAvailableSeries]
   );
 
   const ticketsLeft = useMemo(
@@ -227,8 +245,8 @@ export default function Home() {
   );
 
   const salesOpen = useMemo(
-    () => hasActiveSeries && activeSeriesTotals.total > activeSeriesTotals.sold,
-    [activeSeriesTotals, hasActiveSeries]
+    () => hasActiveSeries && ticketsLeft > 0,
+    [hasActiveSeries, ticketsLeft]
   );
 
   const seriesAvailability = useMemo(() => {
@@ -239,14 +257,14 @@ export default function Home() {
   }, [activeSeriesTotalCount, hasActiveSeries, ticketsLeft]);
 
   const previewTicketNumbers = useMemo(() => {
-    if (!salesOpen || ticketCount < 1) return [];
-    const start = activeSeriesTotals.sold + BigInt(1);
+    if (!salesOpen || ticketCount < 1 || !firstAvailableSeries) return [];
+    const start = firstAvailableSeries.sold + BigInt(1);
     const limit = Math.min(ticketCount, 6);
     return Array.from({ length: limit }, (_, index) => {
       const ticketNumber = start + BigInt(index);
       return ticketNumber.toString();
     });
-  }, [activeSeriesTotals.sold, salesOpen, ticketCount]);
+  }, [firstAvailableSeries, salesOpen, ticketCount]);
 
   const maxSelectable = useMemo(() => {
     if (!salesOpen) return 0;
@@ -365,11 +383,17 @@ export default function Home() {
 
       setStatus("buying");
 
+      // Get available series for purchase
+      if (!firstAvailableSeries) {
+        setFeedback("No series with available tickets. Please try again.");
+        return;
+      }
+
       const buyHash = await writeContractAsync({
         address: LOTTERY_ADDRESS,
         abi: lotteryAbi,
         functionName: "buyTickets",
-        args: [BigInt(ticketCount)],
+        args: [firstAvailableSeries.seriesId, BigInt(ticketCount)],
       });
 
       await waitForTransactionReceipt(wagmiConfig, {
