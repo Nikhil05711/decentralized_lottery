@@ -67,6 +67,10 @@ export default function TicketsPage() {
   const [expandedSeries, setExpandedSeries] = useState<Set<bigint>>(new Set());
   const [seriesTicketsData, setSeriesTicketsData] = useState<Map<bigint, { tickets: Array<{ number: number; isSold: boolean }>; soldLookup: Set<number> | null }>>(new Map());
   const [selectedSeriesForQuickSelect, setSelectedSeriesForQuickSelect] = useState<bigint | null>(null);
+  const [countdownStartTimes, setCountdownStartTimes] = useState<Map<bigint, number>>(new Map()); // seriesId -> timestamp
+  const COUNTDOWN_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const DRAW_THRESHOLD_PERCENT = 90;
+  const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key for persisting timers
 
   const { data: totalSeriesCountData } = useReadContract({
     address: LOTTERY_ADDRESS,
@@ -156,6 +160,8 @@ export default function TicketsPage() {
     isActive: boolean;
     isCompleted: boolean;
     ticketsLeft: number;
+    salesPercent: number;
+    isNearDraw: boolean; // 90% or more sold
   };
 
   const allSeriesData = useMemo(() => {
@@ -175,6 +181,8 @@ export default function TicketsPage() {
         const isCompleted = total > BigInt(0) && sold === total;
         const hasAvailableTickets = !drawExecuted && sold < total && total > BigInt(0);
         const ticketsLeft = Math.max(Number(total) - Number(sold), 0);
+        const salesPercent = total > BigInt(0) ? Math.round((Number(sold) / Number(total)) * 100) : 0;
+        const isNearDraw = salesPercent >= 90 && !drawExecuted && sold < total; // 90% or more but not 100%
 
         return {
           seriesId,
@@ -183,6 +191,8 @@ export default function TicketsPage() {
           isActive: hasAvailableTickets,
           isCompleted,
           ticketsLeft,
+          salesPercent,
+          isNearDraw,
         } as SeriesData;
       })
       .filter((series): series is SeriesData => series !== null)
@@ -279,7 +289,7 @@ export default function TicketsPage() {
       setSelectedSeriesForQuickSelect(firstAvailableSeries.seriesId);
     } else if (selectedSeriesForQuickSelect && !allSeriesData.find(s => s.seriesId === selectedSeriesForQuickSelect && s.isActive)) {
       // If selected series is no longer available, switch to first available
-      if (firstAvailableSeries) {
+    if (firstAvailableSeries) {
         setSelectedSeriesForQuickSelect(firstAvailableSeries.seriesId);
       } else {
         setSelectedSeriesForQuickSelect(null);
@@ -311,6 +321,180 @@ export default function TicketsPage() {
       });
     }
   }, [firstAvailableSeries, selectedSeriesForQuickSelect]);
+
+  // Load countdown timers from localStorage on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    try {
+      const stored = localStorage.getItem(COUNTDOWN_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        const timers = new Map<bigint, number>();
+        
+        Object.entries(parsed).forEach(([seriesIdStr, timestamp]) => {
+          const seriesId = BigInt(seriesIdStr);
+          const startTime = timestamp as number;
+          const elapsed = Date.now() - startTime;
+          
+          // Only restore if timer hasn't expired (within 5 minutes)
+          if (elapsed < COUNTDOWN_DURATION) {
+            timers.set(seriesId, startTime);
+          }
+        });
+        
+        if (timers.size > 0) {
+          setCountdownStartTimes(timers);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load countdown timers from localStorage:", error);
+    }
+  }, []); // Run once on mount
+
+  // Save countdown timers to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window === "undefined" || countdownStartTimes.size === 0) {
+      // Clear localStorage if no timers
+      try {
+        localStorage.removeItem(COUNTDOWN_STORAGE_KEY);
+      } catch (error) {
+        console.error("Failed to clear countdown timers from localStorage:", error);
+      }
+      return;
+    }
+
+    try {
+      const toStore: Record<string, number> = {};
+      countdownStartTimes.forEach((timestamp, seriesId) => {
+        toStore[seriesId.toString()] = timestamp;
+      });
+      localStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(toStore));
+    } catch (error) {
+      console.error("Failed to save countdown timers to localStorage:", error);
+    }
+  }, [countdownStartTimes]);
+
+  // Detect when series reaches 90% and start/restore countdown timer
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    allSeriesData.forEach((series) => {
+      if (series.isNearDraw) {
+        // Check if timer exists in state
+        const existingStartTime = countdownStartTimes.get(series.seriesId);
+        
+        if (!existingStartTime) {
+          // Check localStorage for existing timer first (only if not in state)
+          try {
+            const stored = localStorage.getItem(COUNTDOWN_STORAGE_KEY);
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              const seriesIdStr = series.seriesId.toString();
+              
+              if (parsed[seriesIdStr]) {
+                const storedStartTime = parsed[seriesIdStr] as number;
+                const elapsed = Date.now() - storedStartTime;
+                
+                // Only restore if timer hasn't expired
+                if (elapsed < COUNTDOWN_DURATION) {
+                  setCountdownStartTimes((prev) => {
+                    // Only update if not already set
+                    if (prev.has(series.seriesId)) return prev;
+                    const next = new Map(prev);
+                    next.set(series.seriesId, storedStartTime);
+                    return next;
+                  });
+                  return; // Timer restored from localStorage
+                } else {
+                  // Timer expired, remove from localStorage
+                  delete parsed[seriesIdStr];
+                  if (Object.keys(parsed).length === 0) {
+                    localStorage.removeItem(COUNTDOWN_STORAGE_KEY);
+                  } else {
+                    localStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(parsed));
+                  }
+                }
+              }
+            }
+          } catch (error) {
+            console.error("Failed to check localStorage for countdown timer:", error);
+          }
+          
+          // No existing timer found in localStorage, create new one
+          setCountdownStartTimes((prev) => {
+            // Only create if not already exists
+            if (prev.has(series.seriesId)) return prev;
+            const next = new Map(prev);
+            next.set(series.seriesId, Date.now());
+            return next;
+          });
+        } else {
+          // Timer exists in state, verify it hasn't expired
+          const elapsed = Date.now() - existingStartTime;
+          if (elapsed >= COUNTDOWN_DURATION) {
+            // Timer expired, remove it
+            setCountdownStartTimes((prev) => {
+              if (!prev.has(series.seriesId)) return prev;
+              const next = new Map(prev);
+              next.delete(series.seriesId);
+              return next;
+            });
+          }
+        }
+      } else {
+        // Series is no longer near draw (sold out, drawn, or dropped below 90%)
+        // Remove timer only if it exists
+        if (countdownStartTimes.has(series.seriesId)) {
+          setCountdownStartTimes((prev) => {
+            if (!prev.has(series.seriesId)) return prev;
+            const next = new Map(prev);
+            next.delete(series.seriesId);
+            return next;
+          });
+        }
+      }
+    });
+  }, [allSeriesData]); // Removed countdownStartTimes from dependencies to avoid loops
+
+  // State for countdown display (updates every second)
+  const [currentTime, setCurrentTime] = useState(Date.now());
+  
+  useEffect(() => {
+    if (countdownStartTimes.size > 0) {
+      const interval = setInterval(() => {
+        setCurrentTime(Date.now());
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [countdownStartTimes.size]);
+
+  // Calculate countdown time remaining for a series
+  const getCountdownRemaining = useCallback((seriesId: bigint): number | null => {
+    const startTime = countdownStartTimes.get(seriesId);
+    if (!startTime) return null;
+    
+    const elapsed = currentTime - startTime;
+    const remaining = COUNTDOWN_DURATION - elapsed;
+    return Math.max(0, remaining);
+  }, [countdownStartTimes, currentTime]);
+
+  // Format countdown time as MM:SS
+  const formatCountdown = useCallback((ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }, []);
+
+  // Get series that are in countdown mode (90%+ sold with active timer)
+  const seriesInCountdown = useMemo(() => {
+    return allSeriesData.filter((series) => {
+      if (!series.isNearDraw) return false;
+      const remaining = getCountdownRemaining(series.seriesId);
+      return remaining !== null && remaining > 0;
+    });
+  }, [allSeriesData, getCountdownRemaining, currentTime]);
 
   // Auto-expand selected series from dropdown and collapse others
   useEffect(() => {
@@ -399,7 +583,7 @@ export default function TicketsPage() {
 
         // Ensure tickets are sorted in sequence (1, 2, 3, ...)
         tickets.sort((a, b) => a.number - b.number);
-        
+
         newSeriesTicketsData.set(series.seriesId, { tickets, soldLookup });
       }
     });
@@ -730,9 +914,9 @@ export default function TicketsPage() {
     }
   }, [
     isConnected,
-      ticketCount,
-      needsApproval,
-      refetchAllowance,
+    ticketCount,
+    needsApproval,
+    refetchAllowance,
     refetchPrice,
     refetchAllSeriesInfo,
     refetchAllTicketOwners,
@@ -1112,16 +1296,16 @@ export default function TicketsPage() {
         }
         
         try {
-          const buyHash = await writeContractAsync({
-            address: lotteryAddress,
-            abi: lotteryAbi,
-            functionName: "buyTicketsAt",
+        const buyHash = await writeContractAsync({
+          address: lotteryAddress,
+          abi: lotteryAbi,
+          functionName: "buyTicketsAt",
             args: [seriesId, ticketNumbersBigInt] as [bigint, bigint[]],
-          });
-          
-          await waitForTransactionReceipt(wagmiConfig, {
-            hash: buyHash,
-          });
+        });
+        
+        await waitForTransactionReceipt(wagmiConfig, {
+          hash: buyHash,
+        });
         } catch (seriesError) {
           // Provide more specific error message for this series
           const seriesName = formatSeriesName(seriesId);
@@ -1153,9 +1337,9 @@ export default function TicketsPage() {
   }, [
     LOTTERY_ADDRESS,
     USDT_ADDRESS,
-      availableTicketSet,
-      isConnected,
-      refetchAllowance,
+    availableTicketSet,
+    isConnected,
+    refetchAllowance,
     refetchPrice,
     refetchAllSeriesInfo,
     refetchAllTicketOwners,
@@ -1212,6 +1396,40 @@ export default function TicketsPage() {
             </div>
           </div>
         </header>
+
+        {/* Countdown Timer Banner for 90%+ Series */}
+        {seriesInCountdown.length > 0 && (
+          <div className={styles.countdownBannerContainer}>
+            <AnimatePresence mode="popLayout">
+              {seriesInCountdown.map((series) => {
+                const remaining = getCountdownRemaining(series.seriesId);
+                if (!remaining || remaining <= 0) return null;
+                return (
+                  <motion.div
+                    key={`countdown-${series.seriesId}`}
+                    className={styles.countdownBanner}
+                    initial={{ opacity: 0, y: -30, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -30, scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <div className={styles.countdownContent}>
+                      <div className={styles.countdownLabel}>
+                        ⚡ LAST CHANCE - Series {formatSeriesName(series.seriesId)} - Only {series.ticketsLeft} tickets left!
+                      </div>
+                      <div className={styles.countdownTimer}>
+                        {formatCountdown(remaining)}
+                      </div>
+                      <div className={styles.countdownSubtext}>
+                        Hurry! Get your tickets before the draw!
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        )}
 
         <section className={styles.selectionPanel}>
           <div className={styles.selectionHeader}>
@@ -1526,14 +1744,15 @@ export default function TicketsPage() {
                             // Only show as selected if this specific ticket (number + series) is selected
                             const isSelected = selectedTickets.includes(ticket.number) && 
                                               selectedTicketsSeries.get(ticket.number) === series.seriesId;
+                            const isNearDrawTicket = series.isNearDraw && !ticket.isSold;
                             return (
                               <motion.div
                                 key={`series-${series.seriesId}-ticket-${ticket.number}`}
                                 className={`${styles.ticket} ${
                                   ticket.isSold ? styles.ticketSold : styles.ticketAvailable
-                                } ${!ticket.isSold ? styles.ticketInteractive : ""} ${
-                                  isSelected ? styles.ticketSelected : ""
-                                }`}
+                                } ${isNearDrawTicket ? styles.ticketNearDraw : ""} ${
+                                  !ticket.isSold ? styles.ticketInteractive : ""
+                                } ${isSelected ? styles.ticketSelected : ""}`}
                 initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
