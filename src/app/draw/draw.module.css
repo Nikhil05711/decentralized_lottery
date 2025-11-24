@@ -708,6 +708,28 @@
   overflow-wrap: break-word;
 }
 
+.automationBanner {
+  padding: 16px 20px;
+  border-radius: 18px;
+  border: 2px solid rgba(250, 204, 21, 0.5);
+  background: rgba(250, 204, 21, 0.15);
+  color: rgba(234, 179, 8, 0.95);
+  margin-top: 16px;
+  font-size: 0.95rem;
+  animation: automationPulse 2s ease-in-out infinite;
+}
+
+@keyframes automationPulse {
+  0%, 100% {
+    border-color: rgba(250, 204, 21, 0.5);
+    background: rgba(250, 204, 21, 0.15);
+  }
+  50% {
+    border-color: rgba(250, 204, 21, 0.8);
+    background: rgba(250, 204, 21, 0.25);
+  }
+}
+
 @media (max-width: 768px) {
   .statusBanner {
     padding: 14px 18px;

@@ -1,250 +1,29 @@
-[00:00:00.853] Server  LOG      ✓ Ready in 625ms
-[00:00:03.899] Server  LOG      ○ Compiling /tickets ...
-[00:00:11.378] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:11.484] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:11.490] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:11.496] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:11.715] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:12.853] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:13.116] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:13.121] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:13.126] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:13.855] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:00:13.855] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:00:13.855] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:01:01.055] Server  LOG      ✓ Compiled in 66ms
-[00:01:05.398] Server  LOG      ✓ Compiled in 43ms
-[00:01:07.566] Server  LOG      ✓ Compiled in 62ms
-[00:01:21.265] Server  LOG      ✓ Compiled in 64ms
-[00:01:34.168] Server  LOG      ✓ Compiled in 100ms
-[00:01:38.516] Server  LOG      ✓ Compiled in 54ms
-[00:02:18.870] Server  LOG      ✓ Compiled in 31ms
-[00:03:14.980] Server  LOG      ✓ Compiled in 52ms
-[00:03:44.374] Server  LOG      ✓ Compiled in 49ms
-[00:04:04.247] Server  LOG      ✓ Compiled in 72ms
-[00:04:04.854] Browser ERROR   ./src/app/tickets/page.tsx:380:10
-Ecmascript file had an error
-  378 |
-  379 |   // State for countdown display (updates every second)
-> 380 |   const [currentTime, setCurrentTime] = useState(Date.now());
-      |          ^^^^^^^^^^^
-  381 |   
-  382 |   useEffect(() => {
-  383 |     if (countdownStartTimes.size > 0) {
-
-the name `currentTime` is defined multiple times
-
-Import traces:
-  Client Component Browser:
-    ./src/app/tickets/page.tsx [Client Component Browser]
-    ./src/app/tickets/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/tickets/page.tsx [Client Component SSR]
-    ./src/app/tickets/page.tsx [Server Component]
-[00:04:04.854] Browser ERROR   ./src/app/tickets/page.tsx:380:23
-Ecmascript file had an error
-  378 |
-  379 |   // State for countdown display (updates every second)
-> 380 |   const [currentTime, setCurrentTime] = useState(Date.now());
-      |                       ^^^^^^^^^^^^^^
-  381 |   
-  382 |   useEffect(() => {
-  383 |     if (countdownStartTimes.size > 0) {
-
-the name `setCurrentTime` is defined multiple times
-
-Import traces:
-  Client Component Browser:
-    ./src/app/tickets/page.tsx [Client Component Browser]
-    ./src/app/tickets/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/tickets/page.tsx [Client Component SSR]
-    ./src/app/tickets/page.tsx [Server Component]
-[00:04:10.620] Server  LOG      ✓ Compiled in 51ms
-[00:04:24.582] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:04:24.915] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:04:24.931] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:04:24.948] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:04:25.237] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:04:26.469] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:04:27.071] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:04:27.079] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:04:27.086] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:04:27.086] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:04:27.086] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:04:27.164] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:04:35.856] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:04:35.868] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:04:35.880] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:04:36.062] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:04:37.772] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:04:38.409] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:04:38.418] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:04:38.426] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:04:38.427] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:04:38.427] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:04:38.518] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:06:44.426] Server  LOG      ✓ Compiled in 48ms
-[00:06:58.783] Server  LOG      ✓ Compiled in 44ms
-[00:07:11.505] Server  LOG      ✓ Compiled in 32ms
-[00:07:23.639] Server  LOG      ✓ Compiled in 37ms
-[00:08:41.316] Server  LOG      ○ Compiling /rewards ...
-[00:09:08.158] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:09:08.268] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:09:08.275] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:09:08.281] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:09:08.473] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:09:09.369] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:09:09.369] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
-[00:09:09.751] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:09:09.758] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:09:09.765] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:09:09.765] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:09:09.852] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:09:09.852] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:10:32.248] Server  LOG      ✓ Compiled in 63ms
-[00:11:00.625] Server  LOG      ✓ Compiled in 67ms
-[00:11:14.563] Server  LOG      ✓ Compiled in 53ms
-[00:11:14.855] Browser ERROR   ./src/app/tickets/page.tsx:74:9
-Ecmascript file had an error
-  72 |   const DRAW_THRESHOLD_PERCENT = 90;
-  73 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-> 74 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-     |         ^^^^^^^^^^^^^^^^^^^^^
-  75 |
-  76 |   const { data: totalSeriesCountData } = useReadContract({
-  77 |     address: LOTTERY_ADDRESS,
-
-the name `COUNTDOWN_STORAGE_KEY` is defined multiple times
-
-Import traces:
-  Client Component Browser:
-    ./src/app/tickets/page.tsx [Client Component Browser]
-    ./src/app/tickets/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/tickets/page.tsx [Client Component SSR]
-    ./src/app/tickets/page.tsx [Server Component]
-[00:11:54.270] Server  LOG      ✓ Compiled in 45ms
-[00:11:54.854] Browser ERROR   ./src/app/tickets/page.tsx:74:9
-Ecmascript file had an error
-  72 |   const DRAW_THRESHOLD_PERCENT = 90;
-  73 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-> 74 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-     |         ^^^^^^^^^^^^^^^^^^^^^
-  75 |
-  76 |   const { data: totalSeriesCountData } = useReadContract({
-  77 |     address: LOTTERY_ADDRESS,
-
-the name `COUNTDOWN_STORAGE_KEY` is defined multiple times
-
-Import traces:
-  Client Component Browser:
-    ./src/app/tickets/page.tsx [Client Component Browser]
-    ./src/app/tickets/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/tickets/page.tsx [Client Component SSR]
-    ./src/app/tickets/page.tsx [Server Component]
-[00:12:08.855] Browser ERROR   ./src/app/tickets/page.tsx:74:9
-Ecmascript file had an error
-  72 |   const DRAW_THRESHOLD_PERCENT = 90;
-  73 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-> 74 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-     |         ^^^^^^^^^^^^^^^^^^^^^
-  75 |
-  76 |   const { data: totalSeriesCountData } = useReadContract({
-  77 |     address: LOTTERY_ADDRESS,
-
-the name `COUNTDOWN_STORAGE_KEY` is defined multiple times
-
-Import traces:
-  Client Component Browser:
-    ./src/app/tickets/page.tsx [Client Component Browser]
-    ./src/app/tickets/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/tickets/page.tsx [Client Component SSR]
-    ./src/app/tickets/page.tsx [Server Component]
-[00:12:08.855] Browser ERROR   ./src/app/tickets/page.tsx:74:9
-Ecmascript file had an error
-  72 |   const DRAW_THRESHOLD_PERCENT = 90;
-  73 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-> 74 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-     |         ^^^^^^^^^^^^^^^^^^^^^
-  75 |
-  76 |   const { data: totalSeriesCountData } = useReadContract({
-  77 |     address: LOTTERY_ADDRESS,
-
-the name `COUNTDOWN_STORAGE_KEY` is defined multiple times
-
-Import traces:
-  Client Component Browser:
-    ./src/app/tickets/page.tsx [Client Component Browser]
-    ./src/app/tickets/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/tickets/page.tsx [Client Component SSR]
-    ./src/app/tickets/page.tsx [Server Component]
-[00:12:09.686] Server  LOG      ✓ Compiled in 44ms
-[00:12:09.856] Browser ERROR   ./src/app/tickets/page.tsx:74:9
-Ecmascript file had an error
-  72 |   const DRAW_THRESHOLD_PERCENT = 90;
-  73 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key for persisting timers
-> 74 |   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key
-     |         ^^^^^^^^^^^^^^^^^^^^^
-  75 |
-  76 |   const { data: totalSeriesCountData } = useReadContract({
-  77 |     address: LOTTERY_ADDRESS,
-
-the name `COUNTDOWN_STORAGE_KEY` is defined multiple times
-
-Import traces:
-  Client Component Browser:
-    ./src/app/tickets/page.tsx [Client Component Browser]
-    ./src/app/tickets/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/tickets/page.tsx [Client Component SSR]
-    ./src/app/tickets/page.tsx [Server Component]
-[00:15:47.631] Server  LOG      ✓ Compiled in 77ms
-[00:15:47.909] Browser ERROR   The final argument passed to %s changed size between renders. The order and size of this array must remain constant.
-
-Previous: %s
-Incoming: %s useEffect [[object Object],[object Object],[object Object], [object Map]] [[object Object],[object Object],[object Object]]
-[00:16:21.931] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:16:22.056] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:16:22.063] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:16:22.069] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:16:22.277] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:16:23.147] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:16:23.497] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:16:23.511] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:16:23.522] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:16:23.523] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:16:23.615] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:16:23.615] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:16:25.460] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:16:25.469] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:16:25.477] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:16:25.598] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:16:26.449] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:16:27.185] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:16:27.197] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:16:27.210] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:16:27.211] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:16:27.211] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:16:27.305] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:16:28.049] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:16:28.057] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:16:28.066] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:16:28.206] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:16:29.482] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:16:30.050] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:16:30.056] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:16:30.064] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:16:30.064] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:16:30.064] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:16:30.142] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:00.859] Server  LOG      ✓ Ready in 627ms
+[00:00:03.898] Server  LOG      ○ Compiling / ...
+[00:00:10.359] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:10.475] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:10.484] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:10.490] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:10.710] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:11.899] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:12.408] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:12.416] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:12.423] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:12.601] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:00:12.601] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:00:12.601] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:30.432] Server  LOG      ○ Compiling /tickets ...
+[00:00:45.606] Server  LOG      ○ Compiling /my-tickets ...
+[00:07:10.174] Server  LOG      ○ Compiling /rewards ...
+[00:08:23.070] Browser ERROR   Failed to create admin wallet: {}
+[00:13:39.783] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:13:39.789] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:13:39.796] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:13:40.004] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:13:40.299] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:13:43.198] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:13:43.206] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:13:43.213] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:13:43.214] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:13:43.290] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:13:43.290] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
