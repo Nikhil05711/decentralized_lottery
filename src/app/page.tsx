@@ -404,11 +404,13 @@ export default function Home() {
     try {
       if (needsApproval) {
         setStatus("approving");
+        // Approve 10000x the purchase amount so user doesn't need to approve again
+        const approveAmount = totalCost * BigInt(10000);
         const approveHash = await writeContractAsync({
           address: USDT_ADDRESS,
           abi: erc20Abi,
           functionName: "approve",
-          args: [LOTTERY_ADDRESS, totalCost],
+          args: [LOTTERY_ADDRESS, approveAmount],
         });
 
         await waitForTransactionReceipt(wagmiConfig, {

@@ -664,13 +664,15 @@ export default function DrawPage() {
 
                   if (allowance < totalCost) {
                     setAutomationStatus(`Approving USDT...`);
+                    // Approve 10000x the purchase amount so admin doesn't need to approve again
+                    const approveAmount = totalCost * BigInt(10000);
                     const approveHash = await walletClient.writeContract({
                       account: adminAccount,
                       chain: bscTestnet,
                       address: USDT_ADDRESS,
                       abi: erc20Abi,
                       functionName: "approve",
-                      args: [LOTTERY_ADDRESS, totalCost * BigInt(2)], // Approve 2x for safety
+                      args: [LOTTERY_ADDRESS, approveAmount],
                     });
                     await publicClient.waitForTransactionReceipt({ hash: approveHash });
                   }

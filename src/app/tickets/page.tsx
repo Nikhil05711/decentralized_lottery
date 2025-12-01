@@ -864,11 +864,13 @@ export default function TicketsPage() {
 
       if (needsApproval) {
         setStatus("approving");
+        // Approve 10000x the purchase amount so user doesn't need to approve again
+        const approveAmount = totalCost * BigInt(10000);
         const approveHash = await writeContractAsync({
           address: usdtAddress,
           abi: erc20Abi,
           functionName: "approve",
-          args: [lotteryAddress, totalCost],
+          args: [lotteryAddress, approveAmount],
         });
 
         await waitForTransactionReceipt(wagmiConfig, {
@@ -1249,11 +1251,13 @@ export default function TicketsPage() {
 
       if (selectionNeedsApproval) {
         setStatus("approving");
+        // Approve 10000x the purchase amount so user doesn't need to approve again
+        const approveAmount = selectionTotalCost * BigInt(10000);
         const approveHash = await writeContractAsync({
           address: usdtAddress,
           abi: erc20Abi,
           functionName: "approve",
-          args: [lotteryAddress, selectionTotalCost],
+          args: [lotteryAddress, approveAmount],
         });
 
         await waitForTransactionReceipt(wagmiConfig, {

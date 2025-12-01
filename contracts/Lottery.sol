@@ -1,3 +1,7 @@
+/**
+ *Submitted for verification at testnet.bscscan.com on 2025-11-29
+*/
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
@@ -9,6 +13,8 @@ contract Lottery {
     /// -----------------------------------------------------------------------
 
     event TicketPriceUpdated(uint256 newPrice);
+    event RewardUpdated(uint256 newReward);
+
     event TicketPurchased(
         address indexed buyer,
         uint256 count,
@@ -51,7 +57,6 @@ contract Lottery {
     error DrawAlreadyExecuted(uint256 seriesId);
     error NotEnoughTicketsSold(uint256 seriesId);
 
-
     /// -----------------------------------------------------------------------
     /// Storage
     /// -----------------------------------------------------------------------
@@ -73,6 +78,7 @@ contract Lottery {
     uint256 public ticketPrice;
     uint256 public ticketsSold;
     uint256 public totalSeriesCount;
+    uint256 public rewardPerUser = 1;
     mapping(uint256 => Series) public seriesInfo;
     mapping(address => uint256) public ticketBalances;
     mapping(uint256 => address) public ticketOwners;
@@ -97,7 +103,7 @@ contract Lottery {
         if (usdtAddress == address(0)) revert InvalidAddress();
         owner = msg.sender;
         usdt = IERC20(usdtAddress);
-        ticketPrice = 0.11 * 10**18;
+        ticketPrice = 0.11 * 10 ** 18;
     }
 
     /// -----------------------------------------------------------------------
@@ -107,6 +113,11 @@ contract Lottery {
     function setTicketPrice(uint256 newTicketPrice) external onlyOwner {
         ticketPrice = newTicketPrice;
         emit TicketPriceUpdated(newTicketPrice);
+    }
+
+    function setReward(uint256 newReward) external onlyOwner {
+        ticketPrice = newReward;
+        emit RewardUpdated(newReward);
     }
 
     function transferOwnership(address newOwner) external onlyOwner {
@@ -136,16 +147,18 @@ contract Lottery {
     /// @param seriesId The series ID to draw for
     function executeDraw(uint256 seriesId) external onlyOwner {
         // Validate series exists
-        if (seriesId == 0 || seriesId > totalSeriesCount) revert InvalidSeriesId(seriesId);
-        
+        if (seriesId == 0 || seriesId > totalSeriesCount)
+            revert InvalidSeriesId(seriesId);
+
         Series storage currentSeries = seriesInfo[seriesId];
-        
+
         // Validate series has at least 90 tickets sold
-        if (currentSeries.ticketsSold < DRAW_THRESHOLD) revert NotEnoughTicketsSold(seriesId);
-        
+        if (currentSeries.ticketsSold < DRAW_THRESHOLD)
+            revert NotEnoughTicketsSold(seriesId);
+
         // Validate draw hasn't been executed yet
         if (currentSeries.drawExecuted) revert DrawAlreadyExecuted(seriesId);
-        
+
         // Generate random seed from block data
         // Note: In production, use Chainlink VRF for true randomness
         uint256 randomSeed = uint256(
@@ -160,14 +173,17 @@ contract Lottery {
                 )
             )
         );
-        
+
         currentSeries.drawRandomSeed = randomSeed;
-        
+
         // Generate 10 unique random ticket numbers between 1 and 100
-        uint256[] memory winningNumbers = _generateWinningNumbers(randomSeed, currentSeries.ticketsSold);
+        uint256[] memory winningNumbers = _generateWinningNumbers(
+            randomSeed,
+            currentSeries.ticketsSold
+        );
         currentSeries.winningTicketNumbers = winningNumbers;
         currentSeries.drawExecuted = true;
-        
+
         emit DrawExecuted(seriesId, winningNumbers, randomSeed);
     }
 
@@ -175,40 +191,45 @@ contract Lottery {
     /// @param seriesId The series ID to distribute rewards for
     function distributeRewards(uint256 seriesId) external onlyOwner {
         // Validate series exists
-        if (seriesId == 0 || seriesId > totalSeriesCount) revert InvalidSeriesId(seriesId);
-        
+        if (seriesId == 0 || seriesId > totalSeriesCount)
+            revert InvalidSeriesId(seriesId);
+
         Series storage currentSeries = seriesInfo[seriesId];
-        
+
         // Validate draw has been executed
         if (!currentSeries.drawExecuted) revert DrawNotExecuted(seriesId);
-        
+
         // Validate rewards haven't been distributed yet
-        if (rewardsDistributed[seriesId]) revert RewardsAlreadyDistributed(seriesId);
-        
+        if (rewardsDistributed[seriesId])
+            revert RewardsAlreadyDistributed(seriesId);
+
         // Get winners based on winning ticket numbers
         address[] memory winners = new address[](WINNING_TICKETS_COUNT);
         uint256 winnersCount = 0;
-        
+
         // Find owners of winning tickets
-        for (uint256 i = 0; i < currentSeries.winningTicketNumbers.length; i++) {
+        for (
+            uint256 i = 0;
+            i < currentSeries.winningTicketNumbers.length;
+            i++
+        ) {
             uint256 winningTicketNumber = currentSeries.winningTicketNumbers[i];
             uint256 ticketId = (seriesId << 128) | winningTicketNumber;
             address ticketOwner = ticketOwners[ticketId];
-            
+
             if (ticketOwner != address(0)) {
                 winners[winnersCount] = ticketOwner;
                 winnersCount++;
             }
         }
-        
+
         if (winnersCount == 0) revert InsufficientWinners(seriesId);
-        
+
         // Calculate reward pool for this series (tickets sold * ticket price)
         uint256 totalRewardPool = currentSeries.ticketsSold * ticketPrice;
-        
+
         // Calculate equal reward per winning ticket (each winning ticket gets same reward)
-        uint256 rewardPerWinner = totalRewardPool / WINNING_TICKETS_COUNT;
-        
+        uint256 rewardPerWinner = rewardPerUser * 10 ** 18; // 1 USDT (assuming 18 decimals)
         // Ensure we have enough balance
         uint256 contractBalance = usdt.balanceOf(address(this));
         if (contractBalance < totalRewardPool) {
@@ -216,7 +237,7 @@ contract Lottery {
             totalRewardPool = contractBalance;
             rewardPerWinner = totalRewardPool / WINNING_TICKETS_COUNT;
         }
-        
+
         // Distribute rewards - same user can receive multiple rewards if they own multiple winning tickets
         for (uint256 i = 0; i < winnersCount; i++) {
             if (winners[i] != address(0) && rewardPerWinner > 0) {
@@ -225,17 +246,24 @@ contract Lottery {
                 }
             }
         }
-        
+
         // Mark rewards as distributed
         rewardsDistributed[seriesId] = true;
-        
-        // Create a clean winners array for the event (only unique addresses)
-        address[] memory uniqueWinners = _getUniqueAddresses(winners, winnersCount);
-        
-        // Emit event
-        emit RewardsDistributed(seriesId, uniqueWinners, rewardPerWinner, rewardPerWinner * winnersCount);
-    }
 
+        // Create a clean winners array for the event (only unique addresses)
+        address[] memory uniqueWinners = _getUniqueAddresses(
+            winners,
+            winnersCount
+        );
+
+        // Emit event
+        emit RewardsDistributed(
+            seriesId,
+            uniqueWinners,
+            rewardPerWinner,
+            rewardPerWinner * winnersCount
+        );
+    }
 
     /// -----------------------------------------------------------------------
     /// Public actions
@@ -246,14 +274,16 @@ contract Lottery {
     /// @param count Number of tickets to buy
     function buyTickets(uint256 seriesId, uint256 count) external {
         if (count == 0) revert InvalidTicketCount();
-        if (seriesId == 0 || seriesId > totalSeriesCount) revert InvalidSeriesId(seriesId);
+        if (seriesId == 0 || seriesId > totalSeriesCount)
+            revert InvalidSeriesId(seriesId);
 
         Series storage currentSeries = seriesInfo[seriesId];
-        
+
         // Check if draw has been executed - can't buy after draw
         if (currentSeries.drawExecuted) revert SeriesNotCompleted(seriesId);
-        
-        uint256 remaining = currentSeries.totalTickets - currentSeries.ticketsSold;
+
+        uint256 remaining = currentSeries.totalTickets -
+            currentSeries.ticketsSold;
         if (count > remaining) revert InsufficientTickets();
 
         uint256[] memory ticketNumbers = new uint256[](count);
@@ -268,29 +298,41 @@ contract Lottery {
     /// @notice Buy specific ticket numbers from a series
     /// @param seriesId The series ID to buy tickets from
     /// @param ticketNumbers Array of specific ticket numbers to buy (1-100)
-    function buyTicketsAt(uint256 seriesId, uint256[] calldata ticketNumbers) external {
+    function buyTicketsAt(
+        uint256 seriesId,
+        uint256[] calldata ticketNumbers
+    ) external {
         uint256 count = ticketNumbers.length;
         if (count == 0) revert InvalidTicketCount();
-        if (seriesId == 0 || seriesId > totalSeriesCount) revert InvalidSeriesId(seriesId);
+        if (seriesId == 0 || seriesId > totalSeriesCount)
+            revert InvalidSeriesId(seriesId);
 
         Series storage currentSeries = seriesInfo[seriesId];
-        
+
         // Check if draw has been executed - can't buy after draw
         if (currentSeries.drawExecuted) revert SeriesNotCompleted(seriesId);
-        
-        uint256 remaining = currentSeries.totalTickets - currentSeries.ticketsSold;
+
+        uint256 remaining = currentSeries.totalTickets -
+            currentSeries.ticketsSold;
         if (count > remaining) revert InsufficientTickets();
 
-        uint256[] memory sanitized = _validateTicketNumbers(ticketNumbers, currentSeries.totalTickets);
+        uint256[] memory sanitized = _validateTicketNumbers(
+            ticketNumbers,
+            currentSeries.totalTickets
+        );
 
         _completePurchase(msg.sender, seriesId, currentSeries, sanitized);
     }
 
-    function getOwnedTicketIds(address account) external view returns (uint256[] memory) {
+    function getOwnedTicketIds(
+        address account
+    ) external view returns (uint256[] memory) {
         return ownedTicketIds[account];
     }
 
-    function getSeriesInfo(uint256 seriesId)
+    function getSeriesInfo(
+        uint256 seriesId
+    )
         external
         view
         returns (
@@ -302,7 +344,8 @@ contract Lottery {
         )
     {
         Series storage currentSeries = seriesInfo[seriesId];
-        bool isReadyForDraw = currentSeries.ticketsSold >= DRAW_THRESHOLD && !currentSeries.drawExecuted;
+        bool isReadyForDraw = currentSeries.ticketsSold >= DRAW_THRESHOLD &&
+            !currentSeries.drawExecuted;
         return (
             currentSeries.totalTickets,
             currentSeries.ticketsSold,
@@ -324,7 +367,12 @@ contract Lottery {
     ) internal {
         uint256 count = ticketNumbers.length;
         uint256 totalCost = ticketPrice * count;
-        uint256[] memory ticketIds = _mintTickets(buyer, seriesId, series.totalTickets, ticketNumbers);
+        uint256[] memory ticketIds = _mintTickets(
+            buyer,
+            seriesId,
+            series.totalTickets,
+            ticketNumbers
+        );
 
         series.ticketsSold += count;
         ticketsSold += count;
@@ -343,16 +391,16 @@ contract Lottery {
         }
     }
 
-    function _validateTicketNumbers(uint256[] calldata ticketNumbers, uint256 totalTickets)
-        internal
-        pure
-        returns (uint256[] memory sanitized)
-    {
+    function _validateTicketNumbers(
+        uint256[] calldata ticketNumbers,
+        uint256 totalTickets
+    ) internal pure returns (uint256[] memory sanitized) {
         uint256 count = ticketNumbers.length;
         sanitized = new uint256[](count);
         for (uint256 i = 0; i < count; i++) {
             uint256 ticketNumber = ticketNumbers[i];
-            if (ticketNumber == 0 || ticketNumber > totalTickets) revert InvalidTicketNumber();
+            if (ticketNumber == 0 || ticketNumber > totalTickets)
+                revert InvalidTicketNumber();
             sanitized[i] = ticketNumber;
         }
     }
@@ -367,7 +415,8 @@ contract Lottery {
         ticketIds = new uint256[](count);
         for (uint256 i = 0; i < count; i++) {
             uint256 ticketNumber = ticketNumbers[i];
-            if (ticketNumber == 0 || ticketNumber > totalTicketsInSeries) revert InvalidTicketNumber();
+            if (ticketNumber == 0 || ticketNumber > totalTicketsInSeries)
+                revert InvalidTicketNumber();
 
             uint256 currentTicketId = (seriesId << 128) | ticketNumber;
             if (ticketOwners[currentTicketId] != address(0)) {
@@ -384,35 +433,38 @@ contract Lottery {
     /// @notice Generate 10 unique random winning ticket numbers (1-100)
     /// @param randomSeed The random seed for generating numbers
     /// @param soldCount Number of tickets sold (used for documentation, always generates 10 numbers)
-    function _generateWinningNumbers(uint256 randomSeed, uint256 soldCount) 
-        internal 
-        pure 
-        returns (uint256[] memory) 
-    {
+    function _generateWinningNumbers(
+        uint256 randomSeed,
+        uint256 soldCount
+    ) internal pure returns (uint256[] memory) {
         uint256[] memory winningNumbers = new uint256[](WINNING_TICKETS_COUNT);
         bool[101] memory used; // Index 0 unused, 1-100 for ticket numbers
         uint256 count = 0;
         uint256 seed = randomSeed;
-        
+
         // Always generate exactly 10 unique random numbers between 1-100
         while (count < WINNING_TICKETS_COUNT) {
             // Generate number between 1 and 100
             seed = uint256(keccak256(abi.encodePacked(seed, count)));
             uint256 ticketNumber = (seed % TICKETS_PER_SERIES) + 1;
-            
+
             // Check if this number hasn't been selected yet
             if (!used[ticketNumber]) {
                 used[ticketNumber] = true;
                 winningNumbers[count] = ticketNumber;
                 count++;
             }
-            
+
             // Safety check to prevent infinite loop (shouldn't happen with 100 tickets and 10 winners)
             // If somehow we're stuck, try different seed variations
             if (count < WINNING_TICKETS_COUNT) {
                 uint256 attempts = 0;
                 while (used[ticketNumber] && attempts < 200) {
-                    seed = uint256(keccak256(abi.encodePacked(seed, count, attempts, soldCount)));
+                    seed = uint256(
+                        keccak256(
+                            abi.encodePacked(seed, count, attempts, soldCount)
+                        )
+                    );
                     ticketNumber = (seed % TICKETS_PER_SERIES) + 1;
                     if (!used[ticketNumber]) {
                         used[ticketNumber] = true;
@@ -424,19 +476,18 @@ contract Lottery {
                 }
             }
         }
-        
+
         return winningNumbers;
     }
 
     /// @notice Get unique addresses from an array
-    function _getUniqueAddresses(address[] memory addresses, uint256 length)
-        internal
-        pure
-        returns (address[] memory)
-    {
+    function _getUniqueAddresses(
+        address[] memory addresses,
+        uint256 length
+    ) internal pure returns (address[] memory) {
         address[] memory temp = new address[](length);
         uint256 uniqueCount = 0;
-        
+
         for (uint256 i = 0; i < length; i++) {
             bool isUnique = true;
             for (uint256 j = 0; j < uniqueCount; j++) {
@@ -450,20 +501,23 @@ contract Lottery {
                 uniqueCount++;
             }
         }
-        
+
         address[] memory unique = new address[](uniqueCount);
         for (uint256 i = 0; i < uniqueCount; i++) {
             unique[i] = temp[i];
         }
-        
+
         return unique;
     }
-
 }
 
 /// @dev Minimal ERC20 interface to interact with USDT without external dependencies.
 interface IERC20 {
     function transfer(address to, uint256 value) external returns (bool);
-    function transferFrom(address from, address to, uint256 value) external returns (bool);
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    ) external returns (bool);
     function balanceOf(address account) external view returns (uint256);
 }
