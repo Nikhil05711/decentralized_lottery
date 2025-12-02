@@ -7,6 +7,8 @@ import {
   useAccount,
   usePublicClient,
   useReadContract,
+  useReadContracts,
+  useWriteContract,
 } from "wagmi";
 import {
   BaseError,
@@ -17,6 +19,7 @@ import {
   parseUnits,
   type Address,
 } from "viem";
+import { waitForTransactionReceipt } from "wagmi/actions";
 import { privateKeyToAccount } from "viem/accounts";
 import { bscTestnet } from "viem/chains";
 import styles from "./draw.module.css";
@@ -24,6 +27,7 @@ import { GlowingOrbs } from "@/components/GlowingOrbs";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
 import { formatSeriesName, formatTicketNumber } from "@/lib/seriesUtils";
+import { wagmiConfig } from "@/lib/wagmi";
 
 const LOTTERY_ADDRESS = process.env
   .NEXT_PUBLIC_LOTTERY_ADDRESS as Address | undefined;
@@ -169,6 +173,7 @@ const formatAddress = (address?: string) => {
 export default function DrawPage() {
   const { address } = useAccount();
   const publicClient = usePublicClient();
+  const { writeContractAsync } = useWriteContract();
 
   const [flowState, setFlowState] = useState<FlowState>("idle");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -176,6 +181,10 @@ export default function DrawPage() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState<string | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [drawSeriesId, setDrawSeriesId] = useState<string>("");
+  const [distributeSeriesId, setDistributeSeriesId] = useState<string>("");
+  const [drawSeriesIdError, setDrawSeriesIdError] = useState<string | null>(null);
+  const [distributeSeriesIdError, setDistributeSeriesIdError] = useState<string | null>(null);
 
   const { data: decimalsData } = useReadContract({
     address: USDT_ADDRESS,
@@ -211,9 +220,15 @@ export default function DrawPage() {
     },
   });
 
-  // Note: activeSeriesId doesn't exist in the contract
-  // We'll monitor all series from localStorage countdown timers instead
-  const activeSeriesId = BigInt(0); // Placeholder - not used for automation
+  const { data: totalSeriesCountData } = useReadContract({
+    address: LOTTERY_ADDRESS,
+    abi: lotteryAbi,
+    functionName: "totalSeriesCount",
+    query: {
+      enabled: Boolean(LOTTERY_ADDRESS),
+      refetchInterval: 20_000,
+    },
+  });
 
   const { data: ownerData } = useReadContract({
     address: LOTTERY_ADDRESS,
@@ -223,6 +238,160 @@ export default function DrawPage() {
       enabled: Boolean(LOTTERY_ADDRESS),
     },
   });
+
+  const totalSeriesCount = useMemo(() => {
+    if (typeof totalSeriesCountData === "bigint") return Number(totalSeriesCountData);
+    if (typeof totalSeriesCountData === "number") return totalSeriesCountData;
+    return 0;
+  }, [totalSeriesCountData]);
+
+  const seriesIds = useMemo(() => {
+    if (totalSeriesCount === 0) return [];
+    return Array.from({ length: totalSeriesCount }, (_, i) => BigInt(i + 1));
+  }, [totalSeriesCount]);
+
+  const seriesInfoContracts = useMemo(() => {
+    if (!LOTTERY_ADDRESS || seriesIds.length === 0) return [];
+    return seriesIds.map((seriesId) => ({
+      address: LOTTERY_ADDRESS,
+      abi: lotteryAbi,
+      functionName: "getSeriesInfo" as const,
+      args: [seriesId],
+    }));
+  }, [seriesIds]);
+
+  const { data: allSeriesInfoData } = useReadContracts({
+    contracts: seriesInfoContracts,
+    query: {
+      enabled: seriesInfoContracts.length > 0,
+      refetchInterval: 20_000,
+    },
+  });
+
+  // State for selected series
+  const [selectedSeriesId, setSelectedSeriesId] = useState<bigint | null>(null);
+
+  // Parse all series data and filter active ones
+  const allSeriesData = useMemo(() => {
+    if (!allSeriesInfoData || allSeriesInfoData.length === 0) return [];
+    
+    const series: Array<{
+      seriesId: bigint;
+      total: bigint;
+      sold: bigint;
+      drawExecuted: boolean;
+      readyForDraw: boolean;
+      ticketsLeft: number;
+    }> = [];
+    
+    for (let i = 0; i < seriesIds.length; i++) {
+      const info = allSeriesInfoData[i];
+      if (info?.status === "success" && info.result) {
+        const tuple = info.result as ReadonlyArray<unknown>;
+        const total = Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0);
+        const sold = Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0);
+        const drawExecuted = Array.isArray(tuple) && typeof tuple[2] === "boolean" ? tuple[2] : false;
+        const readyForDraw = Array.isArray(tuple) && typeof tuple[3] === "boolean" ? tuple[3] : false;
+        
+        // Active series: not draw executed and has tickets left
+        if (!drawExecuted && sold < total && total > BigInt(0)) {
+          series.push({
+            seriesId: seriesIds[i],
+            total,
+            sold,
+            drawExecuted,
+            readyForDraw,
+            ticketsLeft: Number(total - sold),
+          });
+        }
+      }
+    }
+    
+    return series.sort((a, b) => Number(b.seriesId - a.seriesId)); // Sort by series ID descending (newest first)
+  }, [allSeriesInfoData, seriesIds]);
+
+  // Set default selected series to first active series
+  useEffect(() => {
+    if (!selectedSeriesId && allSeriesData.length > 0) {
+      setSelectedSeriesId(allSeriesData[0].seriesId);
+    } else if (selectedSeriesId && !allSeriesData.find(s => s.seriesId === selectedSeriesId)) {
+      // If selected series is no longer active, switch to first available
+      if (allSeriesData.length > 0) {
+        setSelectedSeriesId(allSeriesData[0].seriesId);
+      } else {
+        setSelectedSeriesId(null);
+      }
+    }
+  }, [selectedSeriesId, allSeriesData]);
+
+  // Get selected series data
+  const selectedSeries = useMemo(() => {
+    if (!selectedSeriesId) return null;
+    return allSeriesData.find(s => s.seriesId === selectedSeriesId) || null;
+  }, [selectedSeriesId, allSeriesData]);
+
+  // Get list of active series IDs for validation
+  const activeSeriesIds = useMemo(() => {
+    return allSeriesData.map(s => s.seriesId);
+  }, [allSeriesData]);
+
+  // Get max series ID (highest active series)
+  const maxSeriesId = useMemo(() => {
+    if (activeSeriesIds.length === 0) return 0;
+    return Math.max(...activeSeriesIds.map(id => Number(id)));
+  }, [activeSeriesIds]);
+
+  // Validation function for series ID
+  const validateSeriesId = (value: string, setError: (error: string | null) => void): boolean => {
+    if (!value || value.trim() === "") {
+      setError(null);
+      return false; // Empty is not valid but we don't show error until submit
+    }
+
+    const numValue = Number(value.trim());
+    
+    // Check if it's a valid number
+    if (isNaN(numValue) || numValue <= 0 || !Number.isInteger(numValue)) {
+      setError("Please enter a valid positive integer.");
+      return false;
+    }
+
+    // Check if it's within the range of active series
+    if (numValue > maxSeriesId) {
+      setError(`Series ID cannot be greater than ${maxSeriesId} (highest active series).`);
+      return false;
+    }
+
+    // Check if it's an active series
+    const seriesIdBigInt = BigInt(numValue);
+    if (!activeSeriesIds.includes(seriesIdBigInt)) {
+      setError(`Series ${numValue} is not active. Please select an active series.`);
+      return false;
+    }
+
+    setError(null);
+    return true;
+  };
+
+  // Handle draw series ID change
+  const handleDrawSeriesIdChange = (value: string) => {
+    setDrawSeriesId(value);
+    if (value.trim() !== "") {
+      validateSeriesId(value, setDrawSeriesIdError);
+    } else {
+      setDrawSeriesIdError(null);
+    }
+  };
+
+  // Handle distribute series ID change
+  const handleDistributeSeriesIdChange = (value: string) => {
+    setDistributeSeriesId(value);
+    if (value.trim() !== "") {
+      validateSeriesId(value, setDistributeSeriesIdError);
+    } else {
+      setDistributeSeriesIdError(null);
+    }
+  };
 
   const ticketPriceRaw = useMemo(() => {
     if (typeof priceData === "bigint") return priceData;
@@ -242,29 +411,25 @@ export default function DrawPage() {
     return Number(safeValue);
   }, [ticketsSold]);
 
-  const activeSeriesTotals = useMemo(() => {
-    // Return empty for now - automation monitors from localStorage instead
-    return { total: BigInt(0), sold: BigInt(0) };
-  }, []);
-
+  // Use selected series data for stats
   const activeSeriesTotalCount = useMemo(
-    () => clampToSafeNumber(activeSeriesTotals.total),
-    [activeSeriesTotals]
+    () => selectedSeries ? clampToSafeNumber(selectedSeries.total) : 0,
+    [selectedSeries]
   );
 
   const activeSeriesSoldCount = useMemo(
-    () => clampToSafeNumber(activeSeriesTotals.sold),
-    [activeSeriesTotals]
+    () => selectedSeries ? clampToSafeNumber(selectedSeries.sold) : 0,
+    [selectedSeries]
   );
 
   const hasActiveSeries = useMemo(
-    () => activeSeriesId > BigInt(0),
-    [activeSeriesId]
+    () => selectedSeries !== null,
+    [selectedSeries]
   );
 
   const ticketsLeft = useMemo(
-    () => Math.max(activeSeriesTotalCount - activeSeriesSoldCount, 0),
-    [activeSeriesSoldCount, activeSeriesTotalCount]
+    () => selectedSeries ? selectedSeries.ticketsLeft : 0,
+    [selectedSeries]
   );
 
   const totalPot = useMemo(() => {
@@ -292,9 +457,18 @@ export default function DrawPage() {
     );
   }, [activeSeriesSoldCount, activeSeriesTotalCount]);
 
+  const OWNER_ADDRESS = "0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0".toLowerCase();
+
   const isOwner = useMemo(() => {
-    if (!address || !ownerData) return false;
-    return address.toLowerCase() === ownerData.toLowerCase();
+    if (!address) return false;
+    const addressLower = address.toLowerCase();
+    // Check against hardcoded owner address
+    if (addressLower === OWNER_ADDRESS) return true;
+    // Also check against contract owner if available
+    if (ownerData) {
+      return addressLower === ownerData.toLowerCase();
+    }
+    return false;
   }, [address, ownerData]);
 
   const [nextDrawTime, setNextDrawTime] = useState<Date>(() => getNextDrawDate());
@@ -345,12 +519,12 @@ export default function DrawPage() {
 
   const formattedLastDraw = useMemo(() => {
     if (lastDrawTicket == null) return "Awaiting first draw";
-    // Use active series ID for formatting (lastDrawTicket is just the ticket number)
-    if (activeSeriesId > BigInt(0)) {
-      return `Ticket ${formatTicketNumber(lastDrawTicket, activeSeriesId, ticketPadLength)}`;
+    // Use selected series ID for formatting (lastDrawTicket is just the ticket number)
+    if (selectedSeriesId && selectedSeriesId > BigInt(0)) {
+      return `Ticket ${formatTicketNumber(lastDrawTicket, selectedSeriesId, ticketPadLength)}`;
     }
     return `Ticket #${lastDrawTicket.toString().padStart(ticketPadLength, "0")}`;
-  }, [lastDrawTicket, ticketPadLength, activeSeriesId]);
+  }, [lastDrawTicket, ticketPadLength, selectedSeriesId]);
 
   const drawRangeLabel = useMemo(() => {
     if (ticketsInPlay <= 0) {
@@ -860,19 +1034,99 @@ export default function DrawPage() {
     };
   }, [LOTTERY_ADDRESS, USDT_ADDRESS, publicClient, ticketPriceRaw, decimals]);
 
-  const handleAction = (action: Exclude<FlowState, "idle">) => {
+  const handleAction = async (action: Exclude<FlowState, "idle">) => {
     if (!isOwner) {
       setStatusMessage("Only the lottery owner can trigger draws or rewards.");
       return;
     }
+
+    if (!LOTTERY_ADDRESS) {
+      setStatusMessage("Lottery contract address not configured.");
+      return;
+    }
+
+    let seriesId: bigint;
+    
+    if (action === "draw") {
+      if (!drawSeriesId || drawSeriesId.trim() === "") {
+        setStatusMessage("Please enter a Series ID for the draw.");
+        setDrawSeriesIdError("Series ID is required.");
+        return;
+      }
+      if (!validateSeriesId(drawSeriesId, setDrawSeriesIdError)) {
+        setStatusMessage(drawSeriesIdError || "Invalid Series ID.");
+        return;
+      }
+      try {
+        seriesId = BigInt(drawSeriesId.trim());
+      } catch (error) {
+        setStatusMessage("Invalid Series ID. Please enter a valid number.");
+        setDrawSeriesIdError("Invalid Series ID format.");
+        return;
+      }
+    } else {
+      if (!distributeSeriesId || distributeSeriesId.trim() === "") {
+        setStatusMessage("Please enter a Series ID for reward distribution.");
+        setDistributeSeriesIdError("Series ID is required.");
+        return;
+      }
+      if (!validateSeriesId(distributeSeriesId, setDistributeSeriesIdError)) {
+        setStatusMessage(distributeSeriesIdError || "Invalid Series ID.");
+        return;
+      }
+      try {
+        seriesId = BigInt(distributeSeriesId.trim());
+      } catch (error) {
+        setStatusMessage("Invalid Series ID. Please enter a valid number.");
+        setDistributeSeriesIdError("Invalid Series ID format.");
+        return;
+      }
+    }
+
     setFlowState(action);
-    setStatusMessage(
-      "This control requires the on-chain draw/reward function. Deploy the upgraded contract and wire it here."
-    );
+    setStatusMessage(null);
+
+    try {
+      if (action === "draw") {
+        setStatusMessage(`Executing draw for Series ${seriesId.toString()}...`);
+        const hash = await writeContractAsync({
+          address: LOTTERY_ADDRESS,
+          abi: lotteryAbi,
+          functionName: "executeDraw",
+          args: [seriesId],
+        });
+
+        await waitForTransactionReceipt(wagmiConfig, {
+          hash,
+        });
+
+        setStatusMessage(`✅ Draw executed successfully for Series ${seriesId.toString()}!`);
+        setDrawSeriesId("");
+      } else {
+        setStatusMessage(`Distributing rewards for Series ${seriesId.toString()}...`);
+        const hash = await writeContractAsync({
+          address: LOTTERY_ADDRESS,
+          abi: lotteryAbi,
+          functionName: "distributeRewards",
+          args: [seriesId],
+        });
+
+        await waitForTransactionReceipt(wagmiConfig, {
+          hash,
+        });
+
+        setStatusMessage(`✅ Rewards distributed successfully for Series ${seriesId.toString()}!`);
+        setDistributeSeriesId("");
+      }
+    } catch (error) {
+      setStatusMessage(`Error: ${formatError(error)}`);
+    } finally {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setFlowState("idle");
-    }, 1500);
+        setStatusMessage(null);
+      }, 5000);
+    }
   };
 
   return (
@@ -891,7 +1145,8 @@ export default function DrawPage() {
             </p>
           </div>
           <div className={styles.statsPanel}>
-            <div className={styles.countdownCard}>
+            {/* Clock section commented out */}
+            {/* <div className={styles.countdownCard}>
               <div className={styles.countdownRing}>
                 <svg
                   className={styles.countdownSvg}
@@ -930,7 +1185,7 @@ export default function DrawPage() {
                   Last result: {formattedLastDraw}
                 </span>
               </div>
-            </div>
+            </div> */}
             <div className={styles.statCard}>
               <span className={styles.statLabel}>Current prize pool</span>
               <span className={styles.statValue}>{formattedPot} USDT</span>
@@ -939,10 +1194,41 @@ export default function DrawPage() {
               </span>
             </div>
             <div className={styles.statRow}>
+              <div className={styles.statMicro} style={{ gridColumn: "1 / -1" }}>
+                <span className={styles.microLabel}>Select Active Series</span>
+                <select
+                  value={selectedSeriesId?.toString() || ""}
+                  onChange={(e) => {
+                    const seriesId = BigInt(e.target.value);
+                    setSelectedSeriesId(seriesId);
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "8px 12px",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
+                    background: "rgba(0, 0, 0, 0.3)",
+                    color: "white",
+                    fontSize: "0.9rem",
+                    marginTop: "8px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {allSeriesData.length === 0 ? (
+                    <option value="">No active series</option>
+                  ) : (
+                    allSeriesData.map((series) => (
+                      <option key={series.seriesId.toString()} value={series.seriesId.toString()}>
+                        Series {formatSeriesName(series.seriesId)} - {series.ticketsLeft} tickets left ({Number((series.sold * BigInt(100)) / series.total)}% sold)
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
               <div className={styles.statMicro}>
                 <span className={styles.microLabel}>Active series</span>
                 <span className={styles.microValue}>
-                  {hasActiveSeries ? formatSeriesName(activeSeriesId) : "None"}
+                  {hasActiveSeries && selectedSeries ? formatSeriesName(selectedSeries.seriesId) : "None"}
                 </span>
               </div>
               <div className={styles.statMicro}>
@@ -970,6 +1256,8 @@ export default function DrawPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
+          {isOwner ? (
+            <>
           <div className={styles.actionHeader}>
             <h2 className={styles.sectionTitle}>Draw workflow</h2>
             <p className={styles.sectionSubtitle}>
@@ -985,12 +1273,62 @@ export default function DrawPage() {
                 Finalize entries and request verifiable randomness to select the
                 winner. This should seal the round and emit a dedicated event.
               </p>
+              <div style={{ marginBottom: "12px" }}>
+                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.8)" }}>
+                  Series ID:
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max={maxSeriesId}
+                  value={drawSeriesId}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Prevent typing numbers higher than maxSeriesId
+                    if (value === "" || (Number(value) >= 1 && Number(value) <= maxSeriesId)) {
+                      handleDrawSeriesIdChange(value);
+                    }
+                  }}
+                  placeholder={`Enter Series ID (1-${maxSeriesId})`}
+                  disabled={flowState !== "idle" || maxSeriesId === 0}
+                  style={{
+                    width: "100%",
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: drawSeriesIdError 
+                      ? "1px solid rgba(239, 68, 68, 0.8)" 
+                      : "1px solid rgba(255, 255, 255, 0.1)",
+                    background: "rgba(0, 0, 0, 0.3)",
+                    color: "white",
+                    fontSize: "0.95rem",
+                    outline: "none",
+                  }}
+                />
+                {drawSeriesIdError && (
+                  <div style={{
+                    marginTop: "6px",
+                    fontSize: "0.85rem",
+                    color: "rgba(239, 68, 68, 0.9)",
+                  }}>
+                    {drawSeriesIdError}
+                  </div>
+                )}
+                {maxSeriesId > 0 && !drawSeriesIdError && (
+                  <div style={{
+                    marginTop: "6px",
+                    fontSize: "0.8rem",
+                    color: "rgba(255, 255, 255, 0.5)",
+                  }}>
+                    Active series: {activeSeriesIds.map(id => id.toString()).join(", ")}
+                  </div>
+                )}
+              </div>
               <button
                 className={styles.actionButton}
                 onClick={() => handleAction("draw")}
                 disabled={flowState !== "idle"}
               >
-                {flowState === "draw" ? "Preparing..." : "Initiate draw"}
+                {flowState === "draw" ? "Preparing..." : "Execute draw"}
               </button>
             </div>
             <div className={styles.actionCard}>
@@ -1000,6 +1338,56 @@ export default function DrawPage() {
                 on-chain receipt. The `Withdraw` event feeds directly into the
                 history log.
               </p>
+              <div style={{ marginBottom: "12px" }}>
+                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.8)" }}>
+                  Series ID:
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max={maxSeriesId}
+                  value={distributeSeriesId}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Prevent typing numbers higher than maxSeriesId
+                    if (value === "" || (Number(value) >= 1 && Number(value) <= maxSeriesId)) {
+                      handleDistributeSeriesIdChange(value);
+                    }
+                  }}
+                  placeholder={`Enter Series ID (1-${maxSeriesId})`}
+                  disabled={flowState !== "idle" || maxSeriesId === 0}
+                  style={{
+                    width: "100%",
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    border: distributeSeriesIdError 
+                      ? "1px solid rgba(239, 68, 68, 0.8)" 
+                      : "1px solid rgba(255, 255, 255, 0.1)",
+                    background: "rgba(0, 0, 0, 0.3)",
+                    color: "white",
+                    fontSize: "0.95rem",
+                    outline: "none",
+                  }}
+                />
+                {distributeSeriesIdError && (
+                  <div style={{
+                    marginTop: "6px",
+                    fontSize: "0.85rem",
+                    color: "rgba(239, 68, 68, 0.9)",
+                  }}>
+                    {distributeSeriesIdError}
+                  </div>
+                )}
+                {maxSeriesId > 0 && !distributeSeriesIdError && (
+                  <div style={{
+                    marginTop: "6px",
+                    fontSize: "0.8rem",
+                    color: "rgba(255, 255, 255, 0.5)",
+                  }}>
+                    Active series: {activeSeriesIds.map(id => id.toString()).join(", ")}
+                  </div>
+                )}
+              </div>
               <button
                 className={styles.actionButtonSecondary}
                 onClick={() => handleAction("distribute")}
@@ -1007,83 +1395,43 @@ export default function DrawPage() {
               >
                 {flowState === "distribute"
                   ? "Routing funds..."
-                  : "Send winnings"}
+                  : "Distribute Rewards"}
               </button>
             </div>
           </div>
           {statusMessage && (
             <div className={styles.statusBanner}>{statusMessage}</div>
           )}
-          {automationStatus && (
-            <div className={styles.automationBanner}>
-              🤖 <strong>Auto-Bot Status:</strong> {automationStatus}
-            </div>
-          )}
-          {!isOwner && (
-            <p className={styles.permissionHint}>
-              Connect as the contract owner to enable draw & reward controls.
-            </p>
-          )}
-        </motion.section>
-
-        <motion.section
-          className={styles.history}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-        >
-          <div className={styles.historyHeader}>
-            <h2 className={styles.sectionTitle}>Transaction timeline</h2>
-            <p className={styles.sectionSubtitle}>
-              Real-time feed of ticket purchases, prize withdrawals, and price
-              updates. Pulls the last ~6k blocks from the BNB Greenfield testnet
-              RPC and refreshes every 45 seconds.
-            </p>
+            {automationStatus && (
+              <div className={styles.automationBanner}>
+                🤖 <strong>Auto-Bot Status:</strong> {automationStatus}
           </div>
-          {historyError && (
-            <div className={styles.errorBanner}>{historyError}</div>
-          )}
-          {historyLoading && history.length === 0 ? (
-            <div className={styles.loadingState}>Loading recent activity…</div>
-          ) : history.length === 0 ? (
-            <div className={styles.emptyState}>
-              No on-chain activity detected yet. Purchases and reward payouts
-              will appear here automatically.
-            </div>
+            )}
+            </>
           ) : (
-            <div className={styles.historyList}>
-              {history.map((entry, index) => (
-                <div key={`${entry.txHash ?? index}-${entry.heading}`} className={styles.historyItem}>
-                  <span
-                    className={`${styles.historyMarker} ${
-                      entry.type === "withdraw"
-                        ? styles.markerWithdraw
-                        : entry.type === "purchase"
-                        ? styles.markerPurchase
-                        : styles.markerNeutral
-                    }`}
-                  />
-                  <div className={styles.historyContent}>
-                    <div className={styles.historyHeaderRow}>
-                      <h3>{entry.heading}</h3>
-                      <span className={styles.historyAmount}>{entry.amount}</span>
-                    </div>
-                    <p className={styles.historySubheading}>{entry.subheading}</p>
-                    <div className={styles.historyMeta}>
-                      <span>{formatDate(entry.timestamp)}</span>
-                      {entry.txHash && (
-                        <a
-                          href={`https://testnet.bscscan.com/tx/${entry.txHash}`}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          View on BscScan →
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div style={{
+              padding: "40px 20px",
+              textAlign: "center",
+              background: "rgba(0, 0, 0, 0.2)",
+              borderRadius: "16px",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+            }}>
+              <h3 style={{
+                fontSize: "1.2rem",
+                marginBottom: "12px",
+                color: "rgba(255, 255, 255, 0.9)",
+              }}>
+                Owner Access Required
+              </h3>
+              <p style={{
+                fontSize: "0.95rem",
+                color: "rgba(255, 255, 255, 0.6)",
+                lineHeight: "1.6",
+              }}>
+                Only the contract owner can access draw and reward distribution functions.
+                <br />
+                Please connect with the owner wallet to continue.
+              </p>
             </div>
           )}
         </motion.section>
