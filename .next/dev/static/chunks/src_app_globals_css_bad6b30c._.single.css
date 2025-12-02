@@ -298,6 +298,10 @@ img, video {
   visibility: collapse;
 }
 
+.static {
+  position: static;
+}
+
 .block {
   display: block;
 }

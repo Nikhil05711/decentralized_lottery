@@ -1,5 +1,9 @@
 "use client";
 
+// Prevent static generation for this page since it uses localStorage
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -728,7 +732,9 @@ export default function DrawPage() {
 
   useEffect(() => {
     // Only run in browser - skip during SSR/build
+    // Check if we're in a build/export context
     if (typeof window === "undefined" || typeof document === "undefined") return;
+    if (process.env.NODE_ENV === "production" && typeof window.localStorage === "undefined") return;
     
     // Use a flag to ensure this only runs once on client
     let isMounted = true;

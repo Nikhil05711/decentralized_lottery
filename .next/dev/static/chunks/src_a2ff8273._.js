@@ -7,7 +7,6 @@ __turbopack_context__.s([
     ()=>wagmiConfig
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$wagmi$2f$core$2f$dist$2f$esm$2f$utils$2f$cookie$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@wagmi/core/dist/esm/utils/cookie.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$wagmi$2f$core$2f$dist$2f$esm$2f$createStorage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@wagmi/core/dist/esm/createStorage.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$rainbow$2d$me$2f$rainbowkit$2f$dist$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@rainbow-me/rainbowkit/dist/index.js [app-client] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$rainbow$2d$me$2f$rainbowkit$2f$dist$2f$wallets$2f$walletConnectors$2f$chunk$2d$O3RZEMKP$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@rainbow-me/rainbowkit/dist/wallets/walletConnectors/chunk-O3RZEMKP.js [app-client] (ecmascript)");
@@ -45,6 +44,46 @@ const connectors = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modu
     appDescription: "Decentralized lottery where every ticket costs 0.11 USDT on BNB Testnet.",
     appIcon: "https://raw.githubusercontent.com/vercel/next.js/canary/examples/with-web3/public/favicon.ico"
 });
+// Completely custom storage that uses cookies in browser, no-op during SSR
+// This prevents any localStorage access during build/SSR
+const customStorage = {
+    getItem: (key)=>{
+        if (("TURBOPACK compile-time value", "object") === "undefined" || typeof document === "undefined") return null;
+        try {
+            const name = key + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(";");
+            for(let i = 0; i < ca.length; i++){
+                let c = ca[i];
+                while(c.charAt(0) === " "){
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return null;
+        } catch  {
+            return null;
+        }
+    },
+    setItem: (key, value)=>{
+        if (("TURBOPACK compile-time value", "object") === "undefined" || typeof document === "undefined") return;
+        try {
+            document.cookie = `${key}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+        } catch  {
+        // Ignore errors during SSR
+        }
+    },
+    removeItem: (key)=>{
+        if (("TURBOPACK compile-time value", "object") === "undefined" || typeof document === "undefined") return;
+        try {
+            document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+        } catch  {
+        // Ignore errors during SSR
+        }
+    }
+};
 const wagmiConfig = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$wagmi$2f$core$2f$dist$2f$esm$2f$createConfig$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createConfig"])({
     chains: [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$viem$2f$_esm$2f$chains$2f$definitions$2f$bscTestnet$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["bscTestnet"]
@@ -52,7 +91,7 @@ const wagmiConfig = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_mod
     connectors,
     ssr: true,
     storage: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$wagmi$2f$core$2f$dist$2f$esm$2f$createStorage$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createStorage"])({
-        storage: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$wagmi$2f$core$2f$dist$2f$esm$2f$utils$2f$cookie$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cookieStorage"]
+        storage: customStorage
     }),
     transports: {
         [__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$viem$2f$_esm$2f$chains$2f$definitions$2f$bscTestnet$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["bscTestnet"].id]: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$viem$2f$_esm$2f$clients$2f$transports$2f$http$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["http"])(("TURBOPACK compile-time value", "") ?? "https://bsc-testnet.drpc.org")
