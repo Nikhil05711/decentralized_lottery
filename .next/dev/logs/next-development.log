@@ -1,17 +1,20 @@
-[00:00:00.814] Server  LOG      ✓ Ready in 600ms
-[00:00:21.549] Server  LOG      ○ Compiling / ...
-[00:00:26.527] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:26.635] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:26.642] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:26.648] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:26.854] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:26.861] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:26.867] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:27.086] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:27.293] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:29.106] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:29.112] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:29.118] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:29.831] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:00:29.831] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:00:29.831] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:00.811] Server  LOG      ✓ Ready in 597ms
+[00:00:10.481] Server  LOG      ○ Compiling / ...
+[00:00:15.039] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:15.145] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:15.151] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:15.157] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:15.178] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:15.184] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:15.188] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:15.407] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:15.733] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:17.317] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:17.339] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:17.358] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:17.359] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:00:17.359] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:00:17.530] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:00:24.546] Server  LOG      ○ Compiling /tickets ...
+[00:00:41.945] Browser ERROR   Failed to create admin wallet: {}
+[00:00:45.346] Browser ERROR   Failed to create admin wallet: {}
