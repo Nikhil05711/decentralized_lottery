@@ -104,10 +104,20 @@ export default function MyTicketsPage() {
       let ticketsSold = BigInt(0);
 
       if (info?.status === "success" && info.result) {
-        // getSeriesInfo returns: [totalTickets, soldCount, drawExecuted, readyForDraw, winningTicketNumbers[]]
-        const tuple = info.result as readonly [bigint, bigint, boolean, boolean, readonly bigint[]];
-        totalTickets = tuple[0];
-        ticketsSold = tuple[1];
+        // getSeriesInfo returns: (totalTickets, soldCount, drawExecuted, readyForDraw, winningTicketNumbers)
+        // Handle the result safely - convert to unknown first to avoid strict type checking
+        const result = info.result as unknown;
+        if (Array.isArray(result) && result.length >= 2) {
+          const first = result[0];
+          const second = result[1];
+          // Safely extract bigint values with type checking
+          if (typeof first === "bigint" || typeof first === "number") {
+            totalTickets = typeof first === "bigint" ? first : BigInt(first);
+          }
+          if (typeof second === "bigint" || typeof second === "number") {
+            ticketsSold = typeof second === "bigint" ? second : BigInt(second);
+          }
+        }
       }
 
       return {
