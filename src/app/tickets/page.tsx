@@ -1,5 +1,8 @@
 "use client";
 
+// Prevent static generation for this page since it uses localStorage
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
 import {
   useCallback,
@@ -52,6 +55,36 @@ const formatError = (error: unknown) => {
     return error.message;
   }
   return "Something went wrong. Please try again.";
+};
+
+// Safe localStorage helper that only works in browser
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    if (typeof window === "undefined" || typeof localStorage === "undefined") return null;
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): boolean => {
+    if (typeof window === "undefined" || typeof localStorage === "undefined") return false;
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  removeItem: (key: string): boolean => {
+    if (typeof window === "undefined" || typeof localStorage === "undefined") return false;
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch {
+      return false;
+    }
+  },
 };
 
 export default function TicketsPage() {
@@ -324,10 +357,8 @@ export default function TicketsPage() {
 
   // Load countdown timers from localStorage on mount
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    
     try {
-      const stored = localStorage.getItem(COUNTDOWN_STORAGE_KEY);
+      const stored = safeLocalStorage.getItem(COUNTDOWN_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
         const timers = new Map<bigint, number>();
@@ -354,13 +385,9 @@ export default function TicketsPage() {
 
   // Save countdown timers to localStorage whenever they change
   useEffect(() => {
-    if (typeof window === "undefined" || countdownStartTimes.size === 0) {
+    if (countdownStartTimes.size === 0) {
       // Clear localStorage if no timers
-      try {
-        localStorage.removeItem(COUNTDOWN_STORAGE_KEY);
-      } catch (error) {
-        console.error("Failed to clear countdown timers from localStorage:", error);
-      }
+      safeLocalStorage.removeItem(COUNTDOWN_STORAGE_KEY);
       return;
     }
 
@@ -369,16 +396,17 @@ export default function TicketsPage() {
       countdownStartTimes.forEach((timestamp, seriesId) => {
         toStore[seriesId.toString()] = timestamp;
       });
-      localStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(toStore));
+      safeLocalStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(toStore));
     } catch (error) {
-      console.error("Failed to save countdown timers to localStorage:", error);
+      // Silently fail during SSR
+      if (typeof window !== "undefined") {
+        console.error("Failed to save countdown timers to localStorage:", error);
+      }
     }
   }, [countdownStartTimes]);
 
   // Detect when series reaches 90% and start/restore countdown timer
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    
     allSeriesData.forEach((series) => {
       if (series.isNearDraw) {
         // Check if timer exists in state
@@ -387,7 +415,7 @@ export default function TicketsPage() {
         if (!existingStartTime) {
           // Check localStorage for existing timer first (only if not in state)
           try {
-            const stored = localStorage.getItem(COUNTDOWN_STORAGE_KEY);
+            const stored = safeLocalStorage.getItem(COUNTDOWN_STORAGE_KEY);
             if (stored) {
               const parsed = JSON.parse(stored);
               const seriesIdStr = series.seriesId.toString();
@@ -410,9 +438,9 @@ export default function TicketsPage() {
                   // Timer expired, remove from localStorage
                   delete parsed[seriesIdStr];
                   if (Object.keys(parsed).length === 0) {
-                    localStorage.removeItem(COUNTDOWN_STORAGE_KEY);
+                    safeLocalStorage.removeItem(COUNTDOWN_STORAGE_KEY);
                   } else {
-                    localStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(parsed));
+                    safeLocalStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(parsed));
                   }
                 }
               }
@@ -864,11 +892,13 @@ export default function TicketsPage() {
 
       if (needsApproval) {
         setStatus("approving");
+        // Approve 10000x the purchase amount so user doesn't need to approve again
+        const approveAmount = totalCost * BigInt(10000);
         const approveHash = await writeContractAsync({
           address: usdtAddress,
           abi: erc20Abi,
           functionName: "approve",
-          args: [lotteryAddress, totalCost],
+          args: [lotteryAddress, approveAmount],
         });
 
         await waitForTransactionReceipt(wagmiConfig, {
@@ -1249,11 +1279,13 @@ export default function TicketsPage() {
 
       if (selectionNeedsApproval) {
         setStatus("approving");
+        // Approve 10000x the purchase amount so user doesn't need to approve again
+        const approveAmount = selectionTotalCost * BigInt(10000);
         const approveHash = await writeContractAsync({
           address: usdtAddress,
           abi: erc20Abi,
           functionName: "approve",
-          args: [lotteryAddress, selectionTotalCost],
+          args: [lotteryAddress, approveAmount],
         });
 
         await waitForTransactionReceipt(wagmiConfig, {

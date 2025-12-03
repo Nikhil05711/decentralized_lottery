@@ -1,4 +1,4 @@
-import { cookieStorage, createStorage } from "wagmi";
+import { createStorage } from "wagmi";
 import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   metaMaskWallet,
