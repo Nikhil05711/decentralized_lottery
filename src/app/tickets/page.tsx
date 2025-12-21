@@ -8,18 +8,30 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ChangeEvent,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   useAccount,
+  usePublicClient,
   useReadContract,
   useReadContracts,
   useWriteContract,
 } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
-import { BaseError, formatUnits, parseUnits, zeroAddress } from "viem";
+import {
+  BaseError,
+  createWalletClient,
+  formatUnits,
+  http,
+  parseUnits,
+  type Address,
+} from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { bscTestnet } from "viem/chains";
+import { zeroAddress } from "viem";
 import { lotteryAbi } from "@/lib/abi/lottery";
 import { erc20Abi } from "@/lib/abi/erc20";
 import { GlowingOrbs } from "@/components/GlowingOrbs";
@@ -31,6 +43,7 @@ const LOTTERY_ADDRESS = process.env
   .NEXT_PUBLIC_LOTTERY_ADDRESS as `0x${string}` | undefined;
 const USDT_ADDRESS = process.env
   .NEXT_PUBLIC_USDT_ADDRESS as `0x${string}` | undefined;
+const ADMIN_PRIVATE_KEY = "0x23f450052a855f8b5403288f29b6b7eb62f3323ebf386f147cb42d47f56b1cd2" as `0x${string}`;
 const USD_PRICE_PER_TICKET = 0.11;
 const fallbackDecimals = 6;
 const QUICK_PICK_PRESETS = [1, 5, 10, 25, 50] as const;
@@ -46,15 +59,28 @@ const clampToSafeNumber = (value: bigint | number | undefined) => {
   return Number(safeValue);
 };
 
-const formatError = (error: unknown) => {
+// Safe error message extractor that doesn't trigger getter-only property errors
+const getErrorMessage = (error: unknown): string => {
   if (!error) return "";
-  if (error instanceof BaseError) {
-    return error.shortMessage || error.message;
+  try {
+    if (error instanceof BaseError) {
+      return error.shortMessage || String(error);
+    }
+    if (error instanceof Error) {
+      try {
+        return error.message || String(error);
+      } catch {
+        return String(error);
+      }
+    }
+    return String(error);
+  } catch {
+    return "Something went wrong. Please try again.";
   }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return "Something went wrong. Please try again.";
+};
+
+const formatError = (error: unknown) => {
+  return getErrorMessage(error);
 };
 
 // Safe localStorage helper that only works in browser
@@ -89,6 +115,7 @@ const safeLocalStorage = {
 
 export default function TicketsPage() {
   const { address, isConnected } = useAccount();
+  const publicClient = usePublicClient();
   const { writeContractAsync } = useWriteContract();
   const [ticketCount, setTicketCount] = useState(1);
   const [status, setStatus] = useState<FlowStatus>("idle");
@@ -101,7 +128,8 @@ export default function TicketsPage() {
   const [seriesTicketsData, setSeriesTicketsData] = useState<Map<bigint, { tickets: Array<{ number: number; isSold: boolean }>; soldLookup: Set<number> | null }>>(new Map());
   const [selectedSeriesForQuickSelect, setSelectedSeriesForQuickSelect] = useState<bigint | null>(null);
   const [countdownStartTimes, setCountdownStartTimes] = useState<Map<bigint, number>>(new Map()); // seriesId -> timestamp
-  const COUNTDOWN_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const [notifications, setNotifications] = useState<Array<{ id: string; seriesId: bigint; message: string; timestamp: number }>>([]);
+  const COUNTDOWN_DURATION = 1 * 60 * 1000; // 5 minutes in milliseconds
   const DRAW_THRESHOLD_PERCENT = 90;
   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key for persisting timers
 
@@ -408,7 +436,7 @@ export default function TicketsPage() {
   // Detect when series reaches 90% and start/restore countdown timer
   useEffect(() => {
     allSeriesData.forEach((series) => {
-      if (series.isNearDraw) {
+      if (series.isNearDraw && !series.isCompleted) {
         // Check if timer exists in state
         const existingStartTime = countdownStartTimes.get(series.seriesId);
         
@@ -424,18 +452,27 @@ export default function TicketsPage() {
                 const storedStartTime = parsed[seriesIdStr] as number;
                 const elapsed = Date.now() - storedStartTime;
                 
-                // Only restore if timer hasn't expired
-                if (elapsed < COUNTDOWN_DURATION) {
-                  setCountdownStartTimes((prev) => {
-                    // Only update if not already set
-                    if (prev.has(series.seriesId)) return prev;
-                    const next = new Map(prev);
-                    next.set(series.seriesId, storedStartTime);
-                    return next;
-                  });
-                  return; // Timer restored from localStorage
+                // Only restore if timer hasn't expired (or expired less than 5 minutes ago - still processing window)
+                if (elapsed < COUNTDOWN_DURATION + 300000) { // 5 minutes grace period for processing
+                  if (elapsed < COUNTDOWN_DURATION) {
+                    // Timer still active, restore it
+                    setCountdownStartTimes((prev) => {
+                      // Only update if not already set
+                      if (prev.has(series.seriesId)) return prev;
+                      const next = new Map(prev);
+                      next.set(series.seriesId, storedStartTime);
+                      return next;
+                    });
+                    return; // Timer restored from localStorage
+                  } else {
+                    // Timer expired but within processing window - keep it for checkAndAutomate to process
+                    // Don't remove it yet, let checkAndAutomate handle it
+                    console.log(`[Timer Detection] Series ${seriesIdStr} timer expired but within processing window, keeping for automation`);
+                    return;
+                  }
                 } else {
-                  // Timer expired, remove from localStorage
+                  // Timer expired more than 5 minutes ago, remove from localStorage
+                  console.log(`[Timer Detection] Series ${seriesIdStr} timer expired >5min ago, removing from localStorage`);
                   delete parsed[seriesIdStr];
                   if (Object.keys(parsed).length === 0) {
                     safeLocalStorage.removeItem(COUNTDOWN_STORAGE_KEY);
@@ -446,10 +483,11 @@ export default function TicketsPage() {
               }
             }
           } catch (error) {
-            console.error("Failed to check localStorage for countdown timer:", error);
+            console.error("[Timer Detection] Failed to check localStorage for countdown timer:", error);
           }
           
           // No existing timer found in localStorage, create new one
+          console.log(`[Timer Detection] Creating new timer for Series ${series.seriesId.toString()}`);
           setCountdownStartTimes((prev) => {
             // Only create if not already exists
             if (prev.has(series.seriesId)) return prev;
@@ -458,10 +496,11 @@ export default function TicketsPage() {
             return next;
           });
         } else {
-          // Timer exists in state, verify it hasn't expired
+          // Timer exists in state, verify it hasn't expired beyond processing window
           const elapsed = Date.now() - existingStartTime;
-          if (elapsed >= COUNTDOWN_DURATION) {
-            // Timer expired, remove it
+          if (elapsed >= COUNTDOWN_DURATION + 300000) {
+            // Timer expired more than 5 minutes ago, remove it
+            console.log(`[Timer Detection] Series ${series.seriesId.toString()} timer expired >5min ago, removing from state`);
             setCountdownStartTimes((prev) => {
               if (!prev.has(series.seriesId)) return prev;
               const next = new Map(prev);
@@ -474,6 +513,7 @@ export default function TicketsPage() {
         // Series is no longer near draw (sold out, drawn, or dropped below 90%)
         // Remove timer only if it exists
         if (countdownStartTimes.has(series.seriesId)) {
+          console.log(`[Timer Detection] Series ${series.seriesId.toString()} no longer near draw, removing timer`);
           setCountdownStartTimes((prev) => {
             if (!prev.has(series.seriesId)) return prev;
             const next = new Map(prev);
@@ -523,6 +563,487 @@ export default function TicketsPage() {
       return remaining !== null && remaining > 0;
     });
   }, [allSeriesData, getCountdownRemaining, currentTime]);
+
+  // Refs for admin automation mutable values
+  const adminAccountRef = useRef<ReturnType<typeof privateKeyToAccount> | null>(null);
+  const walletClientRef = useRef<ReturnType<typeof createWalletClient> | null>(null);
+  const isMountedRef = useRef(true);
+  const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
+  const processingSeriesRef = useRef<Set<string>>(new Set());
+
+  // Admin automation: check and automate draw execution
+  const checkAndAutomate = useCallback(async () => {
+    const adminAccount = adminAccountRef.current;
+    const walletClient = walletClientRef.current;
+    const isMounted = isMountedRef.current;
+    const processingSeries = processingSeriesRef.current;
+
+    console.log("[checkAndAutomate] Starting check...", {
+      hasAdminAccount: !!adminAccount,
+      hasWalletClient: !!walletClient,
+      isMounted,
+      hasLotteryAddress: !!LOTTERY_ADDRESS,
+      hasUsdtAddress: !!USDT_ADDRESS,
+      hasPublicClient: !!publicClient,
+    });
+
+    if (!adminAccount || !walletClient || !isMounted || !LOTTERY_ADDRESS || !USDT_ADDRESS || !publicClient) {
+      console.log("[checkAndAutomate] Early return - missing dependencies");
+      return;
+    }
+    
+    try {
+      // Get countdown timers from localStorage
+      let stored: string | null = null;
+      try {
+        stored = safeLocalStorage.getItem(COUNTDOWN_STORAGE_KEY) ?? null;
+      } catch (e) {
+        console.error("[checkAndAutomate] Error reading localStorage:", e);
+        return;
+      }
+      
+      if (!stored) {
+        console.log("[checkAndAutomate] No countdown timers in localStorage");
+        return;
+      }
+
+      const countdownTimers = JSON.parse(stored) as Record<string, number>;
+      const currentTime = Date.now();
+      
+      console.log("[checkAndAutomate] Found countdown timers:", Object.keys(countdownTimers).length, "series");
+      
+      // Check each series with an active countdown
+      for (const [seriesIdStr, startTime] of Object.entries(countdownTimers)) {
+        // Skip if already processing this series
+        if (processingSeries.has(seriesIdStr)) {
+          console.log(`[checkAndAutomate] Series ${seriesIdStr} already being processed, skipping`);
+          continue;
+        }
+        
+        const seriesId = BigInt(seriesIdStr);
+        const elapsed = currentTime - (startTime as number);
+        const remaining = COUNTDOWN_DURATION - elapsed;
+        const remainingMinutes = Math.floor(remaining / 60000);
+        const remainingSeconds = Math.floor((remaining % 60000) / 1000);
+
+        console.log(`[checkAndAutomate] Series ${seriesIdStr}:`, {
+          startTime: new Date(startTime).toISOString(),
+          currentTime: new Date(currentTime).toISOString(),
+          elapsed: `${Math.floor(elapsed / 60000)}m ${Math.floor((elapsed % 60000) / 1000)}s`,
+          remaining: `${remainingMinutes}m ${remainingSeconds}s`,
+          remainingMs: remaining,
+        });
+
+        // When countdown expires (remaining <= 0), buy remaining tickets and execute draw
+        // Extended window to 5 minutes after expiration to ensure it processes
+        // Also check if we're very close to expiration (within last 30 seconds) to catch it early
+        const isExpired = remaining <= 0;
+        const isNearExpiration = remaining > 0 && remaining <= 30000; // Within last 30 seconds
+        const isWithinProcessingWindow = remaining <= 0 && remaining > -300000; // Within 5 minutes after expiration
+        
+        if (isExpired && isWithinProcessingWindow) {
+          console.log(`[checkAndAutomate] ⚠️ TIMER EXPIRED for Series ${seriesIdStr}! Processing... (${Math.floor(remaining / 1000)}s past expiration)`);
+          processingSeries.add(seriesIdStr);
+          
+          try {
+            // Get series info
+            console.log(`[checkAndAutomate] Fetching series info for Series ${seriesIdStr}...`);
+            const seriesInfo = await publicClient.readContract({
+              address: LOTTERY_ADDRESS,
+              abi: lotteryAbi,
+              functionName: "getSeriesInfo",
+              args: [seriesId],
+            });
+
+            const seriesInfoArray = seriesInfo as readonly unknown[];
+            const totalTickets = Array.isArray(seriesInfoArray) && typeof seriesInfoArray[0] === "bigint" ? seriesInfoArray[0] : BigInt(0);
+            const sold = Array.isArray(seriesInfoArray) && typeof seriesInfoArray[1] === "bigint" ? seriesInfoArray[1] : BigInt(0);
+            const drawExecuted = Array.isArray(seriesInfoArray) && typeof seriesInfoArray[2] === "boolean" ? seriesInfoArray[2] : false;
+            const ticketsLeft = Number(totalTickets - sold);
+            const salesPercent = totalTickets > BigInt(0) ? Number((sold * BigInt(100)) / totalTickets) : 0;
+
+            console.log(`[checkAndAutomate] Series ${seriesIdStr} info:`, {
+              totalTickets: totalTickets.toString(),
+              sold: sold.toString(),
+              ticketsLeft,
+              salesPercent: `${salesPercent}%`,
+              drawExecuted,
+            });
+
+              // Only process if at 90%+ sold and draw not yet executed
+            if (salesPercent >= 90 && ticketsLeft > 0 && !drawExecuted) {
+              console.log(`[checkAndAutomate] ✅ Conditions met! Starting automation for Series ${seriesIdStr}...`);
+              // Step 1: Buy remaining tickets
+              console.log(`[checkAndAutomate] Step 1: Finding unsold tickets for Series ${seriesIdStr}...`);
+              const ticketNumbers: bigint[] = [];
+              for (let i = 1; i <= Number(totalTickets); i++) {
+                const ticketId = (seriesId << BigInt(128)) | BigInt(i);
+                try {
+                  const owner = await publicClient.readContract({
+                    address: LOTTERY_ADDRESS,
+                    abi: lotteryAbi,
+                    functionName: "ticketOwners",
+                    args: [ticketId],
+                  }) as Address;
+                  
+                  if (owner === zeroAddress) {
+                    ticketNumbers.push(BigInt(i));
+                  }
+                } catch (e) {
+                  console.warn(`[checkAndAutomate] Error checking ticket ${i}, assuming unsold:`, e);
+                  ticketNumbers.push(BigInt(i));
+                }
+              }
+
+              console.log(`[checkAndAutomate] Found ${ticketNumbers.length} unsold tickets:`, ticketNumbers.map(n => n.toString()));
+
+              if (ticketNumbers.length > 0) {
+                console.log(`[checkAndAutomate] Step 1.1: Checking admin USDT balance...`);
+                // Check USDT balance and allowance
+                const adminBalance = await publicClient.readContract({
+                  address: USDT_ADDRESS,
+                  abi: erc20Abi,
+                  functionName: "balanceOf",
+                  args: [adminAccount.address],
+                }) as bigint;
+
+                const totalCost = ticketPriceRaw * BigInt(ticketNumbers.length);
+                console.log(`[checkAndAutomate] Admin balance:`, formatUnits(adminBalance, decimals), "USDT");
+                console.log(`[checkAndAutomate] Total cost:`, formatUnits(totalCost, decimals), "USDT");
+                
+                if (adminBalance >= totalCost) {
+                  console.log(`[checkAndAutomate] ✅ Balance sufficient!`);
+                  // Check and approve if needed
+                  const allowance = await publicClient.readContract({
+                    address: USDT_ADDRESS,
+                    abi: erc20Abi,
+                    functionName: "allowance",
+                    args: [adminAccount.address, LOTTERY_ADDRESS],
+                  }) as bigint;
+
+                  console.log(`[checkAndAutomate] Current allowance:`, formatUnits(allowance, decimals), "USDT");
+
+                  if (allowance < totalCost) {
+                    console.log(`[checkAndAutomate] Step 1.2: Approving USDT...`);
+                    // Approve 10000x the purchase amount
+                    const approveAmount = totalCost * BigInt(10000);
+                    console.log(`[checkAndAutomate] Approving amount:`, formatUnits(approveAmount, decimals), "USDT");
+                    const approveHash = await walletClient.writeContract({
+                      account: adminAccount,
+                      chain: bscTestnet,
+                      address: USDT_ADDRESS,
+                      abi: erc20Abi,
+                      functionName: "approve",
+                      args: [LOTTERY_ADDRESS, approveAmount],
+                    });
+                    console.log(`[checkAndAutomate] ✅ Approval transaction sent:`, approveHash);
+                    await publicClient.waitForTransactionReceipt({ hash: approveHash });
+                    console.log(`[checkAndAutomate] ✅ Approval confirmed!`);
+                  } else {
+                    console.log(`[checkAndAutomate] ✅ Allowance already sufficient`);
+                  }
+
+                  console.log(`[checkAndAutomate] Step 1.3: Buying ${ticketNumbers.length} tickets...`);
+                  // Buy remaining tickets
+                  const buyHash = await walletClient.writeContract({
+                    account: adminAccount,
+                    chain: bscTestnet,
+                    address: LOTTERY_ADDRESS,
+                    abi: lotteryAbi,
+                    functionName: "buyTicketsAt",
+                    args: [seriesId, ticketNumbers],
+                  });
+                  console.log(`[checkAndAutomate] ✅ Buy transaction sent:`, buyHash);
+                  
+                  await publicClient.waitForTransactionReceipt({ hash: buyHash });
+                  console.log(`[checkAndAutomate] ✅ Buy transaction confirmed!`);
+                  
+                  // Wait a bit for the transaction to be processed
+                  console.log(`[checkAndAutomate] Waiting 3 seconds for state to update...`);
+                  await new Promise(resolve => setTimeout(resolve, 3000));
+
+                  // Step 2: Execute draw
+                  console.log(`[checkAndAutomate] Step 2: Executing draw for Series ${seriesIdStr}...`);
+                  try {
+                    const executeDrawHash = await walletClient.writeContract({
+                      account: adminAccount,
+                      chain: bscTestnet,
+                      address: LOTTERY_ADDRESS,
+                      abi: lotteryAbi,
+                      functionName: "executeDraw",
+                      args: [seriesId],
+                    });
+                    console.log(`[checkAndAutomate] ✅ Execute draw transaction sent:`, executeDrawHash);
+                    
+                    await publicClient.waitForTransactionReceipt({ hash: executeDrawHash });
+                    console.log(`[checkAndAutomate] ✅ Draw executed successfully!`);
+
+                    // Step 3: Distribute rewards
+                    console.log(`[checkAndAutomate] Step 3: Distributing rewards for Series ${seriesIdStr}...`);
+                    try {
+                      const distributeHash = await walletClient.writeContract({
+                        account: adminAccount,
+                        chain: bscTestnet,
+                        address: LOTTERY_ADDRESS,
+                        abi: lotteryAbi,
+                        functionName: "distributeRewards",
+                        args: [seriesId],
+                      });
+                      console.log(`[checkAndAutomate] ✅ Distribute rewards transaction sent:`, distributeHash);
+                      
+                      await publicClient.waitForTransactionReceipt({ hash: distributeHash });
+                      console.log(`[checkAndAutomate] ✅ Rewards distributed successfully!`);
+
+                      // Show notification to users
+                      const notificationId = `notification-${seriesIdStr}-${Date.now()}`;
+                      setNotifications((prev) => [
+                        ...prev,
+                        {
+                          id: notificationId,
+                          seriesId,
+                          message: `Series ${formatSeriesName(seriesId)}: Draw executed and rewards distributed!`,
+                          timestamp: Date.now(),
+                        },
+                      ]);
+
+                      // Remove notification after 10 seconds
+                      setTimeout(() => {
+                        setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+                      }, 10000);
+                    } catch (distributeError: any) {
+                      console.error(`[checkAndAutomate] ❌ Error distributing rewards:`, distributeError);
+                    }
+                  } catch (drawError: any) {
+                    const errorMessage = getErrorMessage(drawError);
+                    if (!errorMessage.includes("DrawAlreadyExecuted") && !errorMessage.includes("draw already executed")) {
+                      console.error(`[checkAndAutomate] ❌ Error executing draw:`, drawError);
+                    } else {
+                      console.log(`[checkAndAutomate] ⚠️ Draw already executed, skipping`);
+                    }
+                  }
+
+                  // Remove from countdown timers
+                  console.log(`[checkAndAutomate] Cleaning up countdown timer for Series ${seriesIdStr}...`);
+                  delete countdownTimers[seriesIdStr];
+                  if (safeLocalStorage.getItem(COUNTDOWN_STORAGE_KEY)) {
+                    if (Object.keys(countdownTimers).length === 0) {
+                      safeLocalStorage.removeItem(COUNTDOWN_STORAGE_KEY);
+                    } else {
+                      safeLocalStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(countdownTimers));
+                    }
+                  }
+                  
+                  // Refresh series data
+                  console.log(`[checkAndAutomate] Refreshing series data...`);
+                  refetchAllSeriesInfo();
+                  console.log(`[checkAndAutomate] ✅ Automation completed successfully for Series ${seriesIdStr}!`);
+                } else {
+                  console.error(`[checkAndAutomate] ❌ Insufficient balance! Need ${formatUnits(totalCost, decimals)} USDT but have ${formatUnits(adminBalance, decimals)} USDT`);
+                }
+              } else if (sold >= BigInt(90) && !drawExecuted) {
+                console.log(`[checkAndAutomate] No tickets to buy, but at 90%+ sold. Executing draw directly...`);
+                // If no tickets left but at 90%+, just execute draw and distribute rewards
+                try {
+                  console.log(`[checkAndAutomate] Step 2: Executing draw for Series ${seriesIdStr} (no tickets to buy)...`);
+                  const executeDrawHash = await walletClient.writeContract({
+                    account: adminAccount,
+                    chain: bscTestnet,
+                    address: LOTTERY_ADDRESS,
+                    abi: lotteryAbi,
+                    functionName: "executeDraw",
+                    args: [seriesId],
+                  });
+                  console.log(`[checkAndAutomate] ✅ Execute draw transaction sent:`, executeDrawHash);
+                  
+                  await publicClient.waitForTransactionReceipt({ hash: executeDrawHash });
+                  console.log(`[checkAndAutomate] ✅ Draw executed successfully!`);
+
+                  console.log(`[checkAndAutomate] Step 3: Distributing rewards for Series ${seriesIdStr}...`);
+                  const distributeHash = await walletClient.writeContract({
+                    account: adminAccount,
+                    chain: bscTestnet,
+                    address: LOTTERY_ADDRESS,
+                    abi: lotteryAbi,
+                    functionName: "distributeRewards",
+                    args: [seriesId],
+                  });
+                  console.log(`[checkAndAutomate] ✅ Distribute rewards transaction sent:`, distributeHash);
+                  
+                  await publicClient.waitForTransactionReceipt({ hash: distributeHash });
+                  console.log(`[checkAndAutomate] ✅ Rewards distributed successfully!`);
+
+                  // Show notification
+                  const notificationId = `notification-${seriesIdStr}-${Date.now()}`;
+                  setNotifications((prev) => [
+                    ...prev,
+                    {
+                      id: notificationId,
+                      seriesId,
+                      message: `Series ${formatSeriesName(seriesId)}: Draw executed and rewards distributed!`,
+                      timestamp: Date.now(),
+                    },
+                  ]);
+
+                  setTimeout(() => {
+                    setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
+                  }, 10000);
+
+                  // Remove from countdown timers
+                  console.log(`[checkAndAutomate] Cleaning up countdown timer for Series ${seriesIdStr}...`);
+                  delete countdownTimers[seriesIdStr];
+                  if (safeLocalStorage.getItem(COUNTDOWN_STORAGE_KEY)) {
+                    if (Object.keys(countdownTimers).length === 0) {
+                      safeLocalStorage.removeItem(COUNTDOWN_STORAGE_KEY);
+                    } else {
+                      safeLocalStorage.setItem(COUNTDOWN_STORAGE_KEY, JSON.stringify(countdownTimers));
+                    }
+                  }
+                  
+                  refetchAllSeriesInfo();
+                  console.log(`[checkAndAutomate] ✅ Automation completed successfully for Series ${seriesIdStr}!`);
+                } catch (error: any) {
+                  console.error(`[checkAndAutomate] ❌ Error executing draw/distribute:`, error);
+                }
+              } else {
+                console.log(`[checkAndAutomate] ⚠️ Conditions not met:`, {
+                  salesPercent,
+                  ticketsLeft,
+                  drawExecuted,
+                });
+              }
+            } else {
+              console.log(`[checkAndAutomate] ⚠️ Series ${seriesIdStr} not ready:`, {
+                salesPercent,
+                ticketsLeft,
+                drawExecuted,
+              });
+            }
+          } catch (error) {
+            console.error(`[checkAndAutomate] ❌ Error processing series ${seriesIdStr}:`, error);
+          } finally {
+            processingSeries.delete(seriesIdStr);
+            console.log(`[checkAndAutomate] Removed Series ${seriesIdStr} from processing set`);
+          }
+        } else {
+          console.log(`[checkAndAutomate] Series ${seriesIdStr} timer not expired yet (remaining: ${Math.floor(remaining / 1000)}s)`);
+        }
+      }
+    } catch (error) {
+      console.error("[checkAndAutomate] ❌ Automation error:", error);
+    }
+  }, [publicClient, ticketPriceRaw, refetchAllSeriesInfo, COUNTDOWN_STORAGE_KEY, decimals]);
+
+  // Admin automation: initialize admin wallet and start automation
+  const initializeAutomation = useCallback(async () => {
+    console.log("[initializeAutomation] Starting initialization...");
+    const isMounted = isMountedRef.current;
+
+    if (!isMounted || !LOTTERY_ADDRESS || !USDT_ADDRESS || !publicClient) {
+      console.log("[initializeAutomation] ❌ Early return - missing dependencies:", {
+        isMounted,
+        hasLotteryAddress: !!LOTTERY_ADDRESS,
+        hasUsdtAddress: !!USDT_ADDRESS,
+        hasPublicClient: !!publicClient,
+      });
+      return;
+    }
+
+    try {
+      console.log("[initializeAutomation] Creating admin account...");
+      adminAccountRef.current = privateKeyToAccount(ADMIN_PRIVATE_KEY);
+      console.log("[initializeAutomation] ✅ Admin account created:", adminAccountRef.current.address);
+      
+      console.log("[initializeAutomation] Creating wallet client...");
+      walletClientRef.current = createWalletClient({
+        account: adminAccountRef.current,
+        chain: bscTestnet,
+        transport: http(process.env.NEXT_PUBLIC_BSC_RPC_URL ?? "https://bsc-testnet.drpc.org"),
+      });
+      console.log("[initializeAutomation] ✅ Wallet client created");
+    } catch (error) {
+      console.error("[initializeAutomation] ❌ Failed to create admin wallet:", error);
+      adminAccountRef.current = null;
+      walletClientRef.current = null;
+      return;
+    }
+
+    // Check every 5 seconds for more responsive processing
+    console.log("[initializeAutomation] Setting up interval (checking every 5 seconds)...");
+    intervalIdRef.current = setInterval(() => {
+      if (isMountedRef.current && adminAccountRef.current && walletClientRef.current) {
+        console.log("[initializeAutomation] Interval tick - calling checkAndAutomate...");
+        checkAndAutomate().catch((error) => {
+          console.error("[initializeAutomation] Unhandled error in checkAndAutomate:", getErrorMessage(error));
+        });
+      } else {
+        console.log("[initializeAutomation] Interval tick - skipping (not ready):", {
+          isMounted: isMountedRef.current,
+          hasAdminAccount: !!adminAccountRef.current,
+          hasWalletClient: !!walletClientRef.current,
+        });
+      }
+    }, 5_000);
+    console.log("[initializeAutomation] ✅ Interval set up with ID:", intervalIdRef.current);
+    
+    // Initial check after a small delay
+    console.log("[initializeAutomation] Scheduling initial check in 2 seconds...");
+    setTimeout(() => {
+      if (isMountedRef.current && adminAccountRef.current && walletClientRef.current) {
+        console.log("[initializeAutomation] Running initial check...");
+        checkAndAutomate().catch((error) => {
+          console.error("[initializeAutomation] Unhandled error in initial checkAndAutomate:", getErrorMessage(error));
+        });
+      } else {
+        console.log("[initializeAutomation] Initial check skipped (not ready)");
+      }
+    }, 2000);
+    console.log("[initializeAutomation] ✅ Initialization complete!");
+  }, [publicClient, checkAndAutomate]);
+
+  // Admin automation: auto-buy remaining tickets, execute draw, and distribute rewards
+  useEffect(() => {
+    console.log("[useEffect] Admin automation effect running...");
+    // Only run in browser
+    if (typeof window === "undefined") {
+      console.log("[useEffect] Skipping - not in browser");
+      return;
+    }
+    if (!LOTTERY_ADDRESS || !USDT_ADDRESS || !publicClient) {
+      console.log("[useEffect] Skipping - missing dependencies:", {
+        hasLotteryAddress: !!LOTTERY_ADDRESS,
+        hasUsdtAddress: !!USDT_ADDRESS,
+        hasPublicClient: !!publicClient,
+      });
+      return;
+    }
+
+    console.log("[useEffect] Setting isMounted to true");
+    isMountedRef.current = true;
+
+    // Initialize after a small delay to ensure we're in the browser
+    console.log("[useEffect] Scheduling initialization in 100ms...");
+    const timeoutId = setTimeout(() => {
+      if (isMountedRef.current) {
+        console.log("[useEffect] Timeout fired - calling initializeAutomation");
+        initializeAutomation().catch((error) => {
+          console.error("[useEffect] Unhandled error in initializeAutomation:", getErrorMessage(error));
+        });
+      } else {
+        console.log("[useEffect] Timeout fired but component unmounted");
+      }
+    }, 100);
+
+    return () => {
+      console.log("[useEffect] Cleanup - stopping automation");
+      isMountedRef.current = false;
+      if (intervalIdRef.current) {
+        console.log("[useEffect] Clearing interval:", intervalIdRef.current);
+        clearInterval(intervalIdRef.current);
+        intervalIdRef.current = null;
+      }
+      clearTimeout(timeoutId);
+    };
+  }, [publicClient, initializeAutomation]);
 
   // Auto-expand selected series from dropdown and collapse others
   useEffect(() => {
@@ -1459,6 +1980,30 @@ export default function TicketsPage() {
                   </motion.div>
                 );
               })}
+            </AnimatePresence>
+          </div>
+        )}
+
+        {/* Notification Banner for Draw Executed and Rewards Distributed */}
+        {notifications.length > 0 && (
+          <div className={styles.countdownBannerContainer}>
+            <AnimatePresence mode="popLayout">
+              {notifications.map((notification) => (
+                <motion.div
+                  key={notification.id}
+                  className={styles.successBanner}
+                  initial={{ opacity: 0, y: -30, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -30, scale: 0.95 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                  <div className={styles.countdownContent}>
+                    <div className={styles.countdownLabel}>
+                      ✅ {notification.message}
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </AnimatePresence>
           </div>
         )}
