@@ -149,6 +149,106 @@
   color: rgba(224, 242, 254, 1);
 }
 
+.winningTicketsSection {
+  padding: 32px;
+  border-radius: 28px;
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  background: linear-gradient(
+    145deg,
+    rgba(234, 179, 8, 0.15),
+    rgba(250, 204, 21, 0.1)
+  );
+  box-shadow: 0 24px 60px rgba(234, 179, 8, 0.2);
+}
+
+.winningTicketsTitle {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 600;
+  margin: 0 0 24px;
+  color: rgba(234, 179, 8, 0.95);
+  text-align: center;
+}
+
+.winningTicketsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.winningTicketCard {
+  padding: 20px;
+  border-radius: 20px;
+  border: 2px solid rgba(234, 179, 8, 0.5);
+  background: linear-gradient(
+    145deg,
+    rgba(234, 179, 8, 0.3),
+    rgba(250, 204, 21, 0.25)
+  );
+  box-shadow: 0 8px 24px rgba(234, 179, 8, 0.25);
+  transition: all 0.2s ease;
+}
+
+.winningTicketCard:hover {
+  border-color: rgba(234, 179, 8, 0.8);
+  box-shadow: 0 12px 32px rgba(234, 179, 8, 0.35);
+  transform: translateY(-2px);
+}
+
+.winningTicketHeader {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.winningTicketNumber {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgba(8, 47, 73, 0.95);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.05em;
+}
+
+.winningTicketSeries {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(8, 47, 73, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.winningTicket {
+  border-color: rgba(234, 179, 8, 0.6) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(234, 179, 8, 0.35),
+    rgba(250, 204, 21, 0.3)
+  ) !important;
+  box-shadow: 0 8px 24px rgba(234, 179, 8, 0.3) !important;
+}
+
+.winningTicket:hover {
+  border-color: rgba(234, 179, 8, 0.8) !important;
+  box-shadow: 0 12px 32px rgba(234, 179, 8, 0.4) !important;
+  background: linear-gradient(
+    145deg,
+    rgba(234, 179, 8, 0.45),
+    rgba(250, 204, 21, 0.4)
+  ) !important;
+}
+
+.winningBadge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(234, 179, 8, 0.3);
+  color: rgba(8, 47, 73, 0.95);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .seriesList {
   display: grid;
   gap: 24px;
@@ -337,6 +437,15 @@
   .seriesCard {
     padding: 24px;
   }
+
+  .winningTicketsSection {
+    padding: 24px;
+  }
+
+  .winningTicketsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -359,6 +468,14 @@
 
   .seriesCard {
     padding: 20px;
+  }
+
+  .winningTicketsSection {
+    padding: 20px;
+  }
+
+  .winningTicketsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
 
   .ticketsGrid {

@@ -290,6 +290,52 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
 }
 
+.resultIndicator {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.4), rgba(250, 204, 21, 0.35));
+  border: 1px solid rgba(234, 179, 8, 0.5);
+  color: rgba(255, 251, 235, 0.95);
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.25);
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+  transition: all 0.2s ease;
+}
+
+.resultIndicator:hover {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.5), rgba(250, 204, 21, 0.45));
+  border-color: rgba(234, 179, 8, 0.7);
+  box-shadow: 0 6px 16px rgba(234, 179, 8, 0.35);
+  transform: scale(1.05);
+}
+
+.resultIndicatorText {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resultSeriesName {
+  font-weight: 500;
+  color: rgba(255, 251, 235, 0.9);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.resultTicketNumber {
+  font-weight: 700;
+  color: rgba(255, 251, 235, 1);
+  background: rgba(234, 179, 8, 0.3);
+  padding: 2px 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(234, 179, 8, 0.5);
+}
+
 .seriesStats {
   display: grid;
   gap: 12px;
@@ -324,6 +370,32 @@
 .highlightValue {
   color: rgba(16, 185, 129, 0.95) !important;
   font-size: 1.3rem !important;
+}
+
+.winningTicketValue {
+  color: rgba(234, 179, 8, 0.95) !important;
+  font-weight: 700 !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.winningTicketSeriesLabel {
+  font-weight: 600;
+  color: rgba(234, 179, 8, 0.85);
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.winningTicketNumbers {
+  font-weight: 700;
+  color: rgba(234, 179, 8, 1);
+  background: rgba(234, 179, 8, 0.2);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(234, 179, 8, 0.4);
 }
 
 .statDivider {

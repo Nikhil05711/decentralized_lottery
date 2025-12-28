@@ -27,6 +27,8 @@ type SeriesRewardInfo = {
   userPotentialRewards: number;
   isActive: boolean;
   isCompleted: boolean;
+  drawExecuted: boolean;
+  winningTicketNumbers: bigint[];
 };
 
 const extractSeriesAndNumber = (ticketId: bigint): { seriesId: bigint; ticketNumber: bigint } => {
@@ -120,12 +122,18 @@ export default function RewardsPage() {
       const info = seriesInfoData[index];
       let totalTickets = BigInt(0);
       let ticketsSold = BigInt(0);
+      let drawExecuted = false;
+      let winningTicketNumbers: bigint[] = [];
 
       if (info?.status === "success" && info.result) {
         // getSeriesInfo returns: totalTickets, soldCount, drawExecuted, readyForDraw, winningTicketNumbers
         const tuple = info.result as ReadonlyArray<unknown>;
         totalTickets = Array.isArray(tuple) && typeof tuple[0] === "bigint" ? tuple[0] : BigInt(0);
         ticketsSold = Array.isArray(tuple) && typeof tuple[1] === "bigint" ? tuple[1] : BigInt(0);
+        drawExecuted = Array.isArray(tuple) && typeof tuple[2] === "boolean" ? tuple[2] : false;
+        winningTicketNumbers = Array.isArray(tuple) && Array.isArray(tuple[4]) 
+          ? (tuple[4] as unknown[]).filter((num): num is bigint => typeof num === "bigint")
+          : [];
       }
 
       const { count: rewardCount, pool: totalRewardPool } = calculateRewards(ticketsSold, totalTickets);
@@ -154,6 +162,8 @@ export default function RewardsPage() {
         userPotentialRewards,
         isActive,
         isCompleted,
+        drawExecuted,
+        winningTicketNumbers,
       };
     }).sort((a, b) => {
       // Sort: series with available tickets first, then alphabetically by series code (AA, AB, AC...)
@@ -320,6 +330,18 @@ export default function RewardsPage() {
                               {series.isCompleted && (
                                 <span className={styles.completedBadge}>Completed</span>
                               )}
+                              {series.drawExecuted && series.winningTicketNumbers.length > 0 && (
+                                <div className={styles.resultIndicator} title={`Winning Ticket${series.winningTicketNumbers.length > 1 ? 's' : ''}: ${series.winningTicketNumbers.map(num => num.toString()).join(', ')}`}>
+                                  <span className={styles.resultIndicatorText}>
+                                    <span className={styles.resultSeriesName}>{formatSeriesName(series.seriesId)}</span>
+                                    <span className={styles.resultTicketNumber}>
+                                      {series.winningTicketNumbers.length === 1 
+                                        ? `#${series.winningTicketNumbers[0].toString()}`
+                                        : `${series.winningTicketNumbers.length} winners`}
+                                    </span>
+                                  </span>
+                                </div>
+                              )}
                             </div>
                             <motion.div
                               className={styles.expandIcon}
@@ -375,6 +397,22 @@ export default function RewardsPage() {
                                 <span className={styles.statLabel}>Total Reward Pool</span>
                                 <span className={styles.statValue}>${series.totalRewardPool.toFixed(2)}</span>
                               </div>
+                              {series.drawExecuted && series.winningTicketNumbers.length > 0 && (
+                                <>
+                                  <div className={styles.statDivider} />
+                                  <div className={styles.statRow}>
+                                    <span className={styles.statLabel}>Winning Ticket{series.winningTicketNumbers.length > 1 ? 's' : ''}</span>
+                                    <span className={`${styles.statValue} ${styles.winningTicketValue}`}>
+                                      <span className={styles.winningTicketSeriesLabel}>{formatSeriesName(series.seriesId)}:</span>
+                                      <span className={styles.winningTicketNumbers}>
+                                        {series.winningTicketNumbers.length === 1
+                                          ? `#${series.winningTicketNumbers[0].toString()}`
+                                          : series.winningTicketNumbers.map(num => `#${num.toString()}`).join(', ')}
+                                      </span>
+                                    </span>
+                                  </div>
+                                </>
+                              )}
                               {isConnected && series.userTickets > 0 && (
                                 <>
                                   <div className={styles.statDivider} />

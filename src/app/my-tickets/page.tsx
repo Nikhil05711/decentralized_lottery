@@ -24,6 +24,8 @@ type SeriesGroup = {
   tickets: TicketInfo[];
   totalTickets: bigint;
   ticketsSold: bigint;
+  drawExecuted: boolean;
+  winningTicketNumbers: bigint[];
 };
 
 const extractSeriesAndNumber = (ticketId: bigint): { seriesId: bigint; ticketNumber: bigint } => {
@@ -102,6 +104,8 @@ export default function MyTicketsPage() {
       
       let totalTickets = BigInt(0);
       let ticketsSold = BigInt(0);
+      let drawExecuted = false;
+      let winningTicketNumbers: bigint[] = [];
 
       if (info?.status === "success" && info.result) {
         // getSeriesInfo returns: (totalTickets, soldCount, drawExecuted, readyForDraw, winningTicketNumbers)
@@ -117,6 +121,16 @@ export default function MyTicketsPage() {
           if (typeof second === "bigint" || typeof second === "number") {
             ticketsSold = typeof second === "bigint" ? second : BigInt(second);
           }
+          // Extract drawExecuted (index 2)
+          if (result.length >= 3 && typeof result[2] === "boolean") {
+            drawExecuted = result[2];
+          }
+          // Extract winningTicketNumbers (index 4)
+          if (result.length >= 5 && Array.isArray(result[4])) {
+            winningTicketNumbers = (result[4] as unknown[]).filter(
+              (num): num is bigint => typeof num === "bigint"
+            );
+          }
         }
       }
 
@@ -129,6 +143,8 @@ export default function MyTicketsPage() {
         }),
         totalTickets,
         ticketsSold,
+        drawExecuted,
+        winningTicketNumbers,
       };
     });
   }, [seriesIds, ticketsBySeries, seriesInfoData]);
@@ -136,6 +152,27 @@ export default function MyTicketsPage() {
   const totalTicketsOwned = useMemo(() => {
     return ticketIds.length;
   }, [ticketIds]);
+
+  const winningTicketsBySeries = useMemo(() => {
+    const winningTickets: Array<{ seriesId: bigint; seriesName: string; ticketNumber: bigint; ticketId: bigint }> = [];
+    
+    seriesGroups.forEach((group) => {
+      if (group.drawExecuted && group.winningTicketNumbers.length > 0) {
+        group.tickets.forEach((ticket) => {
+          if (group.winningTicketNumbers.includes(ticket.ticketNumber)) {
+            winningTickets.push({
+              seriesId: group.seriesId,
+              seriesName: formatSeriesName(group.seriesId),
+              ticketNumber: ticket.ticketNumber,
+              ticketId: ticket.ticketId,
+            });
+          }
+        });
+      }
+    });
+    
+    return winningTickets;
+  }, [seriesGroups]);
 
 
   const toggleSeries = (seriesId: bigint) => {
@@ -231,6 +268,29 @@ export default function MyTicketsPage() {
           </div>
         </header>
 
+        {winningTicketsBySeries.length > 0 && (
+          <section className={styles.winningTicketsSection}>
+            <h2 className={styles.winningTicketsTitle}>🏆 My Winning Tickets</h2>
+            <div className={styles.winningTicketsGrid}>
+              {winningTicketsBySeries.map((winningTicket) => {
+                const padLength = seriesGroups.find(g => g.seriesId === winningTicket.seriesId)?.totalTickets.toString().length || 3;
+                return (
+                  <div key={winningTicket.ticketId.toString()} className={styles.winningTicketCard}>
+                    <div className={styles.winningTicketHeader}>
+                      <span className={styles.winningTicketNumber}>
+                        {formatTicketNumber(winningTicket.ticketNumber, winningTicket.seriesId, padLength)}
+                      </span>
+                      <span className={styles.winningTicketSeries}>
+                        Series {winningTicket.seriesName}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         <div className={styles.seriesList}>
           {seriesGroups.map((group, groupIndex) => {
             const isExpanded = expandedSeries.has(group.seriesId);
@@ -304,10 +364,11 @@ export default function MyTicketsPage() {
                       <div className={styles.ticketsGrid}>
                         {group.tickets.map((ticket, ticketIndex) => {
                           const isClicked = clickedTicket === ticket.ticketId;
+                          const isWinningTicket = group.drawExecuted && group.winningTicketNumbers.includes(ticket.ticketNumber);
                           return (
                             <motion.div
                               key={ticket.ticketId.toString()}
-                              className={styles.ticketCard}
+                              className={`${styles.ticketCard} ${isWinningTicket ? styles.winningTicket : ""}`}
                               initial={{ opacity: 0, scale: 0.9 }}
                               animate={{ 
                                 opacity: 1, 
@@ -329,6 +390,9 @@ export default function MyTicketsPage() {
                               </span>
                               <span className={styles.ticketSeriesLabel}>
                                 Series {formatSeriesName(group.seriesId)}
+                                {isWinningTicket && (
+                                  <span className={styles.winningBadge}> 🏆 Winner</span>
+                                )}
                               </span>
                             </motion.div>
                           );

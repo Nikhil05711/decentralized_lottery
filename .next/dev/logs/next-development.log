@@ -1,220 +1,106 @@
-[00:00:00.872] Server  LOG      ✓ Ready in 635ms
-[00:00:04.079] Server  LOG      ○ Compiling /tickets ...
-[00:00:09.856] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:09.969] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:09.977] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:09.983] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:10.202] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:11.717] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:00:11.722] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:00:11.727] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:00:13.041] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:00:13.041] Browser LOG     [useEffect] Admin automation effect running...
-[00:00:13.041] Browser LOG     [useEffect] Setting isMounted to true
-[00:00:13.041] Browser LOG     [useEffect] Scheduling initialization in 100ms...
-[00:00:13.041] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
-[00:00:13.041] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
-[00:00:13.041] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
-[00:00:13.041] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
-[00:00:13.041] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
-[00:00:13.041] Browser LOG     [useEffect] Cleanup - stopping automation
-[00:00:13.041] Browser LOG     [useEffect] Admin automation effect running...
-[00:00:13.041] Browser LOG     [useEffect] Setting isMounted to true
-[00:00:13.041] Browser LOG     [useEffect] Scheduling initialization in 100ms...
-[00:00:13.041] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
-[00:00:13.041] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:00:13.041] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:00:13.041] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:00:13.041] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
-[00:00:13.041] Browser LOG     [initializeAutomation] Starting initialization...
-[00:00:13.041] Browser LOG     [initializeAutomation] Creating admin account...
-[00:00:13.041] Browser ERROR   [initializeAutomation] ❌ Failed to create admin wallet: {}
-[00:03:24.230] Server  LOG      ✓ Compiled in 91ms
-[00:03:24.244] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-[00:03:24.835] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:03:24.921] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:03:24.928] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:03:24.937] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:03:25.327] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:03:26.931] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:03:26.931] Browser LOG     [useEffect] Admin automation effect running...
-[00:03:26.931] Browser LOG     [useEffect] Setting isMounted to true
-[00:03:26.931] Browser LOG     [useEffect] Scheduling initialization in 100ms...
-[00:03:28.034] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:03:28.044] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:03:28.056] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:03:30.036] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
-[00:03:30.036] Browser LOG     [initializeAutomation] Starting initialization...
-[00:03:30.036] Browser LOG     [initializeAutomation] Creating admin account...
-[00:03:30.036] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
-[00:03:30.036] Browser LOG     [initializeAutomation] Creating wallet client...
-[00:03:30.036] Browser LOG     [initializeAutomation] ✅ Wallet client created
-[00:03:30.036] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
-[00:03:30.036] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 134
-[00:03:30.036] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
-[00:03:30.036] Browser LOG     [initializeAutomation] ✅ Initialization complete!
-[00:03:30.036] Browser LOG     [useEffect] Cleanup - stopping automation
-[00:03:30.037] Browser LOG     [useEffect] Clearing interval: 134
-[00:03:30.037] Browser LOG     [useEffect] Admin automation effect running...
-[00:03:30.037] Browser LOG     [useEffect] Setting isMounted to true
-[00:03:30.037] Browser LOG     [useEffect] Scheduling initialization in 100ms...
-[00:03:30.037] Browser LOG     [Timer Detection] Creating new timer for Series 1
-[00:03:30.037] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
-[00:03:30.037] Browser LOG     [initializeAutomation] Starting initialization...
-[00:03:30.037] Browser LOG     [initializeAutomation] Creating admin account...
-[00:03:30.037] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
-[00:03:30.037] Browser LOG     [initializeAutomation] Creating wallet client...
-[00:03:30.037] Browser LOG     [initializeAutomation] ✅ Wallet client created
-[00:03:30.037] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
-[00:03:30.037] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 209
-[00:03:30.037] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
-[00:03:30.037] Browser LOG     [initializeAutomation] ✅ Initialization complete!
-[00:03:30.037] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:03:30.037] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:03:30.037] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:03:30.037] Browser LOG     [initializeAutomation] Running initial check...
-[00:03:30.037] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:30.037] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:30.037] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:44:45.367Z","elapsed":"0m 2s","remaining":"0m 57s","remainingMs":57372,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:30.037] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 57s)
-[00:03:31.036] Browser LOG     [initializeAutomation] Running initial check...
-[00:03:31.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:31.036] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:31.036] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:44:46.366Z","elapsed":"0m 3s","remaining":"0m 56s","remainingMs":56373,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:31.036] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 56s)
-[00:03:34.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:03:34.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:34.036] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:34.036] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:44:49.365Z","elapsed":"0m 6s","remaining":"0m 53s","remainingMs":53374,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:34.036] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 53s)
-[00:03:39.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:03:39.037] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:39.037] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:39.037] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:44:54.367Z","elapsed":"0m 11s","remaining":"0m 48s","remainingMs":48372,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:39.037] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 48s)
-[00:03:44.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:03:44.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:44.037] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:44.037] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:44:59.366Z","elapsed":"0m 16s","remaining":"0m 43s","remainingMs":43373,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:44.037] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 43s)
-[00:03:49.037] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:03:49.037] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:49.037] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:49.037] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:04.366Z","elapsed":"0m 21s","remaining":"0m 38s","remainingMs":38373,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:49.037] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 38s)
-[00:03:52.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:03:52.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:52.375] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:52.375] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:08.603Z","elapsed":"0m 25s","remaining":"0m 34s","remainingMs":34136,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:52.375] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 34s)
-[00:03:57.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:03:57.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:03:57.375] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:03:57.375] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:13.603Z","elapsed":"0m 30s","remaining":"0m 29s","remainingMs":29136,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:03:57.375] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 29s)
-[00:04:02.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:02.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:02.375] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:02.375] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:18.602Z","elapsed":"0m 35s","remaining":"0m 24s","remainingMs":24137,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:04:02.375] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 24s)
-[00:04:07.374] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:07.374] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:07.374] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:07.374] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:23.602Z","elapsed":"0m 40s","remaining":"0m 19s","remainingMs":19137,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:04:07.374] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 19s)
-[00:04:12.374] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:12.374] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:12.374] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:12.374] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:28.602Z","elapsed":"0m 45s","remaining":"0m 14s","remainingMs":14137,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:04:12.374] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 14s)
-[00:04:19.037] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:19.037] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:19.037] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:19.037] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:34.366Z","elapsed":"0m 51s","remaining":"0m 8s","remainingMs":8373,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:04:19.037] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 8s)
-[00:04:22.993] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:22.993] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:22.993] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:22.993] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:39.205Z","elapsed":"0m 56s","remaining":"0m 3s","remainingMs":3534,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:04:22.993] Browser LOG     [checkAndAutomate] Series 1 timer not expired yet (remaining: 3s)
-[00:04:27.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:27.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:27.375] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:27.375] Browser LOG     [checkAndAutomate] Series 1: {"currentTime":"2025-12-21T21:45:43.603Z","elapsed":"1m 0s","remaining":"-1m -1s","remainingMs":-864,"startTime":"2025-12-21T21:44:42.739Z"}
-[00:04:27.375] Browser LOG     [checkAndAutomate] ⚠️ TIMER EXPIRED for Series 1! Processing... (-1s past expiration)
-[00:04:27.375] Browser LOG     [checkAndAutomate] Fetching series info for Series 1...
-[00:04:27.548] Browser LOG     [checkAndAutomate] Series 1 info: {"drawExecuted":false,"salesPercent":"97%","sold":"97","ticketsLeft":3,"totalTickets":"100"}
-[00:04:27.548] Browser LOG     [checkAndAutomate] ✅ Conditions met! Starting automation for Series 1...
-[00:04:27.548] Browser LOG     [checkAndAutomate] Step 1: Finding unsold tickets for Series 1...
-[00:04:32.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:32.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:32.375] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:32.375] Browser LOG     [checkAndAutomate] Series 1 already being processed, skipping
-[00:04:37.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:37.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:37.375] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:37.375] Browser LOG     [checkAndAutomate] Series 1 already being processed, skipping
-[00:04:40.026] Browser LOG     [checkAndAutomate] Found 3 unsold tickets: ["17","35","52"]
-[00:04:40.026] Browser LOG     [checkAndAutomate] Step 1.1: Checking admin USDT balance...
-[00:04:40.144] Browser LOG     [checkAndAutomate] Admin balance: 7630.68999999984999964 USDT
-[00:04:40.144] Browser LOG     [checkAndAutomate] Total cost: 0.33 USDT
-[00:04:40.144] Browser LOG     [checkAndAutomate] ✅ Balance sufficient!
-[00:04:40.264] Browser LOG     [checkAndAutomate] Current allowance: 56094.39 USDT
-[00:04:40.264] Browser LOG     [checkAndAutomate] ✅ Allowance already sufficient
-[00:04:40.264] Browser LOG     [checkAndAutomate] Step 1.3: Buying 3 tickets...
-[00:04:40.932] Browser LOG     [checkAndAutomate] ✅ Buy transaction sent: 0x65532dce6476e5e9c8e22e2ee11b3599107782963cade5d001afb0f03b2e231b
-[00:04:42.374] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:42.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:42.375] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:42.375] Browser LOG     [checkAndAutomate] Series 1 already being processed, skipping
-[00:04:45.415] Browser LOG     [checkAndAutomate] ✅ Buy transaction confirmed!
-[00:04:45.415] Browser LOG     [checkAndAutomate] Waiting 3 seconds for state to update...
-[00:04:49.037] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:49.037] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:49.037] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:49.037] Browser LOG     [checkAndAutomate] Series 1 already being processed, skipping
-[00:04:50.037] Browser LOG     [checkAndAutomate] Step 2: Executing draw for Series 1...
-[00:04:50.037] Browser LOG     [checkAndAutomate] ✅ Execute draw transaction sent: 0x6310bea812a1b2575c7333d0f352aeebd98fb837e50bf95773a0e24888f4b00b
-[00:04:54.037] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:54.037] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:54.037] Browser LOG     [checkAndAutomate] Found countdown timers: 1 series
-[00:04:54.037] Browser LOG     [checkAndAutomate] Series 1 already being processed, skipping
-[00:04:54.389] Browser LOG     [checkAndAutomate] ✅ Draw executed successfully!
-[00:04:54.389] Browser LOG     [checkAndAutomate] Step 3: Distributing rewards for Series 1...
-[00:04:55.030] Browser LOG     [checkAndAutomate] ✅ Distribute rewards transaction sent: 0x591650308777ab0642e553afa64b63822ba81f758b2f61ff9066ab015b2805b9
-[00:04:55.534] Browser LOG     [checkAndAutomate] ✅ Rewards distributed successfully!
-[00:04:55.534] Browser LOG     [checkAndAutomate] Cleaning up countdown timer for Series 1...
-[00:04:55.534] Browser LOG     [checkAndAutomate] Refreshing series data...
-[00:04:55.534] Browser LOG     [checkAndAutomate] ✅ Automation completed successfully for Series 1!
-[00:04:55.534] Browser LOG     [checkAndAutomate] Removed Series 1 from processing set
-[00:04:55.910] Browser LOG     [Timer Detection] Series 1 no longer near draw, removing timer
-[00:04:57.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:04:57.375] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:04:57.375] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:02.376] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:02.376] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:02.376] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:07.375] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:07.376] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:07.376] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:14.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:14.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:14.036] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:19.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:19.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:19.036] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:24.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:24.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:24.036] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:29.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:29.037] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:29.037] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:34.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:34.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:34.036] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:39.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:39.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:39.036] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[00:05:44.036] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[00:05:44.036] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[00:05:44.036] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:00:02.259] Server  LOG      ✓ Ready in 1978ms
+[00:01:48.888] Server  LOG      ○ Compiling / ...
+[00:01:53.945] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:01:54.080] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:01:54.087] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:01:54.093] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:01:54.311] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:54.534] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:01:55.685] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:01:55.691] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:01:55.697] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:01:55.698] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:01:55.779] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:01:55.779] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:05:02.013] Server  LOG      ○ Compiling /rewards ...
+[00:36:43.636] Server  LOG      ✓ Compiled in 75ms
+[00:36:47.116] Server  LOG      ✓ Compiled in 61ms
+[00:36:48.205] Server  LOG      ✓ Compiled in 42ms
+[00:37:00.330] Server  LOG      ✓ Compiled in 29ms
+[00:37:13.003] Server  LOG      ✓ Compiled in 25ms
+[00:37:26.593] Server  LOG      ✓ Compiled in 150ms
+[00:37:26.942] Browser ERROR   ./src/app/rewards/page.tsx:406:39
+Parsing ecmascript source code failed
+  404 |                                         ? `#${series.winningTicketNumbers[0].toString()}`
+  405 |                                         : series.winningTicketNumbers.map(num => `#${num.toString()}`).join(', ')}
+> 406 |                                       }
+      |                                       ^
+  407 |                                     </span>
+  408 |                                   </div>
+  409 |                                 </>
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+Import traces:
+  Client Component Browser:
+    ./src/app/rewards/page.tsx [Client Component Browser]
+    ./src/app/rewards/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/rewards/page.tsx [Client Component SSR]
+    ./src/app/rewards/page.tsx [Server Component]
+[00:37:37.593] Server  LOG      ✓ Compiled in 27ms
+[00:38:23.659] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:38:23.760] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:38:23.767] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:38:23.774] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:38:24.006] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:38:25.004] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:38:25.296] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:38:25.303] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:38:25.309] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:38:25.312] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:38:25.312] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:38:25.388] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[04:36:28.758] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[04:36:28.771] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[04:36:28.777] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[04:36:28.971] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[04:36:29.905] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[04:36:30.345] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[04:36:30.355] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[04:36:30.379] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[04:36:30.379] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[04:36:30.380] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[04:36:30.430] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[04:38:23.326] Server  LOG      ✓ Compiled in 65ms
+[04:38:31.270] Server  LOG      ✓ Compiled in 32ms
+[04:38:41.846] Server  LOG      ✓ Compiled in 31ms
+[04:38:45.747] Server  LOG      ✓ Compiled in 26ms
+[04:39:01.021] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[04:39:01.115] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[04:39:01.122] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[04:39:01.128] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[04:39:01.300] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[04:39:02.222] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[04:39:02.539] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[04:39:02.544] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[04:39:02.550] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[04:39:02.551] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[04:39:02.551] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[04:39:02.634] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[04:39:35.654] Browser LOG     [useEffect] Admin automation effect running...
+[04:39:35.654] Browser LOG     [useEffect] Setting isMounted to true
+[04:39:35.654] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[04:39:35.654] Browser LOG     [useEffect] Cleanup - stopping automation
+[04:39:35.654] Browser LOG     [useEffect] Admin automation effect running...
+[04:39:35.654] Browser LOG     [useEffect] Setting isMounted to true
+[04:39:35.654] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[04:39:35.807] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[04:39:35.807] Browser LOG     [initializeAutomation] Starting initialization...
+[04:39:35.807] Browser LOG     [initializeAutomation] Creating admin account...
+[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[04:39:35.807] Browser LOG     [initializeAutomation] Creating wallet client...
+[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[04:39:35.807] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 355
+[04:39:35.807] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[04:39:37.783] Browser LOG     [initializeAutomation] Running initial check...
+[04:39:37.784] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[04:39:37.784] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[04:39:40.801] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[04:39:40.801] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[04:39:40.801] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[04:39:40.923] Browser LOG     [useEffect] Cleanup - stopping automation
+[04:39:40.923] Browser LOG     [useEffect] Clearing interval: 355
