@@ -1,106 +1,712 @@
-[00:00:02.259] Server  LOG      ✓ Ready in 1978ms
-[00:01:48.888] Server  LOG      ○ Compiling / ...
-[00:01:53.945] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:01:54.080] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:01:54.087] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:01:54.093] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:01:54.311] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:54.534] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:01:55.685] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:01:55.691] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:01:55.697] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:01:55.698] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:01:55.779] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:01:55.779] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[00:05:02.013] Server  LOG      ○ Compiling /rewards ...
-[00:36:43.636] Server  LOG      ✓ Compiled in 75ms
-[00:36:47.116] Server  LOG      ✓ Compiled in 61ms
-[00:36:48.205] Server  LOG      ✓ Compiled in 42ms
-[00:37:00.330] Server  LOG      ✓ Compiled in 29ms
-[00:37:13.003] Server  LOG      ✓ Compiled in 25ms
-[00:37:26.593] Server  LOG      ✓ Compiled in 150ms
-[00:37:26.942] Browser ERROR   ./src/app/rewards/page.tsx:406:39
-Parsing ecmascript source code failed
-  404 |                                         ? `#${series.winningTicketNumbers[0].toString()}`
-  405 |                                         : series.winningTicketNumbers.map(num => `#${num.toString()}`).join(', ')}
-> 406 |                                       }
-      |                                       ^
-  407 |                                     </span>
-  408 |                                   </div>
-  409 |                                 </>
-
-Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
-
-Import traces:
-  Client Component Browser:
-    ./src/app/rewards/page.tsx [Client Component Browser]
-    ./src/app/rewards/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/app/rewards/page.tsx [Client Component SSR]
-    ./src/app/rewards/page.tsx [Server Component]
-[00:37:37.593] Server  LOG      ✓ Compiled in 27ms
-[00:38:23.659] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:38:23.760] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:38:23.767] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:38:23.774] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:38:24.006] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:38:25.004] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[00:38:25.296] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[00:38:25.303] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[00:38:25.309] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[00:38:25.312] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[00:38:25.312] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[00:38:25.388] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[04:36:28.758] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[04:36:28.771] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[04:36:28.777] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[04:36:28.971] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:36:29.905] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[04:36:30.345] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[04:36:30.355] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[04:36:30.379] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[04:36:30.379] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[04:36:30.380] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[04:36:30.430] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[04:38:23.326] Server  LOG      ✓ Compiled in 65ms
-[04:38:31.270] Server  LOG      ✓ Compiled in 32ms
-[04:38:41.846] Server  LOG      ✓ Compiled in 31ms
-[04:38:45.747] Server  LOG      ✓ Compiled in 26ms
-[04:39:01.021] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[04:39:01.115] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[04:39:01.122] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[04:39:01.128] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[04:39:01.300] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[04:39:02.222] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
-[04:39:02.539] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
-[04:39:02.544] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
-[04:39:02.550] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
-[04:39:02.551] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
-[04:39:02.551] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
-[04:39:02.634] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
-[04:39:35.654] Browser LOG     [useEffect] Admin automation effect running...
-[04:39:35.654] Browser LOG     [useEffect] Setting isMounted to true
-[04:39:35.654] Browser LOG     [useEffect] Scheduling initialization in 100ms...
-[04:39:35.654] Browser LOG     [useEffect] Cleanup - stopping automation
-[04:39:35.654] Browser LOG     [useEffect] Admin automation effect running...
-[04:39:35.654] Browser LOG     [useEffect] Setting isMounted to true
-[04:39:35.654] Browser LOG     [useEffect] Scheduling initialization in 100ms...
-[04:39:35.807] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
-[04:39:35.807] Browser LOG     [initializeAutomation] Starting initialization...
-[04:39:35.807] Browser LOG     [initializeAutomation] Creating admin account...
-[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
-[04:39:35.807] Browser LOG     [initializeAutomation] Creating wallet client...
-[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Wallet client created
-[04:39:35.807] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
-[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 355
-[04:39:35.807] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
-[04:39:35.807] Browser LOG     [initializeAutomation] ✅ Initialization complete!
-[04:39:37.783] Browser LOG     [initializeAutomation] Running initial check...
-[04:39:37.784] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[04:39:37.784] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[04:39:40.801] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
-[04:39:40.801] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
-[04:39:40.801] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
-[04:39:40.923] Browser LOG     [useEffect] Cleanup - stopping automation
-[04:39:40.923] Browser LOG     [useEffect] Clearing interval: 355
+[00:00:00.860] Server  LOG      ✓ Ready in 624ms
+[00:00:29.318] Server  LOG      ○ Compiling /my-tickets ...
+[00:00:35.480] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:35.574] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:35.580] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:35.586] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:35.802] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:36.077] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:00:37.130] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:00:37.139] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:00:37.147] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:00:37.148] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:00:37.149] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:00:37.227] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:01:10.728] Server  LOG      ○ Compiling /tickets ...
+[00:01:11.649] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:01:11.659] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:01:11.670] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:01:11.892] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:13.011] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:01:13.011] Browser LOG     [useEffect] Admin automation effect running...
+[00:01:13.011] Browser LOG     [useEffect] Setting isMounted to true
+[00:01:13.011] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:01:13.011] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:01:13.011] Browser LOG     [initializeAutomation] Starting initialization...
+[00:01:13.011] Browser LOG     [initializeAutomation] Creating admin account...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:01:13.011] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:01:13.011] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 109
+[00:01:13.011] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:01:13.011] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:01:13.011] Browser LOG     [useEffect] Clearing interval: 109
+[00:01:13.011] Browser LOG     [useEffect] Admin automation effect running...
+[00:01:13.011] Browser LOG     [useEffect] Setting isMounted to true
+[00:01:13.011] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:01:13.011] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:01:13.011] Browser LOG     [initializeAutomation] Starting initialization...
+[00:01:13.011] Browser LOG     [initializeAutomation] Creating admin account...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:01:13.011] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:01:13.011] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 168
+[00:01:13.011] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:01:13.011] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:01:13.243] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:01:13.243] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:01:13.486] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:01:13.496] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:01:13.507] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:01:13.574] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:01:14.306] Browser LOG     [initializeAutomation] Running initial check...
+[00:01:14.306] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:14.306] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:14.460] Browser LOG     [initializeAutomation] Running initial check...
+[00:01:14.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:14.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:17.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:17.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:17.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:22.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:22.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:22.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:27.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:27.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:27.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:32.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:32.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:32.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:37.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:37.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:37.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:42.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:42.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:42.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:47.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:47.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:47.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:52.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:52.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:52.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:01:57.461] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:01:57.461] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:01:57.461] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:02.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:02.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:02.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:07.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:07.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:07.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:12.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:12.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:12.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:17.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:17.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:17.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:22.461] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:22.461] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:22.461] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:27.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:27.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:27.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:32.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:32.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:32.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:37.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:37.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:37.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:42.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:42.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:42.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:47.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:47.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:47.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:52.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:52.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:52.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:02:57.461] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:02:57.461] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:02:57.461] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:02.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:02.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:02.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:07.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:07.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:07.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:12.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:12.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:12.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:17.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:17.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:17.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:22.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:22.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:22.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:27.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:27.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:27.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:32.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:32.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:32.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:37.461] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:37.461] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:37.461] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:42.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:42.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:42.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:47.461] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:47.461] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:47.461] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:52.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:52.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:52.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:03:57.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:03:57.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:03:57.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:02.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:02.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:02.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:07.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:07.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:07.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:12.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:12.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:12.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:17.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:17.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:17.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:22.461] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:22.461] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:22.461] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:27.461] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:27.461] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:27.461] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:32.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:32.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:32.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:37.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:37.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:37.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:42.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:42.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:42.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:47.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:47.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:47.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:52.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:52.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:52.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:04:57.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:04:57.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:04:57.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:02.460] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:02.460] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:02.460] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:07.459] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:07.459] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:07.459] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:14.226] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:14.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:14.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:19.226] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:19.226] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:19.226] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:24.226] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:24.226] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:24.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:29.226] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:29.226] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:29.226] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:34.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:34.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:34.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:39.226] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:39.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:39.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:44.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:44.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:44.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:49.226] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:49.226] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:49.226] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:54.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:54.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:54.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:05:59.226] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:05:59.226] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:05:59.226] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:04.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:06:04.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:04.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:04.445] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:06:04.888] Server  LOG      ✓ Compiled in 87ms
+[00:06:05.038] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:05.143] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:05.150] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:05.155] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:05.177] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:05.184] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:05.190] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:05.374] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:06.632] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:06.638] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:06.645] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:07.226] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:07.227] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:07.227] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:07.227] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:07.227] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+[00:06:07.227] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:06:07.227] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:07.227] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:07.227] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:07.227] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+[00:06:07.227] Browser ERROR   Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+[00:06:07.227] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:06:07.227] Browser LOG     [initializeAutomation] Starting initialization...
+[00:06:07.227] Browser LOG     [initializeAutomation] Creating admin account...
+[00:06:07.227] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:06:07.227] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:06:07.227] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:06:07.227] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:06:07.227] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 176
+[00:06:07.227] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:06:07.227] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:06:07.227] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:06:07.227] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:06:07.227] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:06:10.227] Browser LOG     [initializeAutomation] Running initial check...
+[00:06:10.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:10.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:11.706] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:06:11.888] Server  LOG      ✓ Compiled in 63ms
+[00:06:12.021] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:12.104] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:12.110] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:12.115] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:12.247] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:12.253] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:12.258] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:12.387] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:13.349] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:13.349] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:13.349] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:13.349] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:13.349] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:06:13.349] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:13.349] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:13.349] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:13.758] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:13.767] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:13.774] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:14.226] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:06:14.226] Browser LOG     [initializeAutomation] Starting initialization...
+[00:06:14.226] Browser LOG     [initializeAutomation] Creating admin account...
+[00:06:14.226] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:06:14.226] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:06:14.226] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:06:14.226] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:06:14.226] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 176
+[00:06:14.226] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:06:14.226] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:06:14.226] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:06:14.226] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:06:14.226] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:06:17.226] Browser LOG     [initializeAutomation] Running initial check...
+[00:06:17.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:17.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:19.384] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:06:19.384] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:06:19.384] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:19.384] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:19.659] Server  LOG      ✓ Compiled in 64ms
+[00:06:19.806] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:19.910] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:19.917] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:19.922] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:20.065] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:20.070] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:20.075] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:20.209] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:21.290] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:21.290] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:21.290] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:21.290] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:21.290] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:06:21.290] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:21.290] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:21.290] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:21.733] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:21.745] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:21.756] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:22.226] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:06:22.226] Browser LOG     [initializeAutomation] Starting initialization...
+[00:06:22.226] Browser LOG     [initializeAutomation] Creating admin account...
+[00:06:22.226] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:06:22.226] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:06:22.226] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:06:22.226] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:06:22.226] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 176
+[00:06:22.226] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:06:22.226] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:06:22.226] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:06:22.226] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:06:22.226] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:06:22.304] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:06:22.322] Server  LOG      ✓ Compiled in 61ms
+[00:06:22.782] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:22.869] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:22.875] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:22.882] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:23.068] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:24.342] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:24.342] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:24.342] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:24.342] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:24.342] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:06:24.342] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:24.342] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:24.342] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:24.807] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:24.816] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:24.823] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:25.227] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:06:25.227] Browser LOG     [initializeAutomation] Starting initialization...
+[00:06:25.227] Browser LOG     [initializeAutomation] Creating admin account...
+[00:06:25.227] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:06:25.227] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:06:25.227] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:06:25.227] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:06:25.227] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 169
+[00:06:25.227] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:06:25.227] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:06:25.227] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:06:25.227] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:06:25.227] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:06:27.421] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:06:27.421] Browser LOG     [initializeAutomation] Running initial check...
+[00:06:27.421] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:27.421] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:27.718] Server  LOG      ✓ Compiled in 64ms
+[00:06:27.829] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:27.916] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:27.921] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:27.926] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:27.948] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:27.953] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:27.958] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:28.080] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:29.227] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:29.227] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:29.227] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:29.227] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:29.227] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:06:29.227] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:29.227] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:29.227] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:29.481] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:29.486] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:29.491] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:30.226] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:06:30.226] Browser LOG     [initializeAutomation] Starting initialization...
+[00:06:30.226] Browser LOG     [initializeAutomation] Creating admin account...
+[00:06:30.226] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:06:30.226] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:06:30.226] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:06:30.226] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:06:30.226] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 179
+[00:06:30.226] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:06:30.226] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:06:30.226] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:06:30.226] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:06:30.226] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:06:33.226] Browser LOG     [initializeAutomation] Running initial check...
+[00:06:33.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:33.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:36.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:06:36.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:36.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:41.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:06:41.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:41.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:44.654] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/tickets.module.css changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:06:44.854] Server  LOG      ✓ Compiled in 47ms
+[00:06:44.990] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:45.074] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:45.080] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:45.085] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:45.238] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:45.243] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:45.248] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:45.445] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:46.478] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:06:46.478] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:46.478] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:46.478] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:46.478] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:06:46.478] Browser LOG     [useEffect] Admin automation effect running...
+[00:06:46.478] Browser LOG     [useEffect] Setting isMounted to true
+[00:06:46.478] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:06:46.812] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:06:46.817] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:06:46.823] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:06:47.226] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:06:47.226] Browser LOG     [initializeAutomation] Starting initialization...
+[00:06:47.226] Browser LOG     [initializeAutomation] Creating admin account...
+[00:06:47.227] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:06:47.227] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:06:47.227] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:06:47.227] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:06:47.227] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 176
+[00:06:47.227] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:06:47.227] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:06:47.227] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:06:47.227] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:06:47.227] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:06:50.227] Browser LOG     [initializeAutomation] Running initial check...
+[00:06:50.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:50.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:53.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:06:53.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:53.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:06:58.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:06:58.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:06:58.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:07:03.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:07:03.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:07:03.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:07:08.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:07:08.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:07:08.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:08:12.227] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:08:12.227] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:08:12.227] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:08:20.230] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:08:20.230] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:08:20.230] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:10:53.959] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:10:53.959] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:10:53.959] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:10:54.059] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:10:54.059] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:10:54.059] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:10:54.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:10:54.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:10:54.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:10:59.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:10:59.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:10:59.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:04.781] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:04.781] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:04.781] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:09.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:09.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:09.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:14.781] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:14.781] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:14.781] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:19.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:19.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:19.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:24.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:24.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:24.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:29.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:29.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:29.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:34.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:34.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:34.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:39.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:39.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:39.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:44.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:44.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:44.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:49.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:49.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:49.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:54.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:54.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:54.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:11:59.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:11:59.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:11:59.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:04.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:04.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:04.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:09.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:09.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:09.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:14.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:14.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:14.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:19.781] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:19.781] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:19.781] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:24.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:24.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:24.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:29.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:29.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:29.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:34.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:34.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:34.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:39.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:39.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:39.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:44.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:44.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:44.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:49.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:49.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:49.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:54.781] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:54.781] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:54.781] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:12:59.781] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:12:59.781] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:12:59.781] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:04.780] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:04.780] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:04.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:09.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:09.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:09.780] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:14.781] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:14.781] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:14.781] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:19.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:19.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:19.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:24.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:24.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:24.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:29.779] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:29.779] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:29.779] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:34.781] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:34.781] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:34.781] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:54.703] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:54.703] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:54.703] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:13:59.702] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:13:59.702] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:13:59.702] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:04.701] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:04.701] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:04.701] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:09.703] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:09.703] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:09.703] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:14.701] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:14.701] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:14.701] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:19.702] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:19.703] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:19.703] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:24.701] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:24.701] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:24.701] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:29.702] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:29.702] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:29.702] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:34.702] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:34.702] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:34.702] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:39.702] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:39.702] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:39.702] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:44.702] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:44.702] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:44.702] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:49.702] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:49.702] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:49.702] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:14:54.703] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:14:54.703] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:14:54.703] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:01.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:01.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:01.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:06.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:06.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:06.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:11.574] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:11.574] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:11.574] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:16.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:16.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:16.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:21.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:21.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:21.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:26.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:26.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:26.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:29.748] Server  WARN     ⚠ Fast Refresh had to perform a full reload when ./src/app/tickets/page.tsx changed. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:15:29.762] Server  LOG      ✓ Compiled in 162ms
+[00:15:30.212] Server  WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:15:30.303] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:15:30.308] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:15:30.313] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:15:30.522] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:15:31.668] Browser WARN    Missing WalletConnect project id. Set NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID to enable WalletConnect compatible wallets.
+[00:15:31.668] Browser LOG     [useEffect] Admin automation effect running...
+[00:15:31.668] Browser LOG     [useEffect] Setting isMounted to true
+[00:15:31.668] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:15:31.668] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:15:31.668] Browser LOG     [useEffect] Admin automation effect running...
+[00:15:31.668] Browser LOG     [useEffect] Setting isMounted to true
+[00:15:31.668] Browser LOG     [useEffect] Scheduling initialization in 100ms...
+[00:15:31.986] Server  ERROR   TypeError: Cannot set property message of  which has only a getter
+[00:15:31.991] Server  ERROR    ⨯ "unhandledRejection:" TypeError: Cannot set property message of  which has only a getter
+[00:15:31.996] Server  ERROR    ⨯ "unhandledRejection: " TypeError: Cannot set property message of  which has only a getter
+[00:15:32.574] Browser LOG     [useEffect] Timeout fired - calling initializeAutomation
+[00:15:32.574] Browser LOG     [initializeAutomation] Starting initialization...
+[00:15:32.574] Browser LOG     [initializeAutomation] Creating admin account...
+[00:15:32.574] Browser LOG     [initializeAutomation] ✅ Admin account created: 0x16Ae01A0d84c72D1c458c5B97B125d4a9511EDD0
+[00:15:32.574] Browser LOG     [initializeAutomation] Creating wallet client...
+[00:15:32.574] Browser LOG     [initializeAutomation] ✅ Wallet client created
+[00:15:32.574] Browser LOG     [initializeAutomation] Setting up interval (checking every 5 seconds)...
+[00:15:32.574] Browser LOG     [initializeAutomation] ✅ Interval set up with ID: 177
+[00:15:32.574] Browser LOG     [initializeAutomation] Scheduling initial check in 2 seconds...
+[00:15:32.574] Browser LOG     [initializeAutomation] ✅ Initialization complete!
+[00:15:32.574] Browser WARN    Lit is in dev mode. Not recommended for production! See https://lit.dev/msg/dev-mode for more information.
+[00:15:32.574] Browser WARN    [Reown Config] Failed to fetch remote project configuration. Using local/default values. {}
+[00:15:32.574] Browser ERROR   Error checking Cross-Origin-Opener-Policy: HTTP error! status: 500
+[00:15:35.575] Browser LOG     [initializeAutomation] Running initial check...
+[00:15:35.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:35.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:38.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:38.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:38.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:43.574] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:43.574] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:43.574] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:48.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:48.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:48.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:53.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:53.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:53.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:15:58.574] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:15:58.574] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:15:58.574] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:16:03.575] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:16:03.575] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:16:03.575] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:16:08.574] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:16:08.574] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:16:08.574] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:16:13.574] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:16:13.574] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:16:13.574] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:16:16.704] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:16:16.704] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:16:16.704] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:16:21.701] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:16:21.701] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:16:21.701] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:16:26.701] Browser LOG     [initializeAutomation] Interval tick - calling checkAndAutomate...
+[00:16:26.702] Browser LOG     [checkAndAutomate] Starting check... {"hasAdminAccount":true,"hasLotteryAddress":true,"hasPublicClient":true,"hasUsdtAddress":true,"hasWalletClient":true,"isMounted":true}
+[00:16:26.702] Browser LOG     [checkAndAutomate] No countdown timers in localStorage
+[00:16:28.263] Server  LOG      ○ Compiling /rewards ...
+[00:16:29.346] Browser LOG     [useEffect] Cleanup - stopping automation
+[00:16:29.346] Browser LOG     [useEffect] Clearing interval: 177

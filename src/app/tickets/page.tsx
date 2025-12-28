@@ -48,6 +48,7 @@ const USD_PRICE_PER_TICKET = 0.11;
 const fallbackDecimals = 6;
 const QUICK_PICK_PRESETS = [1, 5, 10, 25, 50] as const;
 const MAX_CUSTOM_SELECTION = 100;
+const SERIES_PER_PAGE = 5;
 
 type FlowStatus = "idle" | "approving" | "buying";
 
@@ -129,6 +130,7 @@ export default function TicketsPage() {
   const [selectedSeriesForQuickSelect, setSelectedSeriesForQuickSelect] = useState<bigint | null>(null);
   const [countdownStartTimes, setCountdownStartTimes] = useState<Map<bigint, number>>(new Map()); // seriesId -> timestamp
   const [notifications, setNotifications] = useState<Array<{ id: string; seriesId: bigint; message: string; timestamp: number }>>([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const COUNTDOWN_DURATION = 1 * 60 * 1000; // 5 minutes in milliseconds
   const DRAW_THRESHOLD_PERCENT = 90;
   const COUNTDOWN_STORAGE_KEY = "lottery_countdown_timers"; // localStorage key for persisting timers
@@ -257,6 +259,7 @@ export default function TicketsPage() {
         } as SeriesData;
       })
       .filter((series): series is SeriesData => series !== null)
+      .filter((series) => series.ticketsLeft > 0) // Only show series with available tickets
       .sort((a, b) => {
         // Series with available tickets first, then alphabetically by series code (AA, AB, AC...)
         if (a.isActive && !b.isActive) return -1;
@@ -267,6 +270,21 @@ export default function TicketsPage() {
         return codeA.localeCompare(codeB);
       });
   }, [allSeriesInfoData, seriesIds]);
+
+  const totalPages = useMemo(() => {
+    return Math.ceil(allSeriesData.length / SERIES_PER_PAGE);
+  }, [allSeriesData.length]);
+
+  const paginatedSeries = useMemo(() => {
+    const startIndex = (currentPage - 1) * SERIES_PER_PAGE;
+    const endIndex = startIndex + SERIES_PER_PAGE;
+    return allSeriesData.slice(startIndex, endIndex);
+  }, [allSeriesData, currentPage]);
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const decimals = useMemo(() => {
     if (typeof decimalsData === "number") return decimalsData;
@@ -2245,7 +2263,7 @@ export default function TicketsPage() {
           </div>
         ) : (
           <section className={styles.seriesContainer}>
-            {allSeriesData.map((series, seriesIndex) => {
+            {paginatedSeries.map((series, seriesIndex) => {
               const isExpanded = expandedSeries.has(series.seriesId);
               const seriesTickets = seriesTicketsData.get(series.seriesId);
               const seriesPadLength = Math.max(String(Number(series.totalTickets)).length, 3);
@@ -2368,6 +2386,36 @@ export default function TicketsPage() {
               );
             })}
           </section>
+        )}
+
+        {allSeriesData.length > 0 && totalPages > 1 && (
+          <div className={styles.pagination}>
+            <button
+              className={styles.paginationButton}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              ← Previous
+            </button>
+            <div className={styles.paginationPages}>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={`${styles.paginationPage} ${currentPage === page ? styles.paginationPageActive : ""}`}
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+            <button
+              className={styles.paginationButton}
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next →
+            </button>
+          </div>
         )}
       </main>
     </div>
